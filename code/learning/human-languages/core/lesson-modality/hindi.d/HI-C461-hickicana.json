@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C461-hickicana",
+    "language": "hindi",
+    "chapter": 461,
+    "sequence": 25480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c523fc03360f84f9"
+  },
+  "findings": []
+}

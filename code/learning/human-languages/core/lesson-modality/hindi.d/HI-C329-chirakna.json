@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C329-chirakna",
+    "language": "hindi",
+    "chapter": 329,
+    "sequence": 18100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70601cab11b1f9c2"
+  },
+  "findings": []
+}

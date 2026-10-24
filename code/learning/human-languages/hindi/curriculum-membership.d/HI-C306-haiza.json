@@ -1,0 +1,11 @@
+{
+  "id": "HI-C306-haiza",
+  "pathSegment": "HI-PATH-306-AKAL306",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-306-AKAL306",
+      "order": 4
+    }
+  ]
+}

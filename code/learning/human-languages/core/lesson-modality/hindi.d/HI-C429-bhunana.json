@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C429-bhunana",
+    "language": "hindi",
+    "chapter": 429,
+    "sequence": 23620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dd54ac8c51798ed"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:b7bd2d1293ca4902",
+  "lessonIds": [
+    "HI-C527-kala",
+    "HI-C527-citra",
+    "HI-C527-kuci",
+    "HI-C527-rekha",
+    "HI-C527-rangna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch527.txt",
+  "json": "hindi/narration/ch527.json",
+  "textHash": "fnv1a64:3387eb1317564812",
+  "jsonHash": "fnv1a64:c14d43172ace2a1e",
+  "findings": []
+}

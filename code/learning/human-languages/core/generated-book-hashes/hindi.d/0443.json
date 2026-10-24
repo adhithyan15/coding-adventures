@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:bb06208544c928d7",
+  "lessonIds": [
+    "HI-C443-nahar",
+    "HI-C443-jalasay",
+    "HI-C443-dhara",
+    "HI-C443-sicna",
+    "HI-C443-nirana"
+  ],
+  "tex": "hindi/book/chapters/ch443-canals-and-fields.tex"
+}

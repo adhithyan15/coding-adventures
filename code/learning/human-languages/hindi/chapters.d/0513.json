@@ -1,0 +1,21 @@
+{
+  "chapter": 513,
+  "title": "At the Tailor's",
+  "label": "ch:hi-at-the-tailor-s",
+  "canDo": "I can ask a tailor to stitch, trim and unpick clothes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R513-review-506-513",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can ask a tailor to stitch, trim and unpick clothes.",
+    "assesses": [
+      "HI-LEX-C513-DARZI513-01",
+      "HI-LEX-C513-DARZI513-02",
+      "HI-LEX-C513-DARZI513-03",
+      "HI-LEX-C513-DARZI513-04",
+      "HI-LEX-C513-DARZI513-05"
+    ]
+  }
+}

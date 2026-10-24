@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 300,
+  "sourceHash": "fnv1a64:b7695ebf6b2c041b",
+  "lessonIds": [
+    "HI-C300-dhadhakna",
+    "HI-C300-dahakna",
+    "HI-C300-jvala",
+    "HI-C300-ujala",
+    "HI-C300-tapis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch300.txt",
+  "json": "hindi/narration/ch300.json",
+  "textHash": "fnv1a64:00952cf33e8b2651",
+  "jsonHash": "fnv1a64:a6898dbca8d6f762",
+  "findings": []
+}

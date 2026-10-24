@@ -1,0 +1,11 @@
+{
+  "id": "HI-C469-mitvyayi",
+  "pathSegment": "HI-PATH-469-UDAR469",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-469-UDAR469",
+      "order": 1
+    }
+  ]
+}

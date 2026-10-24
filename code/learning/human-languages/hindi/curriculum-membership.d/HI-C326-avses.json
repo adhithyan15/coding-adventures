@@ -1,0 +1,11 @@
+{
+  "id": "HI-C326-avses",
+  "pathSegment": "HI-PATH-326-KHANDAHAR326",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-326-KHANDAHAR326",
+      "order": 4
+    }
+  ]
+}

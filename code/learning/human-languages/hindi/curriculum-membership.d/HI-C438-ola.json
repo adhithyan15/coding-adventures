@@ -1,0 +1,11 @@
+{
+  "id": "HI-C438-ola",
+  "pathSegment": "HI-PATH-438-JADA438",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-438-JADA438",
+      "order": 1
+    }
+  ]
+}

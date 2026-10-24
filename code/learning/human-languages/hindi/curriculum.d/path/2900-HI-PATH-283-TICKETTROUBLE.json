@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-283-TICKETTROUBLE",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "HI-EXT-283-TICKETTROUBLE"
+  ],
+  "after": []
+}

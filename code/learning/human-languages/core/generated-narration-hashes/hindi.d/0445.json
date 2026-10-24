@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:794012e053aa7af8",
+  "lessonIds": [
+    "HI-C445-kisti",
+    "HI-C445-mallah",
+    "HI-C445-jal",
+    "HI-C445-jvar",
+    "HI-C445-sip"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch445.txt",
+  "json": "hindi/narration/ch445.json",
+  "textHash": "fnv1a64:14566f1b80616468",
+  "jsonHash": "fnv1a64:ea4ea2466ee2aa6c",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:825030a825f34067",
+  "lessonIds": [
+    "HI-C310-bichurna",
+    "HI-C310-bhatakna",
+    "HI-C310-talas",
+    "HI-C310-salamat",
+    "HI-C310-dilasa"
+  ],
+  "tex": "hindi/book/chapters/ch310-lost-and-found.tex"
+}

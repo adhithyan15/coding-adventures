@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:862d9896764b80ae",
+  "lessonIds": [
+    "HI-C539-tirth",
+    "HI-C539-dua",
+    "HI-C539-prarthna",
+    "HI-C539-kamna",
+    "HI-C539-thanna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch539.txt",
+  "json": "hindi/narration/ch539.json",
+  "textHash": "fnv1a64:baa8139d32089e67",
+  "jsonHash": "fnv1a64:fd1845b8f1a99810",
+  "findings": []
+}

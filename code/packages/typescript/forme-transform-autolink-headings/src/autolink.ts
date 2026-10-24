@@ -101,7 +101,8 @@ function collectHeadings(blocks: readonly BlockNode[], acc: HeadingNode[]): void
         // blocks, so no headings to find.  Nothing to walk.
         break;
       case "paragraph":
-      case "code_block":
+      case "fenced_block":
+    case "code_block":
       case "thematic_break":
       case "raw_block":
         // No nested blocks of interest.

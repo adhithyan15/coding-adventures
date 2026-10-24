@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:6b92a7ed800bc7d5",
+  "lessonIds": [
+    "HI-C493-madhumeh",
+    "HI-C493-dama",
+    "HI-C493-lakva",
+    "HI-C493-kaimsar",
+    "HI-C493-jakarna"
+  ],
+  "tex": "hindi/book/chapters/ch493-long-illnesses.tex"
+}

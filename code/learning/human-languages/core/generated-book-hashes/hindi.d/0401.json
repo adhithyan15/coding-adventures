@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:f4f88f92132074b1",
+  "lessonIds": [
+    "HI-C401-phatak",
+    "HI-C401-signal",
+    "HI-C401-janksan",
+    "HI-C401-laghna",
+    "HI-C401-takna"
+  ],
+  "tex": "hindi/book/chapters/ch401-gates-and-junctions.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C305-sailab",
+    "language": "hindi",
+    "chapter": 305,
+    "sequence": 16900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fcf8ef73407c6bbe"
+  },
+  "findings": []
+}

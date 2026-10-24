@@ -1,0 +1,19 @@
+{
+  "chapter": 465,
+  "title": "Laughter and Tears",
+  "label": "ch:hi-laughter-and-tears",
+  "canDo": "I can say what made someone laugh or cry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C465-vilap",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say what made someone laugh or cry.",
+    "assesses": [
+      "HI-LEX-C465-VILAP465-03",
+      "HI-LEX-C465-VILAP465-04",
+      "HI-LEX-C465-VILAP465-05"
+    ]
+  }
+}

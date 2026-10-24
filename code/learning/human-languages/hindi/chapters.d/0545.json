@@ -1,0 +1,21 @@
+{
+  "chapter": 545,
+  "title": "A Game of Chance",
+  "label": "ch:hi-a-game-of-chance",
+  "canDo": "I can talk about dice, games and winning a round.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R545-review-538-545",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 545: I can talk about dice, games and winning a round.",
+    "assesses": [
+      "HI-LEX-C545-JUA545-01",
+      "HI-LEX-C545-JUA545-02",
+      "HI-LEX-C545-JUA545-03",
+      "HI-LEX-C545-JUA545-04",
+      "HI-LEX-C545-JUA545-05"
+    ]
+  }
+}

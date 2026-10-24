@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C393-upalabdhi",
+    "language": "hindi",
+    "chapter": 393,
+    "sequence": 21570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eb02d8f71e64bff"
+  },
+  "findings": []
+}

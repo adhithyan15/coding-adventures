@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C558-divana",
+    "language": "hindi",
+    "chapter": 558,
+    "sequence": 30670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:042776f2799d0caa"
+  },
+  "findings": []
+}

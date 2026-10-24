@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:48367223e521eee0",
+  "lessonIds": [
+    "HI-C354-vot",
+    "HI-C354-nagrik",
+    "HI-C354-janmat",
+    "HI-C354-loktantra",
+    "HI-C354-thopna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch354.txt",
+  "json": "hindi/narration/ch354.json",
+  "textHash": "fnv1a64:86d842f7e3571888",
+  "jsonHash": "fnv1a64:a1c5afa2189b62aa",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C464-rocak",
+  "pathSegment": "HI-PATH-464-UBNA464",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-464-UBNA464",
+      "order": 4
+    }
+  ]
+}

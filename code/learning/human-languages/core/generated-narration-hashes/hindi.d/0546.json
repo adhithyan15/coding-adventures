@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 546,
+  "sourceHash": "fnv1a64:2b59191fd3d60ea3",
+  "lessonIds": [
+    "HI-C546-sagun",
+    "HI-C546-asar",
+    "HI-C546-manhus",
+    "HI-C546-saubhagya",
+    "HI-C546-ittafaq"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch546.txt",
+  "json": "hindi/narration/ch546.json",
+  "textHash": "fnv1a64:00bf7c13294ae6aa",
+  "jsonHash": "fnv1a64:359008e736be67c3",
+  "findings": []
+}

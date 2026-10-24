@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "The Storm",
+  "label": "ch:hi-the-storm",
+  "canDo": "I can describe a storm as it came.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C304-tabahi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can describe a storm as it came.",
+    "assesses": [
+      "HI-LEX-C304-TOOFAN304-03",
+      "HI-LEX-C304-TOOFAN304-04",
+      "HI-LEX-C304-TOOFAN304-05"
+    ]
+  }
+}

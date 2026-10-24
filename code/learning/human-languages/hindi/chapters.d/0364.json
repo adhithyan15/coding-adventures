@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Ask an Expert",
+  "label": "ch:hi-ask-an-expert",
+  "canDo": "I can say who knows best and where they said it.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C364-chatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say who knows best and where they said it.",
+    "assesses": [
+      "HI-LEX-C364-VISHESHAGYA364-03",
+      "HI-LEX-C364-VISHESHAGYA364-04",
+      "HI-LEX-C364-VISHESHAGYA364-05"
+    ]
+  }
+}

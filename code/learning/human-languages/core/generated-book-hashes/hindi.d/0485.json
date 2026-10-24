@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:2825ce73b145ad25",
+  "lessonIds": [
+    "HI-C485-badhazmi",
+    "HI-C485-murcha",
+    "HI-C485-pecis",
+    "HI-C485-ubakna",
+    "HI-C485-dakar"
+  ],
+  "tex": "hindi/book/chapters/ch485-feeling-unwell.tex"
+}

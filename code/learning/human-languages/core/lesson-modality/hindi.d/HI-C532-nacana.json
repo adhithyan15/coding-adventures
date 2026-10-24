@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C532-nacana",
+    "language": "hindi",
+    "chapter": 532,
+    "sequence": 29370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b351685b05f3cdd"
+  },
+  "findings": []
+}

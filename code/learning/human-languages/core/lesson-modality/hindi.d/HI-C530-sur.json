@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C530-sur",
+    "language": "hindi",
+    "chapter": 530,
+    "sequence": 29240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:304cad44c03b7aab"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 467,
+  "title": "Honest and False",
+  "label": "ch:hi-honest-and-false",
+  "canDo": "I can say whether someone can be trusted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R467-review-460-467",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can say whether someone can be trusted.",
+    "assesses": [
+      "HI-LEX-C467-KAPAT467-01",
+      "HI-LEX-C467-KAPAT467-02",
+      "HI-LEX-C467-KAPAT467-03",
+      "HI-LEX-C467-KAPAT467-04",
+      "HI-LEX-C467-KAPAT467-05"
+    ]
+  }
+}

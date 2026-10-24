@@ -1,0 +1,570 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 286,
+  "title": "If, and Otherwise",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:2c2bcf0810045fa9",
+  "lessons": [
+    {
+      "id": "HI-C286-agarto",
+      "sequence": 15710,
+      "title": "अगर … तो … (agar … to …) — if, then",
+      "headword": "अगर … तो …",
+      "romanization": "agar … to …",
+      "gloss": "if …, then … — a condition and what follows from it",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e0b22278fc77897",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if\". (अगर, agar.) Then open a reply with \"so, then\": तो चलिए. The two words meet in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अगर … तो … with the future",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगर बारिश होगी, तो हम घर पर रहेंगे। agar bāriś hogī, to ham ghar par raheṅge. — \"If it rains, we will stay at home.\""
+            },
+            {
+              "kind": "speech",
+              "text": "अगर opens the condition and तो opens what follows from it. When both halves are still to come, Hindi puts both in the future: होगी, रहेंगे. English says \"if it rains\"; Hindi says \"if it will rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम आओगे, तो मुझे अच्छा लगेगा। (agar tum āoge, to mujhe acchā lagegā.) — If you come, I'll be glad."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep both words: अगर at the start, तो at the turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: if it is so now",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगर तुम्हें भूख लगी है, तो खाना खाओ। agar tumhẽ bhūkh lagī hai, to khānā khāo. — \"If you're hungry, eat.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When the condition is true now, it stays in the present, and the second half can ask, advise or tell:"
+            },
+            {
+              "kind": "speech",
+              "text": "अगर समय है, तो आइए। (agar samay hai, to āie.) — If you have time, do come."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर आप बीमार हैं, तो आपको आराम करना चाहिए। (agar āp bīmār haiṁ, to āpko ārām karnā cāhiye.) — If you're ill, you should rest."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you come, I'll be glad\" — agar tum āoge, to mujhe acchā lagegā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you come, I'll be glad\" — *agar tum āoge, to mujhe acchā lagegā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you have time, do come\" — agar samay hai, to āie",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you have time, do come\" — *agar samay hai, to āie*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you're ill, you should rest\" — agar āp bīmār haiṁ, to āpko ārām karnā cāhiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you're ill, you should rest\" — *agar āp bīmār haiṁ, to āpko ārām karnā cāhiye*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C286-agarto-r1",
+              "prompt": "Say that if it rains you will stay at home; then tell a friend: if you're hungry, eat.",
+              "assesses": [
+                "HI-GRAMMAR-C286-AGAR-TO-01",
+                "HI-GRAMMAR-C286-IF-NOW-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "agar bāriś hogī, to maiṁ ghar par rahūṅgā; agar tumhẽ bhūkh lagī hai, to khānā khāo",
+                "अगर बारिश होगी, तो मैं घर पर रहूँगा। अगर तुम्हें भूख लगी है, तो खाना खाओ।",
+                "अगर बारिश होगी, तो मैं घर पर रहूँगी। अगर तुम्हें भूख लगी है, तो खाना खाओ।"
+              ],
+              "feedback": {
+                "correct": "The future in both halves for what is still to come; the present for what is true now.",
+                "incorrect": "agar opens, to turns: agar bāriś hogī, to …; for now, agar tumhẽ bhūkh lagī hai, to …."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word opens the condition? (अगर.) Which opens what follows? (तो.) \"If it rains, we will stay at home\"? (अगर बारिश होगी, तो हम घर पर रहेंगे: the future in both halves.) \"If you're hungry, eat\"? (अगर तुम्हें भूख लगी है, तो खाना खाओ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C286-chutgayito",
+      "sequence": 15720,
+      "title": "अगर ट्रेन छूट गई, तो … (agar ṭren chūṭ gaī, to …) — if it happens, and otherwise",
+      "headword": "अगर ट्रेन छूट गई, तो …",
+      "romanization": "agar ṭren chūṭ gaī, to …",
+      "gloss": "if the train is missed, then … — the plain past after अगर, and otherwise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:853ec12d91c385de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I missed my train\". (मेरी ट्रेन छूट गई.) Then \"if it rains, we will stay at home\". (अगर बारिश होगी, तो हम घर पर रहेंगे.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the plain past after अगर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगा। agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā. — \"If I miss my train, I'll come by bus.\""
+            },
+            {
+              "kind": "speech",
+              "text": "For one event that may or may not happen, Hindi can put it in the plain past after अगर, as if it had already happened: छूट गई. The result stays in the future. It is the past of a story, used to try a case out."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर आपको देर हो गई, तो मुझे फ़ोन कीजिए। (agar āpko der ho gaī, to mujhe fon kījiye.) — If you're running late, phone me."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर उसने हाँ कहा, तो हम कल चलेंगे। (agar usne hā̃ kahā, to ham kal caleṅge.) — If she says yes, we'll go tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: नहीं तो, otherwise",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जल्दी चलो, नहीं तो देर हो जाएगी। jaldī calo, nahīṃ to der ho jāegī. — \"Hurry up, otherwise we'll be late.\""
+            },
+            {
+              "kind": "speech",
+              "text": "नहीं तो (nahīṃ to) is \"if not, then\": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here हो जाएगी, the future of हो गई."
+            },
+            {
+              "kind": "speech",
+              "text": "खाना खाओ, नहीं तो भूख लगेगी। (khānā khāo, nahīṃ to bhūkh lagegī.) — Eat, or you'll get hungry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If you're running late, phone me\" — agar āpko der ho gaī, to mujhe fon kījiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If you're running late, phone me\" — *agar āpko der ho gaī, to mujhe fon kījiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"If she says yes, we'll go tomorrow\" — agar usne hā̃ kahā, to ham kal caleṅge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"If she says yes, we'll go tomorrow\" — *agar usne hā̃ kahā, to ham kal caleṅge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Eat, or you'll get hungry\" — khānā khāo, nahīṃ to bhūkh lagegī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Eat, or you'll get hungry\" — *khānā khāo, nahīṃ to bhūkh lagegī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C286-chutgayito-r1",
+              "prompt": "Say that if you miss your train you will come by bus, then warn a friend: hurry up, otherwise we'll be late.",
+              "assesses": [
+                "HI-GRAMMAR-C286-IF-PERFECTIVE-01",
+                "HI-GRAMMAR-C286-NAHIN-TO-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā; jaldī calo, nahīṃ to der ho jāegī",
+                "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगा। जल्दी चलो, नहीं तो देर हो जाएगी।",
+                "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगी। जल्दी चलो, नहीं तो देर हो जाएगी।"
+              ],
+              "feedback": {
+                "correct": "chūṭ gaī tries the case out; the result and the warning are in the future.",
+                "incorrect": "After agar, the plain past: chūṭ gaī; then to and the future. For the warning, nahīṃ to and the future."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If I miss my train\"? (अगर मेरी ट्रेन छूट गई.) Which tense goes in the result? (The future.) \"Otherwise\"? (नहीं तो.) \"We'll be late\"? (देर हो जाएगी.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C286-varna",
+      "sequence": 15730,
+      "title": "वरना (varnā) — otherwise, or else",
+      "headword": "वरना",
+      "romanization": "varnā",
+      "gloss": "otherwise, or else",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:207392226eba36e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"hurry up, otherwise we'll be late\". (जल्दी चलो, नहीं तो देर हो जाएगी.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वरना — varnā — \"otherwise, or else\"."
+            },
+            {
+              "kind": "speech",
+              "text": "जल्दी उठो, वरना ट्रेन छूट जाएगी। jaldī uṭho, varnā ṭren chūṭ jāegī. — \"Get up early, or you'll miss the train.\""
+            },
+            {
+              "kind": "speech",
+              "text": "It does the work of नहीं तो in one word, and stands in the same place, before the warning."
+            },
+            {
+              "kind": "speech",
+              "text": "धीरे बोलो, वरना बच्चा जाग जाएगा। (dhīre bolo, varnā baccā jāg jāegā.) — Speak softly, or the child will wake up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वरना (varnā) is usually traced to Persian varna, \"otherwise\". It ends like a Hindi verb in -ना, but it is not one, and it never changes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "varnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *varnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Get up early, or you'll miss the train\" — jaldī uṭho, varnā ṭren chūṭ jāegī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Get up early, or you'll miss the train\" — *jaldī uṭho, varnā ṭren chūṭ jāegī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Speak softly, or the child will wake up\" — dhīre bolo, varnā baccā jāg jāegā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Speak softly, or the child will wake up\" — *dhīre bolo, varnā baccā jāg jāegā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वरना (varnā) mean? (\"Otherwise, or else\".) Which two words does it stand for? (नहीं तो.) Is it a verb? (No: it never changes.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R286-if-and-otherwise",
+      "sequence": 15740,
+      "title": "Review — if, and otherwise",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "if, and otherwise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:caac270959664d14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"if it rains, we will stay at home\". (agar bāriś hogī, to ham ghar par raheṅge.) Then \"or else\". (varnā.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I hope it won't rain tomorrow. If it rains, we will stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I hope it won't rain tomorrow. If it rains, we will stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If you have time, come to the market with me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If you have time, come to the market with me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "If I miss the bus, I'll have to come by train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: If I miss the bus, I'll have to come by train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It has been raining since the morning. If it doesn't stop, we will stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It has been raining since the morning. If it doesn't stop, we will stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Eat now, otherwise you'll be hungry later.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Eat now, otherwise you'll be hungry later.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Leave early, or you'll be late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Leave early, or you'll be late.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"If it rains, we will stay at home\"? (अगर बारिश होगी, तो हम घर पर रहेंगे.) \"If you have time, come\"? (अगर समय है, तो आइए.) \"If I miss the bus\"? (अगर मेरी बस छूट गई.) \"Otherwise\"? (नहीं तो, or वरना (varnā).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

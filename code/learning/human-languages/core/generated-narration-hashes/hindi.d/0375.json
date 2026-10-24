@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:51341218e66b126a",
+  "lessonIds": [
+    "HI-C375-asa",
+    "HI-C375-asanka",
+    "HI-C375-sanket",
+    "HI-C375-isara",
+    "HI-C375-rijhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch375.txt",
+  "json": "hindi/narration/ch375.json",
+  "textHash": "fnv1a64:aca5827386c75704",
+  "jsonHash": "fnv1a64:de7540f3f0de7ac9",
+  "findings": []
+}

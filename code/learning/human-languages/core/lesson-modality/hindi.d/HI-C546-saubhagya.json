@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C546-saubhagya",
+    "language": "hindi",
+    "chapter": 546,
+    "sequence": 30080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40792c43e4510241"
+  },
+  "findings": []
+}

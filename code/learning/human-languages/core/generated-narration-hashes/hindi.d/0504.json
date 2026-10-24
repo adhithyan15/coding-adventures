@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:27644ee381f796af",
+  "lessonIds": [
+    "HI-C504-yaddast",
+    "HI-C504-chari",
+    "HI-C504-pemsan",
+    "HI-C504-bisarna",
+    "HI-C504-virasat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch504.txt",
+  "json": "hindi/narration/ch504.json",
+  "textHash": "fnv1a64:bb1517743e17398b",
+  "jsonHash": "fnv1a64:0ac7fa63b4ccebde",
+  "findings": []
+}

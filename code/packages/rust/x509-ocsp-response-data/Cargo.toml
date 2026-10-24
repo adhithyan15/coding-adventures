@@ -1,0 +1,13 @@
+[package]
+name = "x509-ocsp-response-data"
+version = "0.1.0"
+edition = "2021"
+description = "Allocation-free structural RFC 6960 OCSP ResponseData decoding"
+
+[dependencies]
+der-asn1 = { path = "../der-asn1" }
+der-tlv = { path = "../der-tlv" }
+x509-extensions = { path = "../x509-extensions" }
+x509-name = { path = "../x509-name" }
+x509-ocsp-single-response = { path = "../x509-ocsp-single-response" }
+x509-time = { path = "../x509-time" }

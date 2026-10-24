@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:99227323d6e715db",
+  "lessonIds": [
+    "HI-C451-sair",
+    "HI-C451-paryatak",
+    "HI-C451-nazara",
+    "HI-C451-smarak",
+    "HI-C451-niharna",
+    "HI-R451-review-445-451",
+    "HI-R451-review-final-451"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch451.txt",
+  "json": "hindi/narration/ch451.json",
+  "textHash": "fnv1a64:1d572418ca0bbcca",
+  "jsonHash": "fnv1a64:f0e2b42d71290d4b",
+  "findings": []
+}

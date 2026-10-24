@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C321-gherna",
+    "language": "hindi",
+    "chapter": 321,
+    "sequence": 17700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08af76dbc830474b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C553-tithi",
+    "language": "hindi",
+    "chapter": 553,
+    "sequence": 30450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ae4f7d61e61b36f1"
+  },
+  "findings": []
+}

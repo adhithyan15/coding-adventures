@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 323,
+  "title": "Victory and Defeat",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:6c0c00e58bbcaa7f",
+  "lessons": [
+    {
+      "id": "HI-C323-harana",
+      "sequence": 17790,
+      "title": "हराना (harānā) — to defeat",
+      "headword": "हराना",
+      "romanization": "harānā",
+      "gloss": "to defeat",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f468338ac7273205",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an arrow, then the Hindi for for the most part."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हराना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हराना — harānā — \"to defeat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोटी सेना ने बड़ी सेना को हराया। choṭī senā ne baṛī senā ko harāyā. The small army defeated the big one."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दुश्मन को हराया, usne duśman ko harāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हराना (harānā) is the causative partner of हारना, to lose, and CDIAL 14061 lists both under Sanskrit hārayati: to make the other side lose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "harānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *harānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "choṭī senā ne baṛī senā ko harāyā. — The small army defeated the big one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *choṭī senā ne baṛī senā ko harāyā.* — The small army defeated the big one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an arrow, then the Hindi for for the most part, then say harānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an arrow, then the Hindi for for the most part, then say *harānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हराना (harānā) mean? (\"To defeat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C323-pacharna",
+      "sequence": 17800,
+      "title": "पछाड़ना (pachāṛnā) — to throw down; to overpower",
+      "headword": "पछाड़ना",
+      "romanization": "pachāṛnā",
+      "gloss": "to throw down; to overpower",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b44aaa3424459ebc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for for the most part, then the Hindi for to defeat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पछाड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछाड़ना — pachāṛnā — \"to throw down; to overpower\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक सिपाही ने दो दुश्मनों को पछाड़ा। ek sipāhī ne do duśmanoṁ ko pachāṛā. One soldier overpowered two enemies."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दुश्मन को पछाड़ा, usne duśman ko pachāṛā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछाड़ना (pachāṛnā) is inherited from pracchaṭ, a form CDIAL reconstructs (CDIAL 8493), with the sense of knocking down. It is the wrestler's word: to throw the other to the ground, and so to beat them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachāṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachāṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachāṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachāṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek sipāhī ne do duśmanoṁ ko pachāṛā. — One soldier overpowered two enemies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek sipāhī ne do duśmanoṁ ko pachāṛā.* — One soldier overpowered two enemies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for for the most part, then the Hindi for to defeat, then say pachāṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for for the most part, then the Hindi for to defeat, then say *pachāṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पछाड़ना (pachāṛnā) mean? (\"To throw down; to overpower\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C323-vijay",
+      "sequence": 17810,
+      "title": "विजय (vijay) — a victory",
+      "headword": "विजय",
+      "romanization": "vijay",
+      "gloss": "a victory",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58898fd8c2822dac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to defeat, then the Hindi for to throw down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विजय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजय — vijay — \"a victory\"."
+            },
+            {
+              "kind": "speech",
+              "text": "विजय के बाद शहर में जुलूस निकला। vijay ke bād śahar meṁ julūs niklā. After the victory a procession went through the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विजय (vijay) is Sanskrit vijaya, \"victory\" (Monier-Williams), the formal word beside जीत. Hindi makes it feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijay",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijay*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijay, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijay*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vijay ke bād śahar meṁ julūs niklā. — After the victory a procession went through the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vijay ke bād śahar meṁ julūs niklā.* — After the victory a procession went through the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to defeat, then the Hindi for to throw down, then say vijay again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to defeat, then the Hindi for to throw down, then say *vijay* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विजय (vijay) mean? (\"A victory\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C323-sahid",
+      "sequence": 17820,
+      "title": "शहीद (śahīd) — a martyr",
+      "headword": "शहीद",
+      "romanization": "śahīd",
+      "gloss": "a martyr",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ebb1941d84a9fe5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to throw down, then the Hindi for a victory."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शहीद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शहीद — śahīd — \"a martyr\"."
+            },
+            {
+              "kind": "speech",
+              "text": "युद्ध में सौ सिपाही शहीद हुए। yuddh meṁ sau sipāhī śahīd hue. A hundred soldiers fell in the war."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शहीद (śahīd) is usually traced, through Persian, to Arabic shahīd, \"a witness\" and then one who dies for a cause. शहीद होना is to fall for one's country."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śahīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śahīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuddh meṁ sau sipāhī śahīd hue. — A hundred soldiers fell in the war.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuddh meṁ sau sipāhī śahīd hue.* — A hundred soldiers fell in the war.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to throw down, then the Hindi for a victory, then say śahīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to throw down, then the Hindi for a victory, then say *śahīd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शहीद (śahīd) mean? (\"A martyr\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C323-sandhi",
+      "sequence": 17830,
+      "title": "संधि (sandhi) — a treaty; a peace pact",
+      "headword": "संधि",
+      "romanization": "sandhi",
+      "gloss": "a treaty; a peace pact",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ce942bcfb501d01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a victory, then the Hindi for a martyr."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: संधि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संधि — sandhi — \"a treaty; a peace pact\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आख़िर में दोनों राजाओं ने संधि की। ākhir meṁ donõ rājāoṁ ne sandhi kī. In the end the two kings made a treaty."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "संधि (sandhi) is Sanskrit saṁdhi, \"a joining, an agreement\" (Monier-Williams). Grammar uses the same word for the joining of sounds; history uses it for the joining of two sides."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sandhi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sandhi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ākhir meṁ donõ rājāoṁ ne sandhi kī. — In the end the two kings made a treaty.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ākhir meṁ donõ rājāoṁ ne sandhi kī.* — In the end the two kings made a treaty.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a victory, then the Hindi for a martyr, then say sandhi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a victory, then the Hindi for a martyr, then say *sandhi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does संधि (sandhi) mean? (\"A treaty; a peace pact\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

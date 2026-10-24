@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C483-cust",
+    "language": "hindi",
+    "chapter": 483,
+    "sequence": 26590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da7dcf3c8349c6c0"
+  },
+  "findings": []
+}

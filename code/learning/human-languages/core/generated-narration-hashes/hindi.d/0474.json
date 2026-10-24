@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:551c388d5cae2ba5",
+  "lessonIds": [
+    "HI-C474-aql",
+    "HI-C474-bevkuf",
+    "HI-C474-nadan",
+    "HI-C474-pagal",
+    "HI-C474-bahakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch474.txt",
+  "json": "hindi/narration/ch474.json",
+  "textHash": "fnv1a64:ff4abba5a3618b7d",
+  "jsonHash": "fnv1a64:4c2fe9a616605f77",
+  "findings": []
+}

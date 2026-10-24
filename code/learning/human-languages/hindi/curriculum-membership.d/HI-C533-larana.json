@@ -1,0 +1,11 @@
+{
+  "id": "HI-C533-larana",
+  "pathSegment": "HI-PATH-533-KUSHTI533",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-533-KUSHTI533",
+      "order": 3
+    }
+  ]
+}

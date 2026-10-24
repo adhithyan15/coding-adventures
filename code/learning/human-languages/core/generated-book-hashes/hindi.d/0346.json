@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:09308cf59e0dc6d5",
+  "lessonIds": [
+    "HI-C346-bahas",
+    "HI-C346-tark",
+    "HI-C346-jhagarna",
+    "HI-C346-tokna",
+    "HI-C346-balki"
+  ],
+  "tex": "hindi/book/chapters/ch346-a-heated-argument.tex"
+}

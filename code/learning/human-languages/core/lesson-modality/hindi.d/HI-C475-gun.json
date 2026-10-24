@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C475-gun",
+    "language": "hindi",
+    "chapter": 475,
+    "sequence": 26200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f73dca62d84f9338"
+  },
+  "findings": []
+}

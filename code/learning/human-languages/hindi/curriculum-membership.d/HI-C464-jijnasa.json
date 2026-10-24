@@ -1,0 +1,11 @@
+{
+  "id": "HI-C464-jijnasa",
+  "pathSegment": "HI-PATH-464-UBNA464",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-464-UBNA464",
+      "order": 3
+    }
+  ]
+}

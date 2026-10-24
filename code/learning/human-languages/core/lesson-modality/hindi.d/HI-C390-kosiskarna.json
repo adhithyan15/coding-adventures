@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C390-kosiskarna",
+    "language": "hindi",
+    "chapter": 390,
+    "sequence": 21440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c40b7de4cc40dee"
+  },
+  "findings": []
+}

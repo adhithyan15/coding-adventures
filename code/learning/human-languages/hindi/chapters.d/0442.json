@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Peaks and Mounds",
+  "label": "ch:hi-peaks-and-mounds",
+  "canDo": "I can talk about a summit, a dune, a heap and a straw, and stones rolled down a hill.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C442-lurhkana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can talk about a summit, a dune, a heap and a straw, and stones rolled down a hill.",
+    "assesses": [
+      "HI-LEX-C442-SHIKHAR442-03",
+      "HI-LEX-C442-SHIKHAR442-04",
+      "HI-LEX-C442-SHIKHAR442-05"
+    ]
+  }
+}

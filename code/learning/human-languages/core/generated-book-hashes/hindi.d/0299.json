@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:795df0265d5a71aa",
+  "lessonIds": [
+    "HI-C299-angara",
+    "HI-C299-sulagna",
+    "HI-C299-sola",
+    "HI-C299-bharakna",
+    "HI-C299-phus"
+  ],
+  "tex": "hindi/book/chapters/ch299-fire.tex"
+}

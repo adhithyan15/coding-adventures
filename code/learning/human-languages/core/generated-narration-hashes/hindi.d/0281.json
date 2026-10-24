@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 281,
+  "sourceHash": "fnv1a64:39875e1792a34eb6",
+  "lessonIds": [
+    "HI-C281-janachahiye",
+    "HI-C281-atah",
+    "HI-W281-sign-visarga",
+    "HI-C281-isliye",
+    "HI-R281-advice-and-reasons"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch281.txt",
+  "json": "hindi/narration/ch281.json",
+  "textHash": "fnv1a64:db8682f1fc395e24",
+  "jsonHash": "fnv1a64:e65e831c83ba315d",
+  "findings": []
+}

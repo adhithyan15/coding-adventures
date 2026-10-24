@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C496-bichauna",
+    "language": "hindi",
+    "chapter": 496,
+    "sequence": 27290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1856e631b702321b"
+  },
+  "findings": []
+}

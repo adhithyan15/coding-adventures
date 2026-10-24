@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C323-sahid",
+    "language": "hindi",
+    "chapter": 323,
+    "sequence": 17820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ebb1941d84a9fe5"
+  },
+  "findings": []
+}

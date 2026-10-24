@@ -1,0 +1,19 @@
+{
+  "chapter": 396,
+  "title": "Values Passed On",
+  "label": "ch:hi-values-passed-on",
+  "canDo": "I can say what children will become if they are brought up well.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C396-ratna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can say what children will become if they are brought up well.",
+    "assesses": [
+      "HI-LEX-C396-SANSKAR396-03",
+      "HI-LEX-C396-SANSKAR396-04",
+      "HI-LEX-C396-SANSKAR396-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C415-magana",
+  "pathSegment": "HI-PATH-415-RAJISTAR415",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-415-RAJISTAR415",
+      "order": 4
+    }
+  ]
+}

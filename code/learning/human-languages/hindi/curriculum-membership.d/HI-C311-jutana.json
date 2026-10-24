@@ -1,0 +1,11 @@
+{
+  "id": "HI-C311-jutana",
+  "pathSegment": "HI-PATH-311-MADAD311",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-311-MADAD311",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Trouble in the Town",
+  "label": "ch:hi-trouble-in-the-town",
+  "canDo": "I can tell how trouble broke out and was brought under control.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C316-karfyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can tell how trouble broke out and was brought under control.",
+    "assesses": [
+      "HI-LEX-C316-UPADRAV316-03",
+      "HI-LEX-C316-UPADRAV316-04",
+      "HI-LEX-C316-UPADRAV316-05"
+    ]
+  }
+}

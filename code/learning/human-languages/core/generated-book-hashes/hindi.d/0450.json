@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:23765f2653bc41d7",
+  "lessonIds": [
+    "HI-C450-jharnaa",
+    "HI-C450-ukharna",
+    "HI-C450-jotna",
+    "HI-C450-upajna",
+    "HI-C450-duhna"
+  ],
+  "tex": "hindi/book/chapters/ch450-on-the-farm.tex"
+}

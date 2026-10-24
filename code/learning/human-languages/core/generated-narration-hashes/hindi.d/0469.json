@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 469,
+  "sourceHash": "fnv1a64:65662a73f2843b46",
+  "lessonIds": [
+    "HI-C469-krpan",
+    "HI-C469-mitvyayi",
+    "HI-C469-dan",
+    "HI-C469-lobhi",
+    "HI-C469-bhikhari"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch469.txt",
+  "json": "hindi/narration/ch469.json",
+  "textHash": "fnv1a64:284771ea6a2cf1f7",
+  "jsonHash": "fnv1a64:3d20002aa290bf0d",
+  "findings": []
+}

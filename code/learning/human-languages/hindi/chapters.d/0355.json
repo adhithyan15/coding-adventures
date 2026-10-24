@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Offices and Officials",
+  "label": "ch:hi-offices-and-officials",
+  "canDo": "I can deal with an office and its officials.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C355-sujhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can deal with an office and its officials.",
+    "assesses": [
+      "HI-LEX-C355-VIBHAG355-03",
+      "HI-LEX-C355-VIBHAG355-04",
+      "HI-LEX-C355-VIBHAG355-05"
+    ]
+  }
+}

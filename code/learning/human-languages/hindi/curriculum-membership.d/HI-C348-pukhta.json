@@ -1,0 +1,11 @@
+{
+  "id": "HI-C348-pukhta",
+  "pathSegment": "HI-PATH-348-PRAMAN348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-348-PRAMAN348",
+      "order": 3
+    }
+  ]
+}

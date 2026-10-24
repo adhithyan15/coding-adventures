@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C507-kausal",
+    "language": "hindi",
+    "chapter": 507,
+    "sequence": 28080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cbbb8a84e096fdc"
+  },
+  "findings": []
+}

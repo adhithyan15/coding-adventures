@@ -1,0 +1,11 @@
+{
+  "id": "HI-C365-manvana",
+  "pathSegment": "HI-PATH-365-SIDDHANT365",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-365-SIDDHANT365",
+      "order": 4
+    }
+  ]
+}

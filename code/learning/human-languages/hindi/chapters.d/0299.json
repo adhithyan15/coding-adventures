@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Fire!",
+  "label": "ch:hi-fire",
+  "canDo": "I can say where a fire started and how it spread.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C299-phus",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say where a fire started and how it spread.",
+    "assesses": [
+      "HI-LEX-C299-AAG299-03",
+      "HI-LEX-C299-AAG299-04",
+      "HI-LEX-C299-AAG299-05"
+    ]
+  }
+}

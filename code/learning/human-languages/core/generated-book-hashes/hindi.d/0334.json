@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:1c03429eaf05315a",
+  "lessonIds": [
+    "HI-C334-katha",
+    "HI-C334-rsi",
+    "HI-C334-asram",
+    "HI-C334-paheli",
+    "HI-C334-kahavat"
+  ],
+  "tex": "hindi/book/chapters/ch334-a-tale-of-long-ago.tex"
+}

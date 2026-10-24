@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C418-bagal",
+    "language": "hindi",
+    "chapter": 418,
+    "sequence": 23050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e925820f82088e54"
+  },
+  "findings": []
+}

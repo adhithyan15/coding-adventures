@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:2c2c87eef8044f8f",
+  "lessonIds": [
+    "HI-C381-kas",
+    "HI-C381-afsos",
+    "HI-C381-satana",
+    "HI-C381-gavana",
+    "HI-C381-bhala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch381.txt",
+  "json": "hindi/narration/ch381.json",
+  "textHash": "fnv1a64:829f455e327173a0",
+  "jsonHash": "fnv1a64:3ce7b8bde2a8a28a",
+  "findings": []
+}

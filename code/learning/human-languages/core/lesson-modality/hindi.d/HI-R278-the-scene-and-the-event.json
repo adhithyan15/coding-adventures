@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R278-the-scene-and-the-event",
+    "language": "hindi",
+    "chapter": 278,
+    "sequence": 15370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9ab7a05e2cf52f9"
+  },
+  "findings": []
+}

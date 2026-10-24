@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:08bddb3b323ec8ae",
+  "lessonIds": [
+    "HI-C314-afvah",
+    "HI-C314-carca",
+    "HI-C314-dahsat",
+    "HI-C314-bharkana",
+    "HI-C314-sansani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch314.txt",
+  "json": "hindi/narration/ch314.json",
+  "textHash": "fnv1a64:18f91fe3eac7a7cd",
+  "jsonHash": "fnv1a64:6d8306e30fd6ff1f",
+  "findings": []
+}

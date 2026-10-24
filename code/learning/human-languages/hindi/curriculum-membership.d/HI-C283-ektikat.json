@@ -1,0 +1,11 @@
+{
+  "id": "HI-C283-ektikat",
+  "pathSegment": "HI-PATH-283-TICKETTROUBLE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-283-TICKETTROUBLE",
+      "order": 1
+    }
+  ]
+}

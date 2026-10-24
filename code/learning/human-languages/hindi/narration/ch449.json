@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 449,
+  "title": "Night in the Fields",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c28a24d99af9ea5a",
+  "lessons": [
+    {
+      "id": "HI-C449-siyar",
+      "sequence": 24610,
+      "title": "सियार (siyār) — a jackal",
+      "headword": "सियार",
+      "romanization": "siyār",
+      "gloss": "a jackal",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ed2e9ae373d823e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to peck, then the Hindi for to prick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सियार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सियार — siyār — \"a jackal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को खेतों में सियार घूमते हैं। rāt ko khetoṁ meṁ siyār ghūmte haiṁ. Jackals roam the fields at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सियार (siyār) is a tadbhava of Sanskrit śṛgāla, \"a jackal\" (CDIAL 12578): the g between vowels has dropped and the vowels have run together."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siyār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siyār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko khetoṁ meṁ siyār ghūmte haiṁ. — Jackals roam the fields at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko khetoṁ meṁ siyār ghūmte haiṁ.* — Jackals roam the fields at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to peck, then the Hindi for to prick, then say siyār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to peck, then the Hindi for to prick, then say *siyār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सियार (siyār) mean? (\"A jackal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C449-jugnu",
+      "sequence": 24620,
+      "title": "जुगनू (jugnū) — a firefly",
+      "headword": "जुगनू",
+      "romanization": "jugnū",
+      "gloss": "a firefly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6f51f88c7081805",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to prick, then the Hindi for a jackal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जुगनू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुगनू — jugnū — \"a firefly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को खेतों में जुगनू दिखते हैं। rāt ko khetoṁ meṁ jugnū dikhte haiṁ. You can see fireflies in the fields at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जुगनू (jugnū) is a tadbhava of Sanskrit jyotiriṅgaṇa, \"a firefly\", literally a moving light (CDIAL 5298), which lists Hindi jugnū."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugnū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugnū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jugnū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jugnū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko khetoṁ meṁ jugnū dikhte haiṁ. — You can see fireflies in the fields at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko khetoṁ meṁ jugnū dikhte haiṁ.* — You can see fireflies in the fields at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to prick, then the Hindi for a jackal, then say jugnū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to prick, then the Hindi for a jackal, then say *jugnū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जुगनू (jugnū) mean? (\"A firefly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C449-jhigur",
+      "sequence": 24630,
+      "title": "झींगुर (jhī̃gur) — a cricket (insect)",
+      "headword": "झींगुर",
+      "romanization": "jhī̃gur",
+      "gloss": "a cricket (insect)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9d077d6c3d7df739",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a jackal, then the Hindi for a firefly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झींगुर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झींगुर — jhī̃gur — \"a cricket (insect)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को झींगुर बहुत शोर करते हैं। rāt ko jhī̃gur bahut śor karte haiṁ. Crickets make a lot of noise at night."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झींगुर (jhī̃gur) goes back to jhiṅgura, a form CDIAL reconstructs (CDIAL 5387) and glosses as a cockroach; it lists Hindi jhĩgur, \"a cricket\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhī̃gur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhī̃gur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhī̃gur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhī̃gur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko jhī̃gur bahut śor karte haiṁ. — Crickets make a lot of noise at night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko jhī̃gur bahut śor karte haiṁ.* — Crickets make a lot of noise at night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a jackal, then the Hindi for a firefly, then say jhī̃gur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a jackal, then the Hindi for a firefly, then say *jhī̃gur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झींगुर (jhī̃gur) mean? (\"A cricket (insect)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C449-carna",
+      "sequence": 24640,
+      "title": "चरना (carnā) — to graze",
+      "headword": "चरना",
+      "romanization": "carnā",
+      "gloss": "to graze",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1813ffc5a36b339b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a firefly, then the Hindi for a cricket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरना — carnā — \"to graze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैदान में गायें चर रही थीं। maidān meṁ gāyẽ car rahī thīṁ. Cows were grazing in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह भैंस दिन भर चरी, vah bhaĩs din bhar carī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चरना (carnā) is a tadbhava of Sanskrit carati, \"moves\" and also \"grazes\" (CDIAL 4686), which lists Hindi carnā, \"to move about, graze\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maidān meṁ gāyẽ car rahī thīṁ. — Cows were grazing in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maidān meṁ gāyẽ car rahī thīṁ.* — Cows were grazing in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a firefly, then the Hindi for a cricket, then say carnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a firefly, then the Hindi for a cricket, then say *carnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चरना (carnā) mean? (\"To graze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C449-carana",
+      "sequence": 24650,
+      "title": "चराना (carānā) — to take to graze; to graze (cattle)",
+      "headword": "चराना",
+      "romanization": "carānā",
+      "gloss": "to take to graze; to graze (cattle)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d6fd62b514b51ebd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a cricket, then the Hindi for to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चराना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चराना — carānā — \"to take to graze; to graze (cattle)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक लड़का नदी के किनारे बकरियाँ चरा रहा था। ek laṛkā nadī ke kināre bakriyā̃ carā rahā thā. A boy was grazing goats on the river bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने भेड़ें चराईं, usne bheṛẽ carāīṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चराना (carānā) is the causative partner of चरना (carnā), from Sanskrit carati, \"moves, grazes\" (CDIAL 4686), which lists Hindi carānā, \"to graze\" a herd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "carānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *carānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek laṛkā nadī ke kināre bakriyā̃ carā rahā thā. — A boy was grazing goats on the river bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek laṛkā nadī ke kināre bakriyā̃ carā rahā thā.* — A boy was grazing goats on the river bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a cricket, then the Hindi for to graze, then say carānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a cricket, then the Hindi for to graze, then say *carānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चराना (carānā) mean? (\"To take to graze; to graze (cattle)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

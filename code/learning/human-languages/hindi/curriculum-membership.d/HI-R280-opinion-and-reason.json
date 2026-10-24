@@ -1,0 +1,11 @@
+{
+  "id": "HI-R280-opinion-and-reason",
+  "pathSegment": "HI-PATH-280-OPINIONREASON",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "HI-EXT-280-OPINIONREASON",
+      "order": 5
+    }
+  ]
+}

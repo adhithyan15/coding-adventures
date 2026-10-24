@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:79e402065430efd6",
+  "lessonIds": [
+    "HI-C466-nisthur",
+    "HI-C466-krur",
+    "HI-C466-nek",
+    "HI-C466-sajjan",
+    "HI-C466-kathor"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch466.txt",
+  "json": "hindi/narration/ch466.json",
+  "textHash": "fnv1a64:a511084c203e30b1",
+  "jsonHash": "fnv1a64:09281bad1fef5ef0",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "On the Farm",
+  "label": "ch:hi-on-the-farm",
+  "canDo": "I can say leaves fell and a tree was uprooted, a farmer ploughed, the crop grew and the cow was milked.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C450-duhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can say leaves fell and a tree was uprooted, a farmer ploughed, the crop grew and the cow was milked.",
+    "assesses": [
+      "HI-LEX-C450-JHADNA450-03",
+      "HI-LEX-C450-JHADNA450-04",
+      "HI-LEX-C450-JHADNA450-05"
+    ]
+  }
+}

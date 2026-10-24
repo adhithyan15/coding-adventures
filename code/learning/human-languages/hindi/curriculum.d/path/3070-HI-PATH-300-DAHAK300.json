@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-300-DAHAK300",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "HI-EXT-300-DAHAK300"
+  ],
+  "after": []
+}

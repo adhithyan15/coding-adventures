@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C535-phadna",
+    "language": "hindi",
+    "chapter": 535,
+    "sequence": 29500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a3df3eb8b84fb36e"
+  },
+  "findings": []
+}

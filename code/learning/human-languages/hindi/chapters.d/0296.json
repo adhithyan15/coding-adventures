@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "A Crash on the Road",
+  "label": "ch:hi-a-crash-on-the-road",
+  "canDo": "I can say how an accident on the road happened.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C296-palatna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can say how an accident on the road happened.",
+    "assesses": [
+      "HI-LEX-C296-TAKKAR296-03",
+      "HI-LEX-C296-TAKKAR296-04",
+      "HI-LEX-C296-TAKKAR296-05"
+    ]
+  }
+}

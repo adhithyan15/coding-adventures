@@ -1,0 +1,11 @@
+{
+  "id": "HI-C477-tag",
+  "pathSegment": "HI-PATH-477-HATHELI477",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-477-HATHELI477",
+      "order": 3
+    }
+  ]
+}

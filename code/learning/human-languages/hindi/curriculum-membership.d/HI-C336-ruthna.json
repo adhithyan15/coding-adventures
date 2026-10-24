@@ -1,0 +1,11 @@
+{
+  "id": "HI-C336-ruthna",
+  "pathSegment": "HI-PATH-336-SHAAP336",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-336-SHAAP336",
+      "order": 4
+    }
+  ]
+}

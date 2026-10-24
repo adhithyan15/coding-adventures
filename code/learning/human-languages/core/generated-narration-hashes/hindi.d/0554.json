@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:bfc97caca6b3fec0",
+  "lessonIds": [
+    "HI-C554-sabaq",
+    "HI-C554-antatah",
+    "HI-C554-natijatan",
+    "HI-C554-taqriban",
+    "HI-C554-darasal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch554.txt",
+  "json": "hindi/narration/ch554.json",
+  "textHash": "fnv1a64:c500a89656b7ca4b",
+  "jsonHash": "fnv1a64:168ccd8dcab51b26",
+  "findings": []
+}

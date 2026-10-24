@@ -281,6 +281,30 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-recursive-relationships-11.16.1-visual-corpus.json"
     ));
+    const ER_PARALLEL_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-parallel-relationships-11.16.1-corpus.json"
+    ));
+    const ER_PARALLEL_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-parallel-relationships-11.16.1-visual-corpus.json"
+    ));
+    const ER_LEADING_ASTERISK_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-leading-asterisk-attributes-11.16.1-corpus.json"
+    ));
+    const ER_LEADING_ASTERISK_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-leading-asterisk-attributes-11.16.1-visual-corpus.json"
+    ));
+    const ER_MIXED_RELATIONSHIP_OPERATORS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-mixed-relationship-operators-11.16.1-corpus.json"
+    ));
+    const ER_MIXED_RELATIONSHIP_OPERATORS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-mixed-relationship-operators-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -3140,6 +3164,145 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_er_recursive_relationship_e2e.png")
             .expect("ER recursive relationship PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_parallel_relationships_to_png() {
+        let syntax: Value = serde_json::from_str(ER_PARALLEL_RELATIONSHIPS_CORPUS)
+            .expect("ER parallel relationship corpus JSON");
+        let visual: Value = serde_json::from_str(ER_PARALLEL_RELATIONSHIPS_VISUAL_CORPUS)
+            .expect("ER parallel relationship visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER parallel relationship source"),
+        )
+        .expect("ER parallel relationship fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.relationships.len(), 2);
+        assert_ne!(layout.relationships[0].points, layout.relationships[1].points);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().filter(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(_)
+        )).count() >= 2);
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_parallel_relationships_e2e.png")
+            .expect("ER parallel relationship PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_leading_asterisk_attributes_to_png() {
+        let syntax: Value = serde_json::from_str(ER_LEADING_ASTERISK_ATTRIBUTES_CORPUS)
+            .expect("ER leading-asterisk attribute corpus JSON");
+        let visual: Value = serde_json::from_str(ER_LEADING_ASTERISK_ATTRIBUTES_VISUAL_CORPUS)
+            .expect("ER leading-asterisk attribute visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER leading-asterisk attribute source"),
+        )
+        .expect("ER leading-asterisk attribute fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes.len(), 1);
+        assert_eq!(
+            layout.nodes[0].compartments[0].rows,
+            ["*title: string", "*the_Primary_Key: id [PK]"]
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_leading_asterisk_attributes_e2e.png")
+            .expect("ER leading-asterisk attribute PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_mixed_relationship_operators_to_png() {
+        let syntax: Value = serde_json::from_str(ER_MIXED_RELATIONSHIP_OPERATORS_CORPUS)
+            .expect("ER mixed relationship operator corpus JSON");
+        let visual: Value = serde_json::from_str(ER_MIXED_RELATIONSHIP_OPERATORS_VISUAL_CORPUS)
+            .expect("ER mixed relationship operator visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER mixed relationship operator source"),
+        )
+        .expect("ER mixed relationship operator fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.relationships.len(), 3);
+        assert!(layout.relationships.iter().all(|relationship| {
+            relationship.points.len() >= 2 && relationship.label.is_some()
+        }));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert_eq!(
+            scene
+                .instructions
+                .iter()
+                .filter(|instruction| matches!(
+                    instruction,
+                    PaintInstruction::Path(path)
+                        if path.stroke_dash.as_deref() == Some(&[6.0, 4.0])
+                ))
+                .count(),
+            2
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_mixed_relationship_operators_e2e.png")
+            .expect("ER mixed relationship operator PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

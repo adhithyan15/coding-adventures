@@ -1,0 +1,19 @@
+{
+  "chapter": 433,
+  "title": "Queues and Counters",
+  "label": "ch:hi-queues-and-counters",
+  "canDo": "I can stand in a queue, take a token, wait at a counter and shop at the weekly market.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C433-thamana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can stand in a queue, take a token, wait at a counter and shop at the weekly market.",
+    "assesses": [
+      "HI-LEX-C433-QATAR433-03",
+      "HI-LEX-C433-QATAR433-04",
+      "HI-LEX-C433-QATAR433-05"
+    ]
+  }
+}

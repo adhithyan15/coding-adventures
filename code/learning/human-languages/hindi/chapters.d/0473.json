@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "Talkers and Quiet Ones",
+  "label": "ch:hi-talkers-and-quiet-ones",
+  "canDo": "I can say whether someone talks a lot or keeps quiet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C473-maun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can say whether someone talks a lot or keeps quiet.",
+    "assesses": [
+      "HI-LEX-C473-BATUNI473-03",
+      "HI-LEX-C473-BATUNI473-04",
+      "HI-LEX-C473-BATUNI473-05"
+    ]
+  }
+}

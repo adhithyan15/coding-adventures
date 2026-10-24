@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C441-suryoday",
+    "language": "hindi",
+    "chapter": 441,
+    "sequence": 24210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eab52031a8c76b3e"
+  },
+  "findings": []
+}

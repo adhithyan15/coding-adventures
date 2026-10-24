@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "level": "pre-A1",
+  "mockId": "pre-a1-mock-2",
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 10,
+      "partIds": [
+        "prea1-reading-signs-and-words",
+        "prea1-reading-phrases-and-notices",
+        "prea1-reading-personal-details"
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 10,
+      "partIds": [
+        "prea1-listening-sounds-and-words",
+        "prea1-listening-greeting-responses",
+        "prea1-listening-personal-details"
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 12,
+      "partIds": [
+        "prea1-writing-delayed-recall",
+        "prea1-writing-dictation",
+        "prea1-writing-bounded-production"
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 8,
+      "partIds": [
+        "prea1-speaking-greeting-and-identity",
+        "prea1-speaking-familiar-questions",
+        "prea1-speaking-short-request"
+      ]
+    }
+  ]
+}

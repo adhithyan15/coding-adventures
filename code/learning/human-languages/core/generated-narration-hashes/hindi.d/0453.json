@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 453,
+  "sourceHash": "fnv1a64:e5e54b7619f0ad7f",
+  "lessonIds": [
+    "HI-C453-anand",
+    "HI-C453-utsah",
+    "HI-C453-muskan",
+    "HI-C453-ullas",
+    "HI-C453-prasann"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch453.txt",
+  "json": "hindi/narration/ch453.json",
+  "textHash": "fnv1a64:f14a31a7edd7f360",
+  "jsonHash": "fnv1a64:71f60e57aef7bfa9",
+  "findings": []
+}

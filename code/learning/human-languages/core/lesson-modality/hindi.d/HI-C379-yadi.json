@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C379-yadi",
+    "language": "hindi",
+    "chapter": 379,
+    "sequence": 20840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30ba0f986684fb0a"
+  },
+  "findings": []
+}

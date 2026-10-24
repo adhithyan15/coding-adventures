@@ -1,0 +1,11 @@
+{
+  "id": "HI-C306-mahamari",
+  "pathSegment": "HI-PATH-306-AKAL306",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-306-AKAL306",
+      "order": 3
+    }
+  ]
+}

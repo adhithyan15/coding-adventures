@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C523-chiilna",
+    "language": "hindi",
+    "chapter": 523,
+    "sequence": 28880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:20250266c5f355c4"
+  },
+  "findings": []
+}

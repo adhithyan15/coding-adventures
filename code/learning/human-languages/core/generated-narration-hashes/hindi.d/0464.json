@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:80451642698ae864",
+  "lessonIds": [
+    "HI-C464-ubna",
+    "HI-C464-dilcaspi",
+    "HI-C464-utsuk",
+    "HI-C464-jijnasa",
+    "HI-C464-rocak"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "hindi/narration/ch464.txt",
+  "json": "hindi/narration/ch464.json",
+  "textHash": "fnv1a64:c2ac561e9b4eb141",
+  "jsonHash": "fnv1a64:b273b2451b126b95",
+  "findings": []
+}

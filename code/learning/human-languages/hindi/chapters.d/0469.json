@@ -1,0 +1,19 @@
+{
+  "chapter": 469,
+  "title": "Generous and Mean",
+  "label": "ch:hi-generous-and-mean",
+  "canDo": "I can say whether someone is generous or mean.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C469-bhikhari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say whether someone is generous or mean.",
+    "assesses": [
+      "HI-LEX-C469-UDAR469-03",
+      "HI-LEX-C469-UDAR469-04",
+      "HI-LEX-C469-UDAR469-05"
+    ]
+  }
+}

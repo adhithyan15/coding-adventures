@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:f7cbd5136ae76079",
+  "lessonIds": [
+    "HI-C322-talvar",
+    "HI-C322-dhal",
+    "HI-C322-bhala",
+    "HI-C322-tir",
+    "HI-C322-prayah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch322.txt",
+  "json": "hindi/narration/ch322.json",
+  "textHash": "fnv1a64:db4df40a19eaaccd",
+  "jsonHash": "fnv1a64:9114afa5061f726a",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:3b1c02c53c272d2b",
+  "lessonIds": [
+    "HI-C342-qissa",
+    "HI-C342-atmakatha",
+    "HI-C342-prakasak",
+    "HI-C342-samskaran",
+    "HI-C342-anuvad",
+    "HI-R342-review-336-342",
+    "HI-R342-review-final-342"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch342.txt",
+  "json": "hindi/narration/ch342.json",
+  "textHash": "fnv1a64:b214c806c2a6014d",
+  "jsonHash": "fnv1a64:76592a169a429e28",
+  "findings": []
+}

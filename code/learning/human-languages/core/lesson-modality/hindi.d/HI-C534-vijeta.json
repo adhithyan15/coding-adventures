@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C534-vijeta",
+    "language": "hindi",
+    "chapter": 534,
+    "sequence": 29460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba385ab214ff86f0"
+  },
+  "findings": []
+}

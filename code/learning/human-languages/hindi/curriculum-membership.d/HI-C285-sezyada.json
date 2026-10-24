@@ -1,0 +1,11 @@
+{
+  "id": "HI-C285-sezyada",
+  "pathSegment": "HI-PATH-285-COMPARETIME",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-285-COMPARETIME",
+      "order": 1
+    }
+  ]
+}

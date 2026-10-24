@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C294-jasus",
+    "language": "hindi",
+    "chapter": 294,
+    "sequence": 16320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1827ad48789c1c4f"
+  },
+  "findings": []
+}

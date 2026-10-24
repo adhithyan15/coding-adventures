@@ -1,0 +1,21 @@
+{
+  "chapter": 421,
+  "title": "Settlements and Towns",
+  "label": "ch:hi-settlements-and-towns",
+  "canDo": "I can talk about a settlement, a small town and the countryside, and the people who live there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R421-review-414-421",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about a settlement, a small town and the countryside, and the people who live there.",
+    "assesses": [
+      "HI-LEX-C421-BASTI421-01",
+      "HI-LEX-C421-BASTI421-02",
+      "HI-LEX-C421-BASTI421-03",
+      "HI-LEX-C421-BASTI421-04",
+      "HI-LEX-C421-BASTI421-05"
+    ]
+  }
+}

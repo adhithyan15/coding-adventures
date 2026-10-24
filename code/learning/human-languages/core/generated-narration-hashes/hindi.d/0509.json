@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:23363523e345a2b9",
+  "lessonIds": [
+    "HI-C509-hartal",
+    "HI-C509-istifa",
+    "HI-C509-canda",
+    "HI-C509-manmani",
+    "HI-C509-nara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch509.txt",
+  "json": "hindi/narration/ch509.json",
+  "textHash": "fnv1a64:d33d6c6aabce4c79",
+  "jsonHash": "fnv1a64:7a61f6e079a1bf9c",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C372-karuna",
+    "language": "hindi",
+    "chapter": 372,
+    "sequence": 20490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80d4fdfa844b2393"
+  },
+  "findings": []
+}

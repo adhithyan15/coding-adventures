@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:331ff60eb4475ffd",
+  "lessonIds": [
+    "HI-C372-daya",
+    "HI-C372-karuna",
+    "HI-C372-vafadar",
+    "HI-C372-pap",
+    "HI-C372-thamna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch372.txt",
+  "json": "hindi/narration/ch372.json",
+  "textHash": "fnv1a64:1f879f7cec07b788",
+  "jsonHash": "fnv1a64:5518756eced5459d",
+  "findings": []
+}

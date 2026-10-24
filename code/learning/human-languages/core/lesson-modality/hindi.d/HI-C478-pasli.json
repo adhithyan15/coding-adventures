@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C478-pasli",
+    "language": "hindi",
+    "chapter": 478,
+    "sequence": 26360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d60e55e07abd5273"
+  },
+  "findings": []
+}

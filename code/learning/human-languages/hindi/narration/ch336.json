@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 336,
+  "title": "The Curse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:38dfe457ab9a7e6a",
+  "lessons": [
+    {
+      "id": "HI-C336-tapasya",
+      "sequence": 18460,
+      "title": "तपस्या (tapasyā) — penance; austerity",
+      "headword": "तपस्या",
+      "romanization": "tapasyā",
+      "gloss": "penance; austerity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e08869477bf6ad4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for immortal, then the Hindi for to swallow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तपस्या",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तपस्या — tapasyā — \"penance; austerity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऋषि ने जंगल में बारह साल तपस्या की। ṛṣi ne jaṅgal meṁ bārah sāl tapasyā kī. The sage did penance in the forest for twelve years."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तपस्या (tapasyā) is Sanskrit tapasyā (Monier-Williams), from tapas, heat and then the hard discipline of a holy life."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapasyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapasyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tapasyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tapasyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṛṣi ne jaṅgal meṁ bārah sāl tapasyā kī. — The sage did penance in the forest for twelve years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṛṣi ne jaṅgal meṁ bārah sāl tapasyā kī.* — The sage did penance in the forest for twelve years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for immortal, then the Hindi for to swallow, then say tapasyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for immortal, then the Hindi for to swallow, then say *tapasyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तपस्या (tapasyā) mean? (\"Penance; austerity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C336-sap",
+      "sequence": 18470,
+      "title": "शाप (śāp) — a curse",
+      "headword": "शाप",
+      "romanization": "śāp",
+      "gloss": "a curse",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb1a50b467333f70",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to swallow, then the Hindi for penance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शाप",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शाप — śāp — \"a curse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऋषि ने गुस्से में राजा को शाप दिया। ṛṣi ne gusse meṁ rājā ko śāp diyā. In anger the sage laid a curse on the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शाप (śāp) is Sanskrit śāpa, \"a curse\" (Monier-Williams). Speech also says श्राप. शाप देना is to lay a curse."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṛṣi ne gusse meṁ rājā ko śāp diyā. — In anger the sage laid a curse on the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṛṣi ne gusse meṁ rājā ko śāp diyā.* — In anger the sage laid a curse on the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to swallow, then the Hindi for penance, then say śāp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to swallow, then the Hindi for penance, then say *śāp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शाप (śāp) mean? (\"A curse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C336-kosna",
+      "sequence": 18480,
+      "title": "कोसना (kosnā) — to curse; to rail at",
+      "headword": "कोसना",
+      "romanization": "kosnā",
+      "gloss": "to curse; to rail at",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5894a54525c745a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for penance, then the Hindi for a curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कोसना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोसना — kosnā — \"to curse; to rail at\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बूढ़ी औरत चोर को कोस रही थी। būṛhī aurat cor ko kos rahī thī. The old woman was cursing the thief."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चोर को कोसा, usne cor ko kosā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कोसना (kosnā) goes back to Sanskrit krośati, \"cries out\" (CDIAL 3612). It is everyday cursing in words, not a sage's शाप (śāp)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kosnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kosnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kosnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kosnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "būṛhī aurat cor ko kos rahī thī. — The old woman was cursing the thief.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *būṛhī aurat cor ko kos rahī thī.* — The old woman was cursing the thief.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for penance, then the Hindi for a curse, then say kosnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for penance, then the Hindi for a curse, then say *kosnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कोसना (kosnā) mean? (\"To curse; to rail at\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C336-pachtana",
+      "sequence": 18490,
+      "title": "पछताना (pachtānā) — to regret; to repent",
+      "headword": "पछताना",
+      "romanization": "pachtānā",
+      "gloss": "to regret; to repent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:29c1ba2a85cce378",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a curse, then the Hindi for to curse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पछताना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछताना — pachtānā — \"to regret; to repent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "शाप के बाद राजा बहुत पछताया। śāp ke bād rājā bahut pachtāyā. After the curse the king bitterly regretted what he had done."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह पछताया, vah pachtāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पछताना (pachtānā) is inherited from paścōttāpa, \"repentance\", a form CDIAL reconstructs (CDIAL 8010): a burning that comes after, from paścā, behind, and tāpa, heat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachtānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachtānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachtānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachtānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śāp ke bād rājā bahut pachtāyā. — After the curse the king bitterly regretted what he had done.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śāp ke bād rājā bahut pachtāyā.* — After the curse the king bitterly regretted what he had done.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a curse, then the Hindi for to curse, then say pachtānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a curse, then the Hindi for to curse, then say *pachtānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पछताना (pachtānā) mean? (\"To regret; to repent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C336-ruthna",
+      "sequence": 18500,
+      "title": "रूठना (rūṭhnā) — to sulk; to take offence",
+      "headword": "रूठना",
+      "romanization": "rūṭhnā",
+      "gloss": "to sulk; to take offence",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08627d69fa91316e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to curse, then the Hindi for to regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रूठना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूठना — rūṭhnā — \"to sulk; to take offence\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रानी राजा से रूठ गई। rānī rājā se rūṭh gaī. The queen took offence at the king."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह रूठ गई, vah rūṭh gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रूठना (rūṭhnā) goes back to Sanskrit ruṣṭa, \"angry, offended\" (CDIAL 10791). It is a quiet anger that waits to be soothed with मनाना."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūṭhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūṭhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rūṭhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rūṭhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rānī rājā se rūṭh gaī. — The queen took offence at the king.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rānī rājā se rūṭh gaī.* — The queen took offence at the king.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to curse, then the Hindi for to regret, then say rūṭhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to curse, then the Hindi for to regret, then say *rūṭhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रूठना (rūṭhnā) mean? (\"To sulk; to take offence\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

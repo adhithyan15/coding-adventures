@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:bfc453936dfad05f",
+  "lessonIds": [
+    "HI-C413-saray",
+    "HI-C413-dharmsala",
+    "HI-C413-lift",
+    "HI-C413-thaharna",
+    "HI-C413-bichana",
+    "HI-R413-review-406-413"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch413.txt",
+  "json": "hindi/narration/ch413.json",
+  "textHash": "fnv1a64:9e2ded7f1bf660a4",
+  "jsonHash": "fnv1a64:bed97d0d20d9223c",
+  "findings": []
+}

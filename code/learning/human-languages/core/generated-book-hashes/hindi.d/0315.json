@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:c6c345f5d9c37539",
+  "lessonIds": [
+    "HI-C315-dava",
+    "HI-C315-janta",
+    "HI-C315-ghosna",
+    "HI-C315-jankari",
+    "HI-C315-ttaalna"
+  ],
+  "tex": "hindi/book/chapters/ch315-claims-and-denials.tex"
+}

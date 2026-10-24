@@ -1,0 +1,22 @@
+{
+  "chapter": 283,
+  "title": "Tickets, Trains and Trouble",
+  "label": "ch:hi-tickets-trains-and-trouble",
+  "canDo": "I can buy a ticket and ask when the next train leaves (aglī ṭren kitne baje calegī?), and report a lost bag or a missed train (merā thailā kho gayā, merī ṭren chūṭ gaī).",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R283-at-the-station",
+    "kind": "production",
+    "summary": "Complete HI-R283-at-the-station: buy a ticket, ask about the next train, and report what went wrong.",
+    "assesses": [
+      "HI-LEX-C283-AGLA-01",
+      "HI-LEX-C283-KHONA-01",
+      "HI-GRAMMAR-C283-BUY-TICKET-01",
+      "HI-GRAMMAR-C283-WHEN-LEAVES-01",
+      "HI-GRAMMAR-C283-LOST-REPORT-01",
+      "HI-GRAMMAR-C283-MISSED-01"
+    ]
+  }
+}

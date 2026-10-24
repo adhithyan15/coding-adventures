@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 524,
+  "title": "Cooking and Serving",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d02d0886569a6047",
+  "lessons": [
+    {
+      "id": "HI-C524-galana",
+      "sequence": 28920,
+      "title": "गलाना (galānā) — to cook soft; to soften",
+      "headword": "गलाना",
+      "romanization": "galānā",
+      "gloss": "to cook soft; to soften",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d73d8f8fb6c80694",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to sprinkle (a powder), then the Hindi for to grind coarsely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गलाना — galānā — \"to cook soft; to soften\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दाल को पूरी तरह गलाइए। Dāl ko pūrī tarah galāie. Cook the dal until it is completely soft."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चावल गलाए, usne cāval galāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गलाना (galānā) is the causative of galnā, \"to melt, soften\", which CDIAL files under Sanskrit galati, \"drips, oozes, trickles\" (CDIAL 4074); CDIAL gives Hindi galnā as \"to melt, trickle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dāl ko pūrī tarah galāie. — Cook the dal until it is completely soft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dāl ko pūrī tarah galāie.* — Cook the dal until it is completely soft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to sprinkle (a powder), then the Hindi for to grind coarsely, then say galānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to sprinkle (a powder), then the Hindi for to grind coarsely, then say *galānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गलाना (galānā) mean? (\"To cook soft; to soften\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C524-parosna",
+      "sequence": 28930,
+      "title": "परोसना (parosnā) — to serve (food)",
+      "headword": "परोसना",
+      "romanization": "parosnā",
+      "gloss": "to serve (food)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f52848dfe92ae957",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to grind coarsely, then the Hindi for to cook soft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परोसना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परोसना — parosnā — \"to serve (food)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने मेहमानों को गरम खाना परोसा। Māṁ ne mehmānoṁ ko garam khānā parosā. Mother served the guests hot food."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दाल परोसी, usne dāl parosī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परोसना (parosnā) is a tadbhava, inherited from Sanskrit parivēṣati, \"serves food\" (CDIAL 7888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parosnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parosnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parosnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parosnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Māṁ ne mehmānoṁ ko garam khānā parosā. — Mother served the guests hot food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Māṁ ne mehmānoṁ ko garam khānā parosā.* — Mother served the guests hot food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to grind coarsely, then the Hindi for to cook soft, then say parosnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to grind coarsely, then the Hindi for to cook soft, then say *parosnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परोसना (parosnā) mean? (\"To serve (food)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C524-ghotna",
+      "sequence": 28940,
+      "title": "घोंटना (ghõṭnā) — to grind into a paste; to rub smooth",
+      "headword": "घोंटना",
+      "romanization": "ghõṭnā",
+      "gloss": "to grind into a paste; to rub smooth",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd677ff2d05a7f3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to cook soft, then the Hindi for to serve (food)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घोंटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोंटना — ghõṭnā — \"to grind into a paste; to rub smooth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ पत्थर पर चटनी घोंट रही है। Māṁ patthar par caṭnī ghõṭ rahī hai. Mother is grinding chutney on a stone."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मसाला घोंटा, usne masālā ghõṭā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोंटना (ghõṭnā) is a tadbhava, inherited from Sanskrit ghaṭṭayati, \"rubs\" (CDIAL 4417). CDIAL gives the Hindi verb as \"to rub\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghõṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghõṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghõṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghõṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Māṁ patthar par caṭnī ghõṭ rahī hai. — Mother is grinding chutney on a stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Māṁ patthar par caṭnī ghõṭ rahī hai.* — Mother is grinding chutney on a stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to cook soft, then the Hindi for to serve (food), then say ghõṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to cook soft, then the Hindi for to serve (food), then say *ghõṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घोंटना (ghõṭnā) mean? (\"To grind into a paste; to rub smooth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C524-jamana",
+      "sequence": 28950,
+      "title": "जमाना (jamānā) — to set (curd); to make (something) set",
+      "headword": "जमाना",
+      "romanization": "jamānā",
+      "gloss": "to set (curd); to make (something) set",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50cd84fe559cb303",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to serve (food), then the Hindi for to grind into a paste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जमाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमाना — jamānā — \"to set (curd); to make (something) set\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को माँ ने दूध में जामन डालकर दही जमाया। Rāt ko māṁ ne dūdh meṁ jāman ḍālkar dahī jamāyā. At night my mother added starter to the milk and set the yoghurt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बर्फ़ जमाई, usne barf jamāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जमाना (jamānā) is a tadbhava, inherited from Sanskrit yamyatē, \"is held, is fixed\" (CDIAL 10428). CDIAL lists jamānā, \"to collect\", beside the intransitive jamnā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jamānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jamānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Rāt ko māṁ ne dūdh meṁ jāman ḍālkar dahī jamāyā. — At night my mother added starter to the milk and set the yoghurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Rāt ko māṁ ne dūdh meṁ jāman ḍālkar dahī jamāyā.* — At night my mother added starter to the milk and set the yoghurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to serve (food), then the Hindi for to grind into a paste, then say jamānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to serve (food), then the Hindi for to grind into a paste, then say *jamānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जमाना (jamānā) mean? (\"To set (curd); to make (something) set\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C524-khagalna",
+      "sequence": 28960,
+      "title": "खँगालना (khãgālnā) — to rinse out",
+      "headword": "खँगालना",
+      "romanization": "khãgālnā",
+      "gloss": "to rinse out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5394efce49aee355",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to grind into a paste, then the Hindi for to set (curd)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खँगालना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खँगालना — khãgālnā — \"to rinse out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खाने के बाद उसने गिलास पानी से खँगाले। Khāne ke bād usne gilās pānī se khãgāle. After the meal he rinsed the tumblers with water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बोतल खँगाली, usne botal khãgālī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खँगालना (khãgālnā) is a tadbhava, inherited from khakkhālayati, \"rinses\", a form CDIAL reconstructs from its descendants (CDIAL 3762)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khãgālnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khãgālnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khãgālnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khãgālnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Khāne ke bād usne gilās pānī se khãgāle. — After the meal he rinsed the tumblers with water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Khāne ke bād usne gilās pānī se khãgāle.* — After the meal he rinsed the tumblers with water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to grind into a paste, then the Hindi for to set (curd), then say khãgālnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to grind into a paste, then the Hindi for to set (curd), then say *khãgālnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खँगालना (khãgālnā) mean? (\"To rinse out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-480-SPARSH480",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how something tastes, smells or feels.",
+  "prerequisites": []
+}

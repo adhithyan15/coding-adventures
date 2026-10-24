@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Citizens and Votes",
+  "label": "ch:hi-citizens-and-votes",
+  "canDo": "I can talk about voting and the rights of citizens.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C354-thopna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can talk about voting and the rights of citizens.",
+    "assesses": [
+      "HI-LEX-C354-NAGRIK354-03",
+      "HI-LEX-C354-NAGRIK354-04",
+      "HI-LEX-C354-NAGRIK354-05"
+    ]
+  }
+}

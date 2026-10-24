@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 292,
+  "title": "Robbers on the Road",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee2eb7719a8e2fbd",
+  "lessons": [
+    {
+      "id": "HI-C292-daku",
+      "sequence": 16200,
+      "title": "डाकू (ḍākū) — a bandit",
+      "headword": "डाकू",
+      "romanization": "ḍākū",
+      "gloss": "a bandit",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:31cd9212258903da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for suspicion, then the Hindi for to stare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डाकू",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डाकू — ḍākū — \"a bandit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "रात को दरवाज़ा बंद रखो, नहीं तो डाकू आ जाएँगे। rāt ko darvāzā band rakho, nahīṃ to ḍākū ā jāeṅge. Keep the door shut at night, or the bandits will get in."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comes from ḍākka, \"robbery\", a form CDIAL reconstructs from its descendants (CDIAL 5543). A डाकू (ḍākū) belongs to a gang that robs on the roads and in villages, not a single चोर who steals in secret."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt ko darvāzā band rakho, nahīṃ to ḍākū ā jāeṅge. — Keep the door shut at night, or the bandits will get in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt ko darvāzā band rakho, nahīṃ to ḍākū ā jāeṅge.* — Keep the door shut at night, or the bandits will get in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for suspicion, then the Hindi for to stare, then say ḍākū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for suspicion, then the Hindi for to stare, then say *ḍākū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डाकू (ḍākū) mean? (\"A bandit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C292-lutna",
+      "sequence": 16210,
+      "title": "लूटना (lūṭnā) — to rob",
+      "headword": "लूटना",
+      "romanization": "lūṭnā",
+      "gloss": "to rob",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aaec4af61aae183",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to stare, then the Hindi for a bandit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लूटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूटना — lūṭnā — \"to rob\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डाकुओं ने पूरा गाँव लूटा। ḍākuoṁ ne pūrā gā̃v lūṭā. The bandits robbed the whole village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दुकान लूटी, usne dukān lūṭī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लूटना (lūṭnā) is inherited from luṭṭati, \"plunders\", a form CDIAL reconstructs from its descendants (CDIAL 11078). English loot was taken from this family of words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lūṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lūṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākuoṁ ne pūrā gā̃v lūṭā. — The bandits robbed the whole village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākuoṁ ne pūrā gā̃v lūṭā.* — The bandits robbed the whole village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to stare, then the Hindi for a bandit, then say lūṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to stare, then the Hindi for a bandit, then say *lūṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लूटना (lūṭnā) mean? (\"To rob\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C292-dakaiti",
+      "sequence": 16220,
+      "title": "डकैती (ḍakaitī) — a robbery (by a gang)",
+      "headword": "डकैती",
+      "romanization": "ḍakaitī",
+      "gloss": "a robbery (by a gang)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e8a95cfccb3f3a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bandit, then the Hindi for to rob."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डकैती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डकैती — ḍakaitī — \"a robbery (by a gang)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर फिर डकैती हुई तो गाँव के लोग पुलिस को बुलाएँगे। agar phir ḍakaitī huī to gā̃v ke log pulis ko bulāeṅge. If there is another robbery, the villagers will call the police."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डकैती (ḍakaitī) is ḍakait, a member of a robber gang, with the noun ending -ī; CDIAL 5543 lists ḍakait beside डाकू (ḍākū) under ḍākka, \"robbery\". English dacoit and dacoity were taken from these words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍakaitī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍakaitī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍakaitī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍakaitī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar phir ḍakaitī huī to gā̃v ke log pulis ko bulāeṅge. — If there is another robbery, the villagers will call the police.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar phir ḍakaitī huī to gā̃v ke log pulis ko bulāeṅge.* — If there is another robbery, the villagers will call the police.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bandit, then the Hindi for to rob, then say ḍakaitī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bandit, then the Hindi for to rob, then say *ḍakaitī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डकैती (ḍakaitī) mean? (\"A robbery (by a gang)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C292-banduq",
+      "sequence": 16230,
+      "title": "बंदूक़ (bandūq) — a gun",
+      "headword": "बंदूक़",
+      "romanization": "bandūq",
+      "gloss": "a gun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c36fd5bbf35ecbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to rob, then the Hindi for a robbery (by a gang)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बंदूक़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंदूक़ — bandūq — \"a gun\"."
+            },
+            {
+              "kind": "speech",
+              "text": "एक डाकू के हाथ में बंदूक़ थी। ek ḍākū ke hāth meṁ bandūq thī. One of the bandits had a gun in his hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बंदूक़ (bandūq) is usually traced, through Persian, to Arabic bunduq, a hazelnut and then a small round pellet; the step from pellet to gun is said to have come through the pellet-bow. Hindi also writes it without the dot."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandūq",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandūq*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bandūq, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bandūq*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ek ḍākū ke hāth meṁ bandūq thī. — One of the bandits had a gun in his hand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ek ḍākū ke hāth meṁ bandūq thī.* — One of the bandits had a gun in his hand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to rob, then the Hindi for a robbery (by a gang), then say bandūq again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to rob, then the Hindi for a robbery (by a gang), then say *bandūq* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बंदूक़ (bandūq) mean? (\"A gun\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C292-badhna",
+      "sequence": 16240,
+      "title": "बाँधना (bā̃dhnā) — to tie up; to bind",
+      "headword": "बाँधना",
+      "romanization": "bā̃dhnā",
+      "gloss": "to tie up; to bind",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:74061f9f00c4bfcc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a robbery (by a gang), then the Hindi for a gun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाँधना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाँधना — bā̃dhnā — \"to tie up; to bind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "डाकुओं ने चौकीदार को रस्सी से बाँधा। ḍākuoṁ ne caukīdār ko rassī se bā̃dhā. The bandits tied the watchman up with rope."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने रस्सी बाँधी, usne rassī bā̃dhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाँधना (bā̃dhnā) goes back to Sanskrit bandhati, \"binds\" (CDIAL 9139). A person tied up takes को and the verb stays masculine: चौकीदार को बाँधा; a thing tied agrees: रस्सी बाँधी."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākuoṁ ne caukīdār ko rassī se bā̃dhā. — The bandits tied the watchman up with rope.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākuoṁ ne caukīdār ko rassī se bā̃dhā.* — The bandits tied the watchman up with rope.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a robbery (by a gang), then the Hindi for a gun, then say bā̃dhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a robbery (by a gang), then the Hindi for a gun, then say *bā̃dhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाँधना (bā̃dhnā) mean? (\"To tie up; to bind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

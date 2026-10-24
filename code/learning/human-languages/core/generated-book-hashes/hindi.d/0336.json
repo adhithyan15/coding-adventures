@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:72143ad61a29e98a",
+  "lessonIds": [
+    "HI-C336-tapasya",
+    "HI-C336-sap",
+    "HI-C336-kosna",
+    "HI-C336-pachtana",
+    "HI-C336-ruthna"
+  ],
+  "tex": "hindi/book/chapters/ch336-the-curse.tex"
+}

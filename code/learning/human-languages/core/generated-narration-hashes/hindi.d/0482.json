@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:b6264a7b78dabdfc",
+  "lessonIds": [
+    "HI-C482-qad",
+    "HI-C482-huliya",
+    "HI-C482-savla",
+    "HI-C482-gora",
+    "HI-C482-dubla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch482.txt",
+  "json": "hindi/narration/ch482.json",
+  "textHash": "fnv1a64:c905808e6a90ba6f",
+  "jsonHash": "fnv1a64:41da4aaec558c5f0",
+  "findings": []
+}

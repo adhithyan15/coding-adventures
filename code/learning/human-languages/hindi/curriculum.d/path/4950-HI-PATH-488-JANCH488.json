@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-488-JANCH488",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-488-JANCH488"
+  ],
+  "after": []
+}

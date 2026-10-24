@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 549,
+  "sourceHash": "fnv1a64:bf27d55238207c1e",
+  "lessonIds": [
+    "HI-C549-vikalp",
+    "HI-C549-duvidha",
+    "HI-C549-asmanjas",
+    "HI-C549-tarjih",
+    "HI-C549-hicakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch549.txt",
+  "json": "hindi/narration/ch549.json",
+  "textHash": "fnv1a64:513832a3d0833e98",
+  "jsonHash": "fnv1a64:7acdfc3795d55648",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Sleep",
+  "label": "ch:hi-sleep",
+  "canDo": "I can say how well someone slept.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C496-bichauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can say how well someone slept.",
+    "assesses": [
+      "HI-LEX-C496-NEEND496-03",
+      "HI-LEX-C496-NEEND496-04",
+      "HI-LEX-C496-NEEND496-05"
+    ]
+  }
+}

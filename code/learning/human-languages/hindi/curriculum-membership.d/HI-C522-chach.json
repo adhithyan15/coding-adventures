@@ -1,0 +1,11 @@
+{
+  "id": "HI-C522-chach",
+  "pathSegment": "HI-PATH-522-CHAACH522",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "HI-EXT-522-CHAACH522",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 442,
+  "sourceHash": "fnv1a64:7e070f9a08c2b86f",
+  "lessonIds": [
+    "HI-C442-sikhar",
+    "HI-C442-tila",
+    "HI-C442-dher",
+    "HI-C442-tinka",
+    "HI-C442-lurhkana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch442.txt",
+  "json": "hindi/narration/ch442.json",
+  "textHash": "fnv1a64:9d13c5dc6a1d94f6",
+  "jsonHash": "fnv1a64:71ac474f492fa40c",
+  "findings": []
+}

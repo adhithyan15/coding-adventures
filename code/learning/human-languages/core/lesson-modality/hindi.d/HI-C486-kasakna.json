@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C486-kasakna",
+    "language": "hindi",
+    "chapter": 486,
+    "sequence": 26760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d58964d52e6b0ea6"
+  },
+  "findings": []
+}

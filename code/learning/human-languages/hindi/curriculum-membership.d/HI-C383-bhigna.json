@@ -1,0 +1,11 @@
+{
+  "id": "HI-C383-bhigna",
+  "pathSegment": "HI-PATH-383-SANKAT383",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-383-SANKAT383",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:30bed3161b49856a",
+  "lessonIds": [
+    "HI-C385-chitrana",
+    "HI-C385-mitna",
+    "HI-C385-latarna",
+    "HI-C385-dhalna",
+    "HI-C385-adhura"
+  ],
+  "tex": "hindi/book/chapters/ch385-if-things-go-wrong.tex"
+}

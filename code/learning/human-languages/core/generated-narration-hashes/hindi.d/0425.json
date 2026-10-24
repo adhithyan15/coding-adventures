@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:cb994a069f9ad9a1",
+  "lessonIds": [
+    "HI-C425-halla",
+    "HI-C425-khaderna",
+    "HI-C425-gatar",
+    "HI-C425-badbu",
+    "HI-C425-risna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch425.txt",
+  "json": "hindi/narration/ch425.json",
+  "textHash": "fnv1a64:85901c60b4d24e79",
+  "jsonHash": "fnv1a64:c2825edd01a89009",
+  "findings": []
+}

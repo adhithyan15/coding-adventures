@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C374-anuman",
+    "language": "hindi",
+    "chapter": 374,
+    "sequence": 20590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:329d66f417034338"
+  },
+  "findings": []
+}

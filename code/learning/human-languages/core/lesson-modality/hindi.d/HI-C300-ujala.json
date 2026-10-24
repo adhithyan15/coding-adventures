@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C300-ujala",
+    "language": "hindi",
+    "chapter": 300,
+    "sequence": 16640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5340fdab201b1cf2"
+  },
+  "findings": []
+}

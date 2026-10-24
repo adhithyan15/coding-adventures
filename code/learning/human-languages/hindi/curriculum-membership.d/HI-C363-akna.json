@@ -1,0 +1,11 @@
+{
+  "id": "HI-C363-akna",
+  "pathSegment": "HI-PATH-363-ADHYAYAN363",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-363-ADHYAYAN363",
+      "order": 4
+    }
+  ]
+}

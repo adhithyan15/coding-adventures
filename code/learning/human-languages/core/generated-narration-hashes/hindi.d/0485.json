@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:f524a7039356cfc1",
+  "lessonIds": [
+    "HI-C485-badhazmi",
+    "HI-C485-murcha",
+    "HI-C485-pecis",
+    "HI-C485-ubakna",
+    "HI-C485-dakar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch485.txt",
+  "json": "hindi/narration/ch485.json",
+  "textHash": "fnv1a64:5df3496fa3685203",
+  "jsonHash": "fnv1a64:185b889d75465576",
+  "findings": []
+}

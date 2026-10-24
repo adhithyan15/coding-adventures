@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-R390-review-383-390",
+    "language": "hindi",
+    "chapter": 390,
+    "sequence": 21450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:656f2d741ef95da6"
+  },
+  "findings": []
+}

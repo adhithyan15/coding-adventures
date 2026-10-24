@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:fe5886bde70fffa9",
+  "lessonIds": [
+    "HI-C359-mudda",
+    "HI-C359-samjhauta",
+    "HI-C359-vivad",
+    "HI-C359-ulajhna",
+    "HI-C359-cherna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch359.txt",
+  "json": "hindi/narration/ch359.json",
+  "textHash": "fnv1a64:33c5e2c71a5df284",
+  "jsonHash": "fnv1a64:16cf53df9085b406",
+  "findings": []
+}

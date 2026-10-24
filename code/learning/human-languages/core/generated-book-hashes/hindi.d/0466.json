@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:33d1f430400d7f45",
+  "lessonIds": [
+    "HI-C466-nisthur",
+    "HI-C466-krur",
+    "HI-C466-nek",
+    "HI-C466-sajjan",
+    "HI-C466-kathor"
+  ],
+  "tex": "hindi/book/chapters/ch466-kind-and-cruel.tex"
+}

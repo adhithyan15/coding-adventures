@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:1aaee8e1a6f2bf53",
+  "lessonIds": [
+    "HI-C440-dhul",
+    "HI-C440-ghirna",
+    "HI-C440-thamnaintr",
+    "HI-C440-chatnaintr",
+    "HI-C440-urana"
+  ],
+  "tex": "hindi/book/chapters/ch440-clouds-gather-and-clear.tex"
+}

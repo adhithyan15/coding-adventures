@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Goods and Stock",
+  "label": "ch:hi-goods-and-stock",
+  "canDo": "I can talk about goods, stores and packets, read a label and get something wrapped.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C432-lapetna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can talk about goods, stores and packets, read a label and get something wrapped.",
+    "assesses": [
+      "HI-LEX-C432-MAAL432-03",
+      "HI-LEX-C432-MAAL432-04",
+      "HI-LEX-C432-MAAL432-05"
+    ]
+  }
+}

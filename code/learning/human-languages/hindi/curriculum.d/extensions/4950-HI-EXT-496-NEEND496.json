@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-496-NEEND496",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how well someone slept.",
+  "prerequisites": []
+}

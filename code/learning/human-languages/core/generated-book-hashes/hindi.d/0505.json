@@ -1,0 +1,15 @@
+{
+  "language": "hindi",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:5ad1f2cb5cbfb2a7",
+  "lessonIds": [
+    "HI-C505-sok",
+    "HI-C505-smasan",
+    "HI-C505-cita",
+    "HI-C505-vidhva",
+    "HI-C505-dafnana",
+    "HI-R505-review-499-505",
+    "HI-R505-review-final-505"
+  ],
+  "tex": "hindi/book/chapters/ch505-mourning.tex"
+}

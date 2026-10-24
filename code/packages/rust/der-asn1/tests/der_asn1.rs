@@ -1,8 +1,8 @@
 use der_asn1::{
     decode_bit_string, decode_boolean, decode_enumerated, decode_ia5_string,
-    decode_implicit_bit_string, decode_implicit_ia5_string, decode_implicit_object_identifier,
-    decode_implicit_octet_string, decode_integer, decode_null, decode_object_identifier,
-    decode_octet_string, Asn1Decoder, Asn1ErrorKind, Asn1Limits,
+    decode_implicit_bit_string, decode_implicit_ia5_string, decode_implicit_null,
+    decode_implicit_object_identifier, decode_implicit_octet_string, decode_integer, decode_null,
+    decode_object_identifier, decode_octet_string, Asn1Decoder, Asn1ErrorKind, Asn1Limits,
 };
 
 fn decode(input: &[u8]) -> (Asn1Decoder, der_asn1::Asn1Element<'_>) {
@@ -56,6 +56,28 @@ fn implicit_primitive_values_require_the_exact_context_tag() {
             Asn1ErrorKind::UnexpectedTag
         );
     }
+}
+
+#[test]
+fn implicit_null_requires_the_exact_primitive_tag_and_empty_contents() {
+    for (input, tag_number) in [(&[0x80, 0x00][..], 0), (&[0x82, 0x00][..], 2)] {
+        let (_, element) = decode(input);
+        decode_implicit_null(element, tag_number).unwrap();
+    }
+
+    for input in [&[0x05, 0x00][..], &[0xa0, 0x00], &[0x81, 0x00]] {
+        let (_, element) = decode(input);
+        assert_eq!(
+            decode_implicit_null(element, 0).unwrap_err().kind(),
+            Asn1ErrorKind::UnexpectedTag
+        );
+    }
+
+    let (_, nonempty) = decode(&[0x80, 0x01, 0xa5]);
+    let error = decode_implicit_null(nonempty, 0).unwrap_err();
+    assert_eq!(error.kind(), Asn1ErrorKind::NonEmptyNull);
+    assert_eq!(error.offset(), 2);
+    assert!(!error.to_string().contains("a5"));
 }
 
 #[test]

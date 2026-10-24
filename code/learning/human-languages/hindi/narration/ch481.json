@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 481,
+  "title": "Lying Down and Getting About",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:42b9c7938976f19c",
+  "lessons": [
+    {
+      "id": "HI-C481-letna",
+      "sequence": 26480,
+      "title": "लेटना (leṭnā) — to lie down",
+      "headword": "लेटना",
+      "romanization": "leṭnā",
+      "gloss": "to lie down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fccc084d8b1d30f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an aroma, then the Hindi for to lick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लेटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेटना — leṭnā — \"to lie down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खाने के बाद दादा थोड़ी देर लेटते हैं। khāne ke bād dādā thoṛī der leṭte haiṁ. After eating, my grandfather lies down for a while."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह बिस्तर पर लेट गया, vah bistar par leṭ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लेटना (leṭnā) is a tadbhava: CDIAL lists Hindi leṭnā, \"to lie down\", under Sanskrit lēṭyáti (CDIAL 11109)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *leṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "leṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *leṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāne ke bād dādā thoṛī der leṭte haiṁ. — After eating, my grandfather lies down for a while.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāne ke bād dādā thoṛī der leṭte haiṁ.* — After eating, my grandfather lies down for a while.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an aroma, then the Hindi for to lick, then say leṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an aroma, then the Hindi for to lick, then say *leṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लेटना (leṭnā) mean? (\"To lie down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C481-sikorna",
+      "sequence": 26490,
+      "title": "सिकोड़ना (sikoṛnā) — to draw in; to screw up (the face)",
+      "headword": "सिकोड़ना",
+      "romanization": "sikoṛnā",
+      "gloss": "to draw in; to screw up (the face)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46272a52bdc1803f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to lick, then the Hindi for to lie down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सिकोड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिकोड़ना — sikoṛnā — \"to draw in; to screw up (the face)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ठंड में दादी ने रजाई में पैर सिकोड़े। ṭhaṇḍ meṁ dādī ne rajāī meṁ pair sikoṛe. In the cold, my grandmother drew her feet up under the quilt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने नाक सिकोड़ी, usne nāk sikoṛī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सिकोड़ना (sikoṛnā) is a tadbhava: CDIAL lists Hindi sikoṛnā, \"to contract, compress, crumple together\", under saṁkōṭayati, a form it reconstructs (CDIAL 12833). nāk sikoṛnā, \"to screw up one's nose\", is to show distaste."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikoṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikoṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sikoṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sikoṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhaṇḍ meṁ dādī ne rajāī meṁ pair sikoṛe. — In the cold, my grandmother drew her feet up under the quilt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhaṇḍ meṁ dādī ne rajāī meṁ pair sikoṛe.* — In the cold, my grandmother drew her feet up under the quilt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to lick, then the Hindi for to lie down, then say sikoṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to lick, then the Hindi for to lie down, then say *sikoṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सिकोड़ना (sikoṛnā) mean? (\"To draw in; to screw up (the face)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C481-lagrana",
+      "sequence": 26500,
+      "title": "लँगड़ाना (lãgṛānā) — to limp",
+      "headword": "लँगड़ाना",
+      "romanization": "lãgṛānā",
+      "gloss": "to limp",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a7b145296dfcbc0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to lie down, then the Hindi for to draw in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लँगड़ाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लँगड़ाना — lãgṛānā — \"to limp\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मोच की वजह से अरुण लँगड़ा रहा था। moc kī vajah se Aruṇ lãgṛā rahā thā. Arun was limping because of a sprain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह लँगड़ाया, vah lãgṛāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लँगड़ाना (lãgṛānā) is a tadbhava: CDIAL lists Hindi lãgṛānā, \"to limp\", under lakka, a form it reconstructs (CDIAL 10877)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lãgṛānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lãgṛānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lãgṛānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lãgṛānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moc kī vajah se Aruṇ lãgṛā rahā thā. — Arun was limping because of a sprain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moc kī vajah se Aruṇ lãgṛā rahā thā.* — Arun was limping because of a sprain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to lie down, then the Hindi for to draw in, then say lãgṛānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to lie down, then the Hindi for to draw in, then say *lãgṛānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लँगड़ाना (lãgṛānā) mean? (\"To limp\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C481-ucakna",
+      "sequence": 26510,
+      "title": "उचकना (ucaknā) — to stand on tiptoe; to spring up",
+      "headword": "उचकना",
+      "romanization": "ucaknā",
+      "gloss": "to stand on tiptoe; to spring up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e39a1792954a502",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to draw in, then the Hindi for to limp."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उचकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उचकना — ucaknā — \"to stand on tiptoe; to spring up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ऊपर की अलमारी तक पहुँचने के लिए मीरा उचकी। ūpar kī almārī tak pahũcne ke liye Mīrā ucakī. Mira stood on tiptoe to reach the top cupboard."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह उचका, vah ucakā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उचकना (ucaknā) is a tadbhava: CDIAL lists Hindi ucaknā, \"to leap up\", under Sanskrit ucca, \"high\" (CDIAL 1634): to push oneself higher."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ucaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ucaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ucaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ucaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūpar kī almārī tak pahũcne ke liye Mīrā ucakī. — Mira stood on tiptoe to reach the top cupboard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūpar kī almārī tak pahũcne ke liye Mīrā ucakī.* — Mira stood on tiptoe to reach the top cupboard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to draw in, then the Hindi for to limp, then say ucaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to draw in, then the Hindi for to limp, then say *ucaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उचकना (ucaknā) mean? (\"To stand on tiptoe; to spring up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C481-kudna",
+      "sequence": 26520,
+      "title": "कूदना (kūdnā) — to jump",
+      "headword": "कूदना",
+      "romanization": "kūdnā",
+      "gloss": "to jump",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30cf6ff180005756",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to limp, then the Hindi for to stand on tiptoe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कूदना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूदना — kūdnā — \"to jump\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चे ख़ुशी से पानी में कूद पड़े। bacce khuśī se pānī meṁ kūd paṛe. The children jumped into the water with joy."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह पानी में कूदा, vah pānī meṁ kūdā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कूदना (kūdnā) is a tadbhava: CDIAL lists Hindi kūdnā, \"to jump\", under Sanskrit kūrdati, \"leaps\" (CDIAL 3412)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūdnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūdnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kūdnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kūdnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bacce khuśī se pānī meṁ kūd paṛe. — The children jumped into the water with joy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bacce khuśī se pānī meṁ kūd paṛe.* — The children jumped into the water with joy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to limp, then the Hindi for to stand on tiptoe, then say kūdnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to limp, then the Hindi for to stand on tiptoe, then say *kūdnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कूदना (kūdnā) mean? (\"To jump\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

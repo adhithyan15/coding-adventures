@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:73d8760b02850a40",
+  "lessonIds": [
+    "HI-C409-eyarport",
+    "HI-C409-viman",
+    "HI-C409-payalat",
+    "HI-C409-uran",
+    "HI-C409-agaman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch409.txt",
+  "json": "hindi/narration/ch409.json",
+  "textHash": "fnv1a64:e61082e6043fe896",
+  "jsonHash": "fnv1a64:4fe3ea18749ece2a",
+  "findings": []
+}

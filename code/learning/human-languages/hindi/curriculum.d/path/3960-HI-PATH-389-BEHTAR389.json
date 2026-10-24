@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-389-BEHTAR389",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-389-BEHTAR389"
+  ],
+  "after": []
+}

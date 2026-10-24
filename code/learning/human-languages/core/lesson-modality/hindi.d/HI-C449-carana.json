@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C449-carana",
+    "language": "hindi",
+    "chapter": 449,
+    "sequence": 24650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d6fd62b514b51ebd"
+  },
+  "findings": []
+}

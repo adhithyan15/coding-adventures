@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:09e61ced5f6a8a3f",
+  "lessonIds": [
+    "HI-C324-praja",
+    "HI-C324-hukm",
+    "HI-C324-gulam",
+    "HI-C324-vidroh",
+    "HI-C324-lalkarna"
+  ],
+  "tex": "hindi/book/chapters/ch324-rebellion.tex"
+}

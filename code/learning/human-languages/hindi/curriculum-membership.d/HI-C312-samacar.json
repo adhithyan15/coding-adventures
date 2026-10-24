@@ -1,0 +1,11 @@
+{
+  "id": "HI-C312-samacar",
+  "pathSegment": "HI-PATH-312-SAMACHAR312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-312-SAMACHAR312",
+      "order": 1
+    }
+  ]
+}

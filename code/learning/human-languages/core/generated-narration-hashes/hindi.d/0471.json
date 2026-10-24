@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:2033b5a5e6bfa2ae",
+  "lessonIds": [
+    "HI-C471-vinamra",
+    "HI-C471-badtamiz",
+    "HI-C471-lihaz",
+    "HI-C471-sistacar",
+    "HI-C471-cirhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch471.txt",
+  "json": "hindi/narration/ch471.json",
+  "textHash": "fnv1a64:09490d0e9cb017de",
+  "jsonHash": "fnv1a64:bd635f34a02c612c",
+  "findings": []
+}

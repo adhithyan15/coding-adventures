@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:953d588cf299ab09",
+  "lessonIds": [
+    "HI-C334-katha",
+    "HI-C334-rsi",
+    "HI-C334-asram",
+    "HI-C334-paheli",
+    "HI-C334-kahavat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch334.txt",
+  "json": "hindi/narration/ch334.json",
+  "textHash": "fnv1a64:08799f62c5df7727",
+  "jsonHash": "fnv1a64:a3f6163f555ccce6",
+  "findings": []
+}

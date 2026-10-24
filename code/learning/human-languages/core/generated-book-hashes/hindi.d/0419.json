@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:94bdc60a254aadae",
+  "lessonIds": [
+    "HI-C419-tiraha",
+    "HI-C419-cakkar",
+    "HI-C419-nisan",
+    "HI-C419-imarat",
+    "HI-C419-bord"
+  ],
+  "tex": "hindi/book/chapters/ch419-landmarks.tex"
+}

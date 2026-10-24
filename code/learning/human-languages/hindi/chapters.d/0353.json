@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Who Governs",
+  "label": "ch:hi-who-governs",
+  "canDo": "I can say who makes the rules and who is to blame.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C353-thahrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say who makes the rules and who is to blame.",
+    "assesses": [
+      "HI-LEX-C353-SHASAN353-03",
+      "HI-LEX-C353-SHASAN353-04",
+      "HI-LEX-C353-SHASAN353-05"
+    ]
+  }
+}

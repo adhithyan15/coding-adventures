@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-408-MIL408",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how far apart two places are, in miles or in kos, and say a driver went too fast.",
+  "prerequisites": []
+}

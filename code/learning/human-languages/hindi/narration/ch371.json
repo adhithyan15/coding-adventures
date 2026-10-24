@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 371,
+  "title": "Even So",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:96ea3eb8dfe3f043",
+  "lessons": [
+    {
+      "id": "HI-C371-halaki",
+      "sequence": 20430,
+      "title": "हालाँकि (hālā̃ki) — although",
+      "headword": "हालाँकि",
+      "romanization": "hālā̃ki",
+      "gloss": "although",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1fd5b13f091bc48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a political party, then the Hindi for to fix (a date)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हालाँकि",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हालाँकि — hālā̃ki — \"although\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हालाँकि बारिश हो रही थी, फिर भी हम बाज़ार गए। hālā̃ki bāriś ho rahī thī, phir bhī ham bāzār gae. Although it was raining, we still went to the market."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हालाँकि (hālā̃ki) is usually traced to Persian hālānki, \"although\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālā̃ki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālā̃ki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālā̃ki, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālā̃ki*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālā̃ki bāriś ho rahī thī, phir bhī ham bāzār gae. — Although it was raining, we still went to the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālā̃ki bāriś ho rahī thī, phir bhī ham bāzār gae.* — Although it was raining, we still went to the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a political party, then the Hindi for to fix (a date), then say hālā̃ki again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a political party, then the Hindi for to fix (a date), then say *hālā̃ki* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हालाँकि (hālā̃ki) mean? (\"Although\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C371-bavjud",
+      "sequence": 20440,
+      "title": "बावजूद (bāvjūd) — despite (के बावजूद)",
+      "headword": "बावजूद",
+      "romanization": "bāvjūd",
+      "gloss": "despite (के बावजूद)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d69da77c1300a7c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to fix (a date), then the Hindi for although."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बावजूद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बावजूद — bāvjūd — \"despite (के बावजूद)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बीमारी के बावजूद वह काम पर आया। bīmārī ke bāvjūd vah kām par āyā. Despite being ill, he came to work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बावजूद (bāvjūd) is usually traced to Persian bāvujūd, \"with the existence (of)\". Its second part is Arabic wujūd, \"existence\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvjūd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvjūd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāvjūd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāvjūd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīmārī ke bāvjūd vah kām par āyā. — Despite being ill, he came to work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīmārī ke bāvjūd vah kām par āyā.* — Despite being ill, he came to work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to fix (a date), then the Hindi for although, then say bāvjūd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to fix (a date), then the Hindi for although, then say *bāvjūd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बावजूद (bāvjūd) mean? (\"Despite (के बावजूद (bāvjūd))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C371-bajay",
+      "sequence": 20450,
+      "title": "बजाय (bajāy) — instead of (के बजाय)",
+      "headword": "बजाय",
+      "romanization": "bajāy",
+      "gloss": "instead of (के बजाय)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f15796e4bc36a51b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for although, then the Hindi for despite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बजाय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजाय — bajāy — \"instead of (के बजाय)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चाय के बजाय दूध लीजिए। cāy ke bajāy dūdh lījie. Have milk instead of tea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बजाय (bajāy) is usually traced to Persian bajāy, \"in place of\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bajāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bajāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cāy ke bajāy dūdh lījie. — Have milk instead of tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cāy ke bajāy dūdh lījie.* — Have milk instead of tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for although, then the Hindi for despite, then say bajāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for although, then the Hindi for despite, then say *bajāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बजाय (bajāy) mean? (\"Instead of (के बजाय (bajāy))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C371-alava",
+      "sequence": 20460,
+      "title": "अलावा (alāvā) — besides, apart from (के अलावा)",
+      "headword": "अलावा",
+      "romanization": "alāvā",
+      "gloss": "besides, apart from (के अलावा)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8119b7b43fc92da4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for despite, then the Hindi for instead of."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अलावा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अलावा — alāvā — \"besides, apart from (के अलावा)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हिंदी के अलावा मैं अंग्रेज़ी भी बोलता हूँ। hindī ke alāvā maiṁ angrezī bhī boltā hūṁ. Besides Hindi, I also speak English."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अलावा (alāvā) is usually traced to Arabic ʿalāwa, \"an addition\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alāvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alāvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "alāvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *alāvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hindī ke alāvā maiṁ angrezī bhī boltā hūṁ. — Besides Hindi, I also speak English.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hindī ke alāvā maiṁ angrezī bhī boltā hūṁ.* — Besides Hindi, I also speak English.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for despite, then the Hindi for instead of, then say alāvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for despite, then the Hindi for instead of, then say *alāvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अलावा (alāvā) mean? (\"Besides, apart from (के अलावा (alāvā))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C371-arna",
+      "sequence": 20470,
+      "title": "अड़ना (aṛnā) — to dig one's heels in, to insist",
+      "headword": "अड़ना",
+      "romanization": "aṛnā",
+      "gloss": "to dig one's heels in, to insist",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8200c8fa43ba233a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for instead of, then the Hindi for apart from."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अड़ना — aṛnā — \"to dig one's heels in, to insist\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चा नए खिलौने के लिए अड़ गया। baccā nae khilaune ke liye aṛ gayā. The child dug his heels in over a new toy."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह अपनी बात पर अड़ गया, vah apnī bāt par aṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अड़ना (aṛnā) is inherited from aḍ, \"stop\", a form CDIAL reconstructs from its descendants (CDIAL 187)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccā nae khilaune ke liye aṛ gayā. — The child dug his heels in over a new toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccā nae khilaune ke liye aṛ gayā.* — The child dug his heels in over a new toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for instead of, then the Hindi for apart from, then say aṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for instead of, then the Hindi for apart from, then say *aṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अड़ना (aṛnā) mean? (\"To dig one's heels in, to insist\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

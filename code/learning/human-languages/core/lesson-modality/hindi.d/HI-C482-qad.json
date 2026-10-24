@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C482-qad",
+    "language": "hindi",
+    "chapter": 482,
+    "sequence": 26530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee4543e1021448c1"
+  },
+  "findings": []
+}

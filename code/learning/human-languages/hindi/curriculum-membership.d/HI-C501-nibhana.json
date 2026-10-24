@@ -1,0 +1,11 @@
+{
+  "id": "HI-C501-nibhana",
+  "pathSegment": "HI-PATH-501-NATA501",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-501-NATA501",
+      "order": 3
+    }
+  ]
+}

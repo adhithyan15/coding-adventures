@@ -1,0 +1,19 @@
+{
+  "chapter": 357,
+  "title": "What We Value",
+  "label": "ch:hi-what-we-value",
+  "canDo": "I can say what a family or a village values.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C357-apnana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say what a family or a village values.",
+    "assesses": [
+      "HI-LEX-C357-MULYA357-03",
+      "HI-LEX-C357-MULYA357-04",
+      "HI-LEX-C357-MULYA357-05"
+    ]
+  }
+}

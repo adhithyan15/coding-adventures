@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Trouble at the Factory",
+  "label": "ch:hi-trouble-at-the-factory",
+  "canDo": "I can talk about strikes, collections and leaving a job.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C509-nara",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about strikes, collections and leaving a job.",
+    "assesses": [
+      "HI-LEX-C509-HADTAL509-03",
+      "HI-LEX-C509-HADTAL509-04",
+      "HI-LEX-C509-HADTAL509-05"
+    ]
+  }
+}

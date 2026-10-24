@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C446-khilna",
+    "language": "hindi",
+    "chapter": 446,
+    "sequence": 24490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7eb1b4f74796f9c8"
+  },
+  "findings": []
+}

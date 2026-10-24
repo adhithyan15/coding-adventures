@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 472,
+  "title": "Lazy or Brisk",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3730c8679db1659d",
+  "lessons": [
+    {
+      "id": "HI-C472-phurtila",
+      "sequence": 26020,
+      "title": "फुर्तीला (phurtīlā) — nimble; brisk",
+      "headword": "फुर्तीला",
+      "romanization": "phurtīlā",
+      "gloss": "nimble; brisk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e30b36f6c34d8e55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for etiquette, then the Hindi for to tease."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फुर्तीला",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुर्तीला — phurtīlā — \"nimble; brisk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "फुर्तीला खिलाड़ी गेंद को जल्दी पकड़ लेता है। phurtīlā khilāṛī gẽd ko jaldī pakaṛ letā hai. A nimble player catches the ball quickly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फुर्तीला (phurtīlā) is phurtī, \"briskness\", with the ending -īlā, \"full of\"; CDIAL lists Hindi phurtī, \"activity\", under Sanskrit sphuráti, \"darts, quivers\" (CDIAL 13849)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phurtīlā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phurtīlā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phurtīlā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phurtīlā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phurtīlā khilāṛī gẽd ko jaldī pakaṛ letā hai. — A nimble player catches the ball quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phurtīlā khilāṛī gẽd ko jaldī pakaṛ letā hai.* — A nimble player catches the ball quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for etiquette, then the Hindi for to tease, then say phurtīlā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for etiquette, then the Hindi for to tease, then say *phurtīlā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फुर्तीला (phurtīlā) mean? (\"Nimble; brisk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C472-sust",
+      "sequence": 26030,
+      "title": "सुस्त (sust) — sluggish; slack",
+      "headword": "सुस्त",
+      "romanization": "sust",
+      "gloss": "sluggish; slack",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e31a5d4232a7e54",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to tease, then the Hindi for nimble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुस्त",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुस्त — sust — \"sluggish; slack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गर्मी में सब लोग सुस्त हो जाते हैं। garmī meṁ sab log sust ho jāte haiṁ. In the heat everyone becomes sluggish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुस्त (sust) is usually traced to Persian sust, \"weak, slack\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sust",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sust*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sust, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sust*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmī meṁ sab log sust ho jāte haiṁ. — In the heat everyone becomes sluggish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmī meṁ sab log sust ho jāte haiṁ.* — In the heat everyone becomes sluggish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to tease, then the Hindi for nimble, then say sust again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to tease, then the Hindi for nimble, then say *sust* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुस्त (sust) mean? (\"Sluggish; slack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C472-nikamma",
+      "sequence": 26040,
+      "title": "निकम्मा (nikammā) — good-for-nothing; idle",
+      "headword": "निकम्मा",
+      "romanization": "nikammā",
+      "gloss": "good-for-nothing; idle",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef1ebbd08f82df77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for nimble, then the Hindi for sluggish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निकम्मा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निकम्मा — nikammā — \"good-for-nothing; idle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह लड़का निकम्मा है, दिन भर कुछ नहीं करता। vah laṛkā nikammā hai, din bhar kuch nahīṃ kartā. That boy is good for nothing; he does nothing all day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निकम्मा (nikammā) is a tadbhava: CDIAL lists Hindi nikammā, \"useless, unemployed\", under Sanskrit niṣkarman (CDIAL 7475), from niḥ, \"without\", and karman, \"work\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikammā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikammā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nikammā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nikammā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah laṛkā nikammā hai, din bhar kuch nahīṃ kartā. — That boy is good for nothing; he does nothing all day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah laṛkā nikammā hai, din bhar kuch nahīṃ kartā.* — That boy is good for nothing; he does nothing all day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for nimble, then the Hindi for sluggish, then say nikammā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for nimble, then the Hindi for sluggish, then say *nikammā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निकम्मा (nikammā) mean? (\"Good-for-nothing; idle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C472-karmath",
+      "sequence": 26050,
+      "title": "कर्मठ (karmaṭh) — dedicated; diligent in work",
+      "headword": "कर्मठ",
+      "romanization": "karmaṭh",
+      "gloss": "dedicated; diligent in work",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aedd587a8fda77d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for sluggish, then the Hindi for good-for-nothing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कर्मठ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्मठ — karmaṭh — \"dedicated; diligent in work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा की माँ बहुत कर्मठ हैं, सुबह से रात तक काम करती हैं। Mīrā kī māṁ bahut karmaṭh haiṁ, subah se rāt tak kām kartī haiṁ. Mira's mother is very dedicated; she works from morning till night."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कर्मठ (karmaṭh) is a tatsama, borrowed from Sanskrit karmaṭha, \"capable of work; working diligently\" (Monier-Williams), from karman, \"work\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karmaṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karmaṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karmaṭh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karmaṭh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā kī māṁ bahut karmaṭh haiṁ, subah se rāt tak kām kartī haiṁ. — Mira's mother is very dedicated; she works from morning till night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā kī māṁ bahut karmaṭh haiṁ, subah se rāt tak kām kartī haiṁ.* — Mira's mother is very dedicated; she works from morning till night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for sluggish, then the Hindi for good-for-nothing, then say karmaṭh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for sluggish, then the Hindi for good-for-nothing, then say *karmaṭh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कर्मठ (karmaṭh) mean? (\"Dedicated; diligent in work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C472-mustaid",
+      "sequence": 26060,
+      "title": "मुस्तैद (mustaid) — alert; ready for action",
+      "headword": "मुस्तैद",
+      "romanization": "mustaid",
+      "gloss": "alert; ready for action",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:260ee093e05a0395",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for good-for-nothing, then the Hindi for dedicated."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुस्तैद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुस्तैद — mustaid — \"alert; ready for action\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चुनाव के दिन पुलिस मुस्तैद थी। cunāv ke din pulis mustaid thī. On election day the police were on the alert."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुस्तैद (mustaid) is usually traced to Arabic mustaʿidd, \"ready, prepared\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaid",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaid*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mustaid, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mustaid*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cunāv ke din pulis mustaid thī. — On election day the police were on the alert.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cunāv ke din pulis mustaid thī.* — On election day the police were on the alert.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for good-for-nothing, then the Hindi for dedicated, then say mustaid again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for good-for-nothing, then the Hindi for dedicated, then say *mustaid* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुस्तैद (mustaid) mean? (\"Alert; ready for action\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

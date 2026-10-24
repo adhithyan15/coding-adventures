@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C353-thahrana",
+    "language": "hindi",
+    "chapter": 353,
+    "sequence": 19550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3247417141676f22"
+  },
+  "findings": []
+}

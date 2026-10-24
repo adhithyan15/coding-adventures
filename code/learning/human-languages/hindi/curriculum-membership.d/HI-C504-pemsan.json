@@ -1,0 +1,11 @@
+{
+  "id": "HI-C504-pemsan",
+  "pathSegment": "HI-PATH-504-BUDHAPA504",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-504-BUDHAPA504",
+      "order": 2
+    }
+  ]
+}

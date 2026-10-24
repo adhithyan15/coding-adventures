@@ -1,0 +1,858 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 521,
+  "title": "Heat in the Kitchen",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:454d44985c8586b0",
+  "lessons": [
+    {
+      "id": "HI-C521-ac",
+      "sequence": 28760,
+      "title": "आँच (ā̃c) — the heat of a flame; a flame",
+      "headword": "आँच",
+      "romanization": "ā̃c",
+      "gloss": "the heat of a flame; a flame",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54a7cbf5afd37e32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to roll out (dough), then the Hindi for to puff up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आँच",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आँच — ā̃c — \"the heat of a flame; a flame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दाल को धीमी आँच पर पकाइए। Dāl ko dhīmī ā̃c par pakāie. Cook the dal on a low flame."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आँच (ā̃c) is a tadbhava, inherited from Sanskrit arcis, \"a flame, a ray\" (CDIAL 635)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃c",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃c*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ā̃c, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ā̃c*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dāl ko dhīmī ā̃c par pakāie. — Cook the dal on a low flame.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dāl ko dhīmī ā̃c par pakāie.* — Cook the dal on a low flame.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to roll out (dough), then the Hindi for to puff up, then say ā̃c again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to roll out (dough), then the Hindi for to puff up, then say *ā̃c* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आँच (ā̃c) mean? (\"The heat of a flame; a flame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C521-dalna",
+      "sequence": 28770,
+      "title": "डालना (ḍālnā) — to put in; to pour in",
+      "headword": "डालना",
+      "romanization": "ḍālnā",
+      "gloss": "to put in; to pour in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9dd9dc16af35777",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to puff up, then the Hindi for the heat of a flame."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: डालना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डालना — ḍālnā — \"to put in; to pour in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गरम तेल में थोड़ा नमक डालिए। Garam tel meṁ thoṛā namak ḍāliye. Put a little salt into the hot oil."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने दाल में पानी डाला, usne dāl meṁ pānī ḍālā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "डालना (ḍālnā) is a tadbhava, inherited from ḍāl, \"pour, put\", a form CDIAL reconstructs from its descendants (CDIAL 5545)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍālnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍālnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍālnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍālnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Garam tel meṁ thoṛā namak ḍāliye. — Put a little salt into the hot oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Garam tel meṁ thoṛā namak ḍāliye.* — Put a little salt into the hot oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to puff up, then the Hindi for the heat of a flame, then say ḍālnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to puff up, then the Hindi for the heat of a flame, then say *ḍālnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does डालना (ḍālnā) mean? (\"To put in; to pour in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C521-jira",
+      "sequence": 28780,
+      "title": "जीरा (jīrā) — cumin",
+      "headword": "जीरा",
+      "romanization": "jīrā",
+      "gloss": "cumin",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb7f3025b981d4cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the heat of a flame, then the Hindi for to put in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जीरा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जीरा — jīrā — \"cumin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने गरम घी में जीरा डाला। Māṁ ne garam ghī meṁ jīrā ḍālā. Mother put cumin into the hot ghee."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जीरा (jīrā) is a tadbhava, inherited from Sanskrit jīraka, \"cumin\" (CDIAL 5234)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Māṁ ne garam ghī meṁ jīrā ḍālā. — Mother put cumin into the hot ghee.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Māṁ ne garam ghī meṁ jīrā ḍālā.* — Mother put cumin into the hot ghee.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the heat of a flame, then the Hindi for to put in, then say jīrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the heat of a flame, then the Hindi for to put in, then say *jīrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जीरा (jīrā) mean? (\"Cumin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C521-bagharna",
+      "sequence": 28790,
+      "title": "बघारना (baghārnā) — to temper (with hot spiced oil)",
+      "headword": "बघारना",
+      "romanization": "baghārnā",
+      "gloss": "to temper (with hot spiced oil)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:940a597bfae1d235",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to put in, then the Hindi for cumin."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बघारना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बघारना — baghārnā — \"to temper (with hot spiced oil)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "माँ ने दाल को घी और जीरे से बघारा। Māṁ ne dāl ko ghī aur jīre se baghārā. Mother tempered the dal with ghee and cumin."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने सब्ज़ी बघारी, usne sabzī baghārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बघारना (baghārnā) is a tadbhava, inherited from Sanskrit vyāghārayati, \"sprinkles (with hot fat)\" (CDIAL 12191). CDIAL gives the Hindi verb as \"to brown onions and spices in heated oil\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baghārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baghārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baghārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baghārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Māṁ ne dāl ko ghī aur jīre se baghārā. — Mother tempered the dal with ghee and cumin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Māṁ ne dāl ko ghī aur jīre se baghārā.* — Mother tempered the dal with ghee and cumin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to put in, then the Hindi for cumin, then say baghārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to put in, then the Hindi for cumin, then say *baghārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बघारना (baghārnā) mean? (\"To temper (with hot spiced oil)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C521-bhujna",
+      "sequence": 28800,
+      "title": "भूँजना (bhū̃jnā) — to roast; to parch (dry, in a pan)",
+      "headword": "भूँजना",
+      "romanization": "bhū̃jnā",
+      "gloss": "to roast; to parch (dry, in a pan)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b10b1a0dbeffe342",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cumin, then the Hindi for to temper (with hot spiced oil)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भूँजना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूँजना — bhū̃jnā — \"to roast; to parch (dry, in a pan)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी कड़ाही में मूँगफली भूँज रही हैं। Dādī kaṛāhī meṁ mū̃gphalī bhū̃j rahī haiṁ. Grandmother is roasting peanuts in the wok."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मूँगफली भूँजी, usne mū̃gphalī bhū̃jī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूँजना (bhū̃jnā) is a tadbhava, inherited from bhṛñjati, \"parches\", a form CDIAL reconstructs from its descendants (CDIAL 9586). CDIAL gives the Hindi verb as \"to parch, fry\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃jnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃jnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhū̃jnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhū̃jnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Dādī kaṛāhī meṁ mū̃gphalī bhū̃j rahī haiṁ. — Grandmother is roasting peanuts in the wok.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Dādī kaṛāhī meṁ mū̃gphalī bhū̃j rahī haiṁ.* — Grandmother is roasting peanuts in the wok.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cumin, then the Hindi for to temper (with hot spiced oil), then say bhū̃jnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cumin, then the Hindi for to temper (with hot spiced oil), then say *bhū̃jnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भूँजना (bhū̃jnā) mean? (\"To roast; to parch (dry, in a pan)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R521-review-514-521",
+      "sequence": 28810,
+      "title": "Looking back: from Metal and Gold to Heat in the Kitchen",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Metal and Gold to Heat in the Kitchen",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16cf12919b504fd0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for a stamp, a die and to file (metal or wood)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stamp, a die, to file (metal or wood), to set (a stone), to polish, to make shine, to melt (something)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stamp, a die, to file (metal or wood), to set (a stone), to polish, to make shine, to melt (something)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loose, a screw, a screwdriver, to tighten, to rattle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: loose, a screw, a screwdriver, to tighten, to rattle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to let drip, to crack, to split, a pipe, a hole, to trickle down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to let drip, to crack, to split, a pipe, a hole, to trickle down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a brick, lime (for whitewash), plaster (on a wall), to smear (a floor or wall with mud), to lay (bricks)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a brick, lime (for whitewash), plaster (on a wall), to smear (a floor or wall with mud), to lay (bricks)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wire, a light bulb, a switch, a peg, to hang up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wire, a light bulb, a switch, a peg, to hang up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a trunk, a spider, waste paper, to sweep (with a broom), to scour (pots)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a trunk, a spider, waste paper, to sweep (with a broom), to scour (pots)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to kindle, to knead, a round board for rolling dough, to roll out (dough), to puff up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to kindle, to knead, a round board for rolling dough, to roll out (dough), to puff up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the heat of a flame, to put in, cumin, to temper (with hot spiced oil), to roast",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the heat of a flame, to put in, cumin, to temper (with hot spiced oil), to roast]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A stamp, a die? (ठप्पा, ṭhappā.) To file (metal or wood)? (रेतना, retnā.) To set (a stone)? (जड़ना, jaṛnā.) To polish, to make shine? (चमकाना, camkānā.) To melt (something)? (पिघलाना, pighlānā.) Loose? (ढीला, ḍhīlā.) A screw? (पेंच, peñc.) A screwdriver? (पेचकस, peckas.) To tighten? (कसना, kasnā.) To rattle? (खड़खड़ाना, khaṛkhaṛānā.) To let drip? (टपकाना, ṭapkānā.) To crack, to split? (दरकना, daraknā.) A pipe? (पाइप, pāip.) A hole? (छेद, ched.) To trickle down? (ढलकना, ḍhalaknā.) A brick? (ईंट, ī̃ṭ.) Lime (for whitewash)? (चूना, cūnā.) Plaster (on a wall)? (पलस्तर, palastar.) To smear (a floor or wall with mud)? (लीपना, līpnā.) To lay (bricks)? (चिनना, cinnā.) A wire? (तार, tār.) A light bulb? (बल्ब, balb.) A switch? (स्विच, svic.) A peg? (खूँटी, khū̃ṭī.) To hang up? (टाँगना, ṭā̃gnā.) A trunk? (संदूक़, sandūq.) A spider? (मकड़ी, makṛī.) Waste paper? (रद्दी, raddī.) To sweep (with a broom)? (बुहारना, buhārnā.) To scour (pots)? (माँजना, mā̃jnā.) To kindle? (सुलगाना, sulgānā.) To knead? (गूँधना, gū̃dhnā.) A round board for rolling dough? (चकला, caklā.) To roll out (dough)? (बेलना, belnā.) To puff up? (फूलना, phūlnā.) The heat of a flame? (आँच, ā̃c.) To put in? (डालना, ḍālnā.) Cumin? (जीरा, jīrā.) To temper (with hot spiced oil)? (बघारना, baghārnā.) To roast? (भूँजना, bhū̃jnā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

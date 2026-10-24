@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Lost and Found",
+  "label": "ch:hi-lost-and-found",
+  "canDo": "I can tell how a family was separated and found again.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C310-dilasa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can tell how a family was separated and found again.",
+    "assesses": [
+      "HI-LEX-C310-BICHHUD310-03",
+      "HI-LEX-C310-BICHHUD310-04",
+      "HI-LEX-C310-BICHHUD310-05"
+    ]
+  }
+}

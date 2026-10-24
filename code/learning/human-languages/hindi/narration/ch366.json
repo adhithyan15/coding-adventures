@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 366,
+  "title": "Reasonable or Not",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5ae47ba7edd623f6",
+  "lessons": [
+    {
+      "id": "HI-C366-vajib",
+      "sequence": 20170,
+      "title": "वाजिब (vājib) — reasonable, fair (of a price, a demand)",
+      "headword": "वाजिब",
+      "romanization": "vājib",
+      "gloss": "reasonable, fair (of a price, a demand)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7b0d472b0d0e29ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to hold up, then the Hindi for to get (someone) to accept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: वाजिब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजिब — vājib — \"reasonable, fair (of a price, a demand)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह दाम वाजिब है। yah dām vājib hai. This price is reasonable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "वाजिब (vājib) is usually traced to Arabic wājib, \"due, necessary\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājib",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājib*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājib, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājib*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yah dām vājib hai. — This price is reasonable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yah dām vājib hai.* — This price is reasonable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to hold up, then the Hindi for to get (someone) to accept, then say vājib again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to hold up, then the Hindi for to get (someone) to accept, then say *vājib* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does वाजिब (vājib) mean? (\"Reasonable, fair (of a price, a demand)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C366-jayaz",
+      "sequence": 20180,
+      "title": "जायज़ (jāyaz) — legitimate, justified",
+      "headword": "जायज़",
+      "romanization": "jāyaz",
+      "gloss": "legitimate, justified",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a39ca7337f288f14",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to get (someone) to accept, then the Hindi for reasonable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जायज़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जायज़ — jāyaz — \"legitimate, justified\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तुम्हारा ग़ुस्सा जायज़ है। tumhārā ġussā jāyaz hai. Your anger is justified."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जायज़ (jāyaz) is usually traced to Arabic jāʾiz, \"permitted\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāyaz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāyaz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāyaz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāyaz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tumhārā ġussā jāyaz hai. — Your anger is justified.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tumhārā ġussā jāyaz hai.* — Your anger is justified.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to get (someone) to accept, then the Hindi for reasonable, then say jāyaz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to get (someone) to accept, then the Hindi for reasonable, then say *jāyaz* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जायज़ (jāyaz) mean? (\"Legitimate, justified\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C366-bhram",
+      "sequence": 20190,
+      "title": "भ्रम (bhram) — a misconception, an illusion",
+      "headword": "भ्रम",
+      "romanization": "bhram",
+      "gloss": "a misconception, an illusion",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:498bfeea5ce9abce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for reasonable, then the Hindi for legitimate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भ्रम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रम — bhram — \"a misconception, an illusion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "यह एक भ्रम है कि पैसे से सब कुछ मिलता है। yah ek bhram hai ki paise se sab kuch miltā hai. It's a misconception that money buys everything."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ्रम (bhram) is a tatsama, borrowed from Sanskrit bhrama, \"wandering; confusion\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yah ek bhram hai ki paise se sab kuch miltā hai. — It's a misconception that money buys everything.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yah ek bhram hai ki paise se sab kuch miltā hai.* — It's a misconception that money buys everything.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for reasonable, then the Hindi for legitimate, then say bhram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for reasonable, then the Hindi for legitimate, then say *bhram* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भ्रम (bhram) mean? (\"A misconception, an illusion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C366-bahkana",
+      "sequence": 20200,
+      "title": "बहकाना (bahkānā) — to lead astray, to mislead",
+      "headword": "बहकाना",
+      "romanization": "bahkānā",
+      "gloss": "to lead astray, to mislead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c489ac1d7f156758",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for legitimate, then the Hindi for a misconception."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहकाना — bahkānā — \"to lead astray, to mislead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कुछ लोगों ने बच्चों को बहकाया। kuch logoṁ ne baccoṁ ko bahkāyā. Some people led the children astray."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मुझे बहकाया, usne mujhe bahkāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहकाना (bahkānā) is the causative of बहकना, \"to be misled\", which CDIAL files under Sanskrit vyathate, \"trembles, goes astray\" (CDIAL 12164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuch logoṁ ne baccoṁ ko bahkāyā. — Some people led the children astray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuch logoṁ ne baccoṁ ko bahkāyā.* — Some people led the children astray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for legitimate, then the Hindi for a misconception, then say bahkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for legitimate, then the Hindi for a misconception, then say *bahkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहकाना (bahkānā) mean? (\"To lead astray, to mislead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C366-majbur",
+      "sequence": 20210,
+      "title": "मजबूर (majbūr) — forced, compelled",
+      "headword": "मजबूर",
+      "romanization": "majbūr",
+      "gloss": "forced, compelled",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b2b4bff03d26a9cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a misconception, then the Hindi for to mislead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मजबूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मजबूर — majbūr — \"forced, compelled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बारिश की वजह से हम घर लौटने पर मजबूर हुए। bāriś kī vajah se ham ghar lauṭne par majbūr hue. The rain forced us to go back home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मजबूर (majbūr) is usually traced to Arabic majbūr, \"compelled\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majbūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majbūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majbūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majbūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāriś kī vajah se ham ghar lauṭne par majbūr hue. — The rain forced us to go back home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāriś kī vajah se ham ghar lauṭne par majbūr hue.* — The rain forced us to go back home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a misconception, then the Hindi for to mislead, then say majbūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a misconception, then the Hindi for to mislead, then say *majbūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मजबूर (majbūr) mean? (\"Forced, compelled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R366-review-359-366",
+      "sequence": 20220,
+      "title": "Looking back: from The Issue at Hand to Reasonable or Not",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Issue at Hand to Reasonable or Not",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0f07421b341e826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for an issue and a compromise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an issue, a compromise, a dispute, to get tangled, to raise (a topic)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an issue, a compromise, a dispute, to get tangled, to raise (a topic)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an objection, condemnation, a point of view, to threaten, to coax",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an objection, condemnation, a point of view, to threaten, to coax]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "research, an experiment, a scientist, to gauge, a laboratory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: research, an experiment, a scientist, to gauge, a laboratory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a conclusion, an average, to bring out, an analysis, a trial",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a conclusion, an average, to bring out, an analysis, a trial]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a study, according to, a sample, to compare, to assess",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a study, according to, a sample, to compare, to assess]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an expert, a scholar, an article, an essay, to pick out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an expert, a scholar, an article, an essay, to pick out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a theory, conduct, an exception, to hold up, to get (someone) to accept",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a theory, conduct, an exception, to hold up, to get (someone) to accept]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reasonable, legitimate, a misconception, to mislead, compelled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reasonable, legitimate, a misconception, to mislead, compelled]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An issue? (मुद्दा, muddā.) A compromise? (समझौता, samjhautā.) A dispute? (विवाद, vivād.) To get tangled? (उलझना, ulajhnā.) To raise (a topic)? (छेड़ना, cheṛnā.) An objection? (आपत्ति, āpatti.) Condemnation? (निंदा, nindā.) A point of view? (दृष्टिकोण, dṛṣṭikoṇ.) To threaten? (धमकाना, dhamkānā.) To coax? (फुसलाना, phuslānā.) Research? (शोध, śodh.) An experiment? (प्रयोग, prayog.) A scientist? (वैज्ञानिक, vaijñānik.) To gauge? (मापना, māpnā.) A laboratory? (प्रयोगशाला, prayogśālā.) A conclusion? (निष्कर्ष, niṣkarṣ.) An average? (औसत, ausat.) To bring out? (उभारना, ubhārnā.) An analysis? (विश्लेषण, viśleṣaṇ.) A trial? (परीक्षण, parīkṣaṇ.) A study? (अध्ययन, adhyayan.) According to? (अनुसार, anusār.) A sample? (नमूना, namūnā.) To compare? (तुलना करना, tulnā karnā.) To assess? (आँकना, ā̃knā.) An expert? (विशेषज्ञ, viśeṣajña.) A scholar? (विद्वान, vidvān.) An article? (लेख, lekh.) An essay? (निबंध, nibandh.) To pick out? (छाँटना, chā̃ṭnā.) A theory? (सिद्धांत, siddhānt.) Conduct? (व्यवहार, vyavahār.) An exception? (अपवाद, apvād.) To hold up? (टिकना, ṭiknā.) To get (someone) to accept? (मनवाना, manvānā.) Reasonable? (वाजिब, vājib.) Legitimate? (जायज़, jāyaz.) A misconception? (भ्रम, bhram.) To mislead? (बहकाना, bahkānā.) Compelled? (मजबूर, majbūr.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

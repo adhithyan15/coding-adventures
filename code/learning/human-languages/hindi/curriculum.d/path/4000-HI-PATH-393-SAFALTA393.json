@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-393-SAFALTA393",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-393-SAFALTA393"
+  ],
+  "after": []
+}

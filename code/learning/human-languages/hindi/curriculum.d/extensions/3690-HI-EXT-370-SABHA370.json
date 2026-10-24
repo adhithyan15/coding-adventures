@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-370-SABHA370",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say who decided what at a meeting.",
+  "prerequisites": []
+}

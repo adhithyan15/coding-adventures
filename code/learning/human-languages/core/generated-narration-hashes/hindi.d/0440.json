@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:03ffe6bdb321adf2",
+  "lessonIds": [
+    "HI-C440-dhul",
+    "HI-C440-ghirna",
+    "HI-C440-thamnaintr",
+    "HI-C440-chatnaintr",
+    "HI-C440-urana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch440.txt",
+  "json": "hindi/narration/ch440.json",
+  "textHash": "fnv1a64:3cab88fef17af063",
+  "jsonHash": "fnv1a64:bf16d85c957a19af",
+  "findings": []
+}

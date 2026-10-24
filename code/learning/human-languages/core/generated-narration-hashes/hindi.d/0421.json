@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:adc4edaaebcbf836",
+  "lessonIds": [
+    "HI-C421-basti",
+    "HI-C421-qasba",
+    "HI-C421-basinda",
+    "HI-C421-paros",
+    "HI-C421-dehat",
+    "HI-R421-review-414-421"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch421.txt",
+  "json": "hindi/narration/ch421.json",
+  "textHash": "fnv1a64:c0da5a370cccef0f",
+  "jsonHash": "fnv1a64:037c4b7a844d39c8",
+  "findings": []
+}

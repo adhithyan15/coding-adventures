@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:0cf87d89bf6da017",
+  "lessonIds": [
+    "HI-C410-pasport",
+    "HI-C410-viza",
+    "HI-C410-suraksa",
+    "HI-C410-kastam",
+    "HI-C410-sulk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch410.txt",
+  "json": "hindi/narration/ch410.json",
+  "textHash": "fnv1a64:fe69eb3890ab349d",
+  "jsonHash": "fnv1a64:839caea87c852c07",
+  "findings": []
+}

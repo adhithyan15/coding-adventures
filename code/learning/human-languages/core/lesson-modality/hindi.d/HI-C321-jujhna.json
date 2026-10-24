@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C321-jujhna",
+    "language": "hindi",
+    "chapter": 321,
+    "sequence": 17730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e0814436759b6c89"
+  },
+  "findings": []
+}

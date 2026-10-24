@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:18bd8011baf3ee44",
+  "lessonIds": [
+    "HI-C356-barabar",
+    "HI-C356-bhedbhav",
+    "HI-C356-paksapat",
+    "HI-C356-imsaf",
+    "HI-C356-uksana"
+  ],
+  "tex": "hindi/book/chapters/ch356-fair-and-unfair.tex"
+}

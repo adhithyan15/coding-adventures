@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:1131cac9af92a327",
+  "lessonIds": [
+    "HI-C417-disa",
+    "HI-C417-taraf",
+    "HI-C417-or",
+    "HI-C417-marg",
+    "HI-C417-rukh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch417.txt",
+  "json": "hindi/narration/ch417.json",
+  "textHash": "fnv1a64:d1f26e9c29e37076",
+  "jsonHash": "fnv1a64:dc7e50730c850b69",
+  "findings": []
+}

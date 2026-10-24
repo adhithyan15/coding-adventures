@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:cd1e6b47849c762e",
+  "lessonIds": [
+    "HI-C417-disa",
+    "HI-C417-taraf",
+    "HI-C417-or",
+    "HI-C417-marg",
+    "HI-C417-rukh"
+  ],
+  "tex": "hindi/book/chapters/ch417-which-way.tex"
+}

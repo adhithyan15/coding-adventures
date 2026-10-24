@@ -1,0 +1,11 @@
+{
+  "id": "HI-C403-futpath",
+  "pathSegment": "HI-PATH-403-STAIND403",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-403-STAIND403",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C397-chatravrtti",
+  "pathSegment": "HI-PATH-397-VISHAY397",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-397-VISHAY397",
+      "order": 2
+    }
+  ]
+}

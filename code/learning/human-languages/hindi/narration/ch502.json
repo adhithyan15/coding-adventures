@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 502,
+  "title": "Grandchildren and Nephews",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:642520b6cad503d5",
+  "lessons": [
+    {
+      "id": "HI-C502-pota",
+      "sequence": 27560,
+      "title": "पोता (potā) — a grandson (a son's son)",
+      "headword": "पोता",
+      "romanization": "potā",
+      "gloss": "a grandson (a son's son)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ed970af0c2513ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to keep up, then the Hindi for a reconciliation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पोता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोता — potā — \"a grandson (a son's son)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादा अपने पोते के साथ खेल रहे हैं। dādā apne pote ke sāth khel rahe haiṁ. Grandfather is playing with his grandson."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पोता (potā) is a tadbhava: CDIAL lists Hindi potā, \"son's son\", under Sanskrit paútra, \"grandson\" (CDIAL 8416). The granddaughter is potī."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "potā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *potā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādā apne pote ke sāth khel rahe haiṁ. — Grandfather is playing with his grandson.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādā apne pote ke sāth khel rahe haiṁ.* — Grandfather is playing with his grandson.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to keep up, then the Hindi for a reconciliation, then say potā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to keep up, then the Hindi for a reconciliation, then say *potā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पोता (potā) mean? (\"A grandson (a son's son)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C502-nati",
+      "sequence": 27570,
+      "title": "नाती (nātī) — a grandson (a daughter's son)",
+      "headword": "नाती",
+      "romanization": "nātī",
+      "gloss": "a grandson (a daughter's son)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2dab85451c82c482",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a reconciliation, then the Hindi for a grandson (a son's son)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नाती",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाती — nātī — \"a grandson (a daughter's son)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नानी अपने नाती को कहानी सुना रही हैं। nānī apne nātī ko kahānī sunā rahī haiṁ. Grandmother is telling her grandson a story."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नाती (nātī) is a tadbhava: CDIAL lists Hindi nātī, \"daughter's son\", under Sanskrit náptṛ, \"grandson\" (CDIAL 6955b). Hindi keeps the father's side (potā) and the mother's side (nātī) apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nātī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nātī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nānī apne nātī ko kahānī sunā rahī haiṁ. — Grandmother is telling her grandson a story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nānī apne nātī ko kahānī sunā rahī haiṁ.* — Grandmother is telling her grandson a story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a reconciliation, then the Hindi for a grandson (a son's son), then say nātī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a reconciliation, then the Hindi for a grandson (a son's son), then say *nātī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नाती (nātī) mean? (\"A grandson (a daughter's son)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C502-bhanja",
+      "sequence": 27580,
+      "title": "भांजा (bhāñjā) — a nephew (a sister's son)",
+      "headword": "भांजा",
+      "romanization": "bhāñjā",
+      "gloss": "a nephew (a sister's son)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:293211ee47522672",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a grandson (a son's son), then the Hindi for a grandson (a daughter's son)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भांजा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भांजा — bhāñjā — \"a nephew (a sister's son)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा भांजा अगले साल स्कूल जाएगा। merā bhāñjā agle sāl skūl jāegā. My nephew will start school next year."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भांजा (bhāñjā) is a tadbhava: CDIAL lists Hindi bhā̃jā, \"sister's son\", under Sanskrit bhāginēya, \"sister's son\" (CDIAL 9433), from bhaginī, \"sister\". A brother's son is bhatījā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāñjā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāñjā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāñjā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāñjā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā bhāñjā agle sāl skūl jāegā. — My nephew will start school next year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā bhāñjā agle sāl skūl jāegā.* — My nephew will start school next year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a grandson (a son's son), then the Hindi for a grandson (a daughter's son), then say bhāñjā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a grandson (a son's son), then the Hindi for a grandson (a daughter's son), then say *bhāñjā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भांजा (bhāñjā) mean? (\"A nephew (a sister's son)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C502-jhulana",
+      "sequence": 27590,
+      "title": "झुलाना (jhulānā) — to rock; to swing (someone)",
+      "headword": "झुलाना",
+      "romanization": "jhulānā",
+      "gloss": "to rock; to swing (someone)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e780f4a2a57d8763",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a grandson (a daughter's son), then the Hindi for a nephew (a sister's son)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झुलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुलाना — jhulānā — \"to rock; to swing (someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी पोते को झूले में झुला रही हैं। dādī pote ko jhūle meṁ jhulā rahī haiṁ. Grandmother is rocking her grandson in the swing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बच्चे को झुलाया, usne bacce ko jhulāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झुलाना (jhulānā) is the causative partner of jhūlnā, \"to swing\", which CDIAL lists under jhulyati, a form it reconstructs (CDIAL 5406); jhūlā, \"a swing\", belongs to the same family."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhulānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhulānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhulānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhulānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī pote ko jhūle meṁ jhulā rahī haiṁ. — Grandmother is rocking her grandson in the swing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī pote ko jhūle meṁ jhulā rahī haiṁ.* — Grandmother is rocking her grandson in the swing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a grandson (a daughter's son), then the Hindi for a nephew (a sister's son), then say jhulānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a grandson (a daughter's son), then the Hindi for a nephew (a sister's son), then say *jhulānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झुलाना (jhulānā) mean? (\"To rock; to swing (someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C502-iklauta",
+      "sequence": 27600,
+      "title": "इकलौता (iklautā) — only (child)",
+      "headword": "इकलौता",
+      "romanization": "iklautā",
+      "gloss": "only (child)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c28efa8750787a3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a nephew (a sister's son), then the Hindi for to rock."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: इकलौता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इकलौता — iklautā — \"only (child)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण अपने माँ बाप का इकलौता बेटा है। Aruṇ apne māṁ bāp kā iklautā beṭā hai. Arun is his parents' only son."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "इकलौता (iklautā) is a tadbhava: CDIAL lists Hindi iklautā, \"only begotten, only son\", under ēkkalaputra, a form it reconstructs from ēkkala, \"alone\", and putra, \"son\" (CDIAL 2507). akelā, \"alone\", comes from the same ēkkala."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iklautā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iklautā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iklautā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iklautā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ apne māṁ bāp kā iklautā beṭā hai. — Arun is his parents' only son.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ apne māṁ bāp kā iklautā beṭā hai.* — Arun is his parents' only son.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a nephew (a sister's son), then the Hindi for to rock, then say iklautā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a nephew (a sister's son), then the Hindi for to rock, then say *iklautā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does इकलौता (iklautā) mean? (\"Only (child)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C497-navjat",
+  "pathSegment": "HI-PATH-497-JANM497",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-497-JANM497",
+      "order": 3
+    }
+  ]
+}

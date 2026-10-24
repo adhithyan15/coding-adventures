@@ -1,0 +1,11 @@
+{
+  "id": "HI-C390-iccha",
+  "pathSegment": "HI-PATH-390-LAKSHYA390",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-390-LAKSHYA390",
+      "order": 1
+    }
+  ]
+}

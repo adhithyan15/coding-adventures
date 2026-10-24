@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C422-kothi",
+    "language": "hindi",
+    "chapter": 422,
+    "sequence": 23240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f42b63224fc232c3"
+  },
+  "findings": []
+}

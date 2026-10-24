@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 450,
+  "title": "On the Farm",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:88a4adb70b8e4e1a",
+  "lessons": [
+    {
+      "id": "HI-C450-jharnaa",
+      "sequence": 24660,
+      "title": "झड़ना (jhaṛnā) — to fall off; to be shed (of leaves)",
+      "headword": "झड़ना",
+      "romanization": "jhaṛnā",
+      "gloss": "to fall off; to be shed (of leaves)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32da0c3277cf3642",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to graze, then the Hindi for to take to graze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झड़ना — jhaṛnā — \"to fall off; to be shed (of leaves)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पतझड़ में पेड़ों से पत्ते झड़ते हैं। patjhaṛ meṁ peṛoṁ se patte jhaṛte haiṁ. In autumn the leaves fall from the trees."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह पत्ता पेड़ से झड़ गया, vah pattā peṛ se jhaṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झड़ना (jhaṛnā) goes back to jhaṭati, \"falls\", a form CDIAL reconstructs (CDIAL 5328), which lists Hindi jhaṛnā, \"to fall\"; पतझड़, autumn, is the leaf-fall."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patjhaṛ meṁ peṛoṁ se patte jhaṛte haiṁ. — In autumn the leaves fall from the trees.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patjhaṛ meṁ peṛoṁ se patte jhaṛte haiṁ.* — In autumn the leaves fall from the trees.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to graze, then the Hindi for to take to graze, then say jhaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to graze, then the Hindi for to take to graze, then say *jhaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झड़ना (jhaṛnā) mean? (\"To fall off; to be shed (of leaves)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C450-ukharna",
+      "sequence": 24670,
+      "title": "उखड़ना (ukhaṛnā) — to be uprooted; to come loose",
+      "headword": "उखड़ना",
+      "romanization": "ukhaṛnā",
+      "gloss": "to be uprooted; to come loose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d54938eb8f430031",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to take to graze, then the Hindi for to be shed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उखड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उखड़ना — ukhaṛnā — \"to be uprooted; to come loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "तूफ़ान में कई पेड़ उखड़ गए। tūfān meṁ kaī peṛ ukhaṛ gae. Several trees were uprooted in the storm."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह खंभा उखड़ गया, vah khambhā ukhaṛ gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उखड़ना (ukhaṛnā) goes back to utskarati, \"digs out\", a form CDIAL reconstructs (CDIAL 1895), which lists Hindi ukhaṛnā, \"to be rooted up\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ukhaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ukhaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūfān meṁ kaī peṛ ukhaṛ gae. — Several trees were uprooted in the storm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūfān meṁ kaī peṛ ukhaṛ gae.* — Several trees were uprooted in the storm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to take to graze, then the Hindi for to be shed, then say ukhaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to take to graze, then the Hindi for to be shed, then say *ukhaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उखड़ना (ukhaṛnā) mean? (\"To be uprooted; to come loose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C450-jotna",
+      "sequence": 24680,
+      "title": "जोतना (jotnā) — to plough",
+      "headword": "जोतना",
+      "romanization": "jotnā",
+      "gloss": "to plough",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:68a0b644ac77f941",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be shed, then the Hindi for to be uprooted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जोतना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जोतना — jotnā — \"to plough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किसान सुबह से खेत जोत रहा है। kisān subah se khet jot rahā hai. The farmer has been ploughing the field since morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने खेत जोता, usne khet jotā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जोतना (jotnā) is a tadbhava of Sanskrit yoktrayati, \"fastens, ties\" (CDIAL 10524), which lists Hindi jotnā, \"to yoke, plough\": to yoke the oxen, and so to plough."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jotnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jotnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jotnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jotnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisān subah se khet jot rahā hai. — The farmer has been ploughing the field since morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisān subah se khet jot rahā hai.* — The farmer has been ploughing the field since morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be shed, then the Hindi for to be uprooted, then say jotnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be shed, then the Hindi for to be uprooted, then say *jotnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जोतना (jotnā) mean? (\"To plough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C450-upajna",
+      "sequence": 24690,
+      "title": "उपजना (upajnā) — to grow (of crops); to arise",
+      "headword": "उपजना",
+      "romanization": "upajnā",
+      "gloss": "to grow (of crops); to arise",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:315a60e9b2323b27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to be uprooted, then the Hindi for to plough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपजना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपजना — upajnā — \"to grow (of crops); to arise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "इस खेत में अच्छा अनाज उपजता है। is khet meṁ acchā anāj upajtā hai. Good grain grows in this field."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह फ़सल अच्छी उपजी, vah fasal acchī upjī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपजना (upajnā) is a tadbhava of Sanskrit utpadyate, \"arises, originates\" (CDIAL 1814), which lists Hindi upajnā, \"to originate, grow\"; उपज, a crop, is its noun."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upajnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upajnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upajnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upajnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is khet meṁ acchā anāj upajtā hai. — Good grain grows in this field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is khet meṁ acchā anāj upajtā hai.* — Good grain grows in this field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to be uprooted, then the Hindi for to plough, then say upajnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to be uprooted, then the Hindi for to plough, then say *upajnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपजना (upajnā) mean? (\"To grow (of crops); to arise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C450-duhna",
+      "sequence": 24700,
+      "title": "दुहना (duhnā) — to milk",
+      "headword": "दुहना",
+      "romanization": "duhnā",
+      "gloss": "to milk",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a3e657d2cef011b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to plough, then the Hindi for to grow (of crops)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दुहना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुहना — duhnā — \"to milk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी रोज़ सुबह गाय दुहती हैं। dādī roz subah gāy duhtī haiṁ. Grandmother milks the cow every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने भैंस दुही, usne bhaĩs duhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दुहना (duhnā) goes back to duhati, \"milks\", a form CDIAL reconstructs (CDIAL 6476), which lists Hindi duhnā, \"to milk\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duhnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duhnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duhnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duhnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī roz subah gāy duhtī haiṁ. — Grandmother milks the cow every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī roz subah gāy duhtī haiṁ.* — Grandmother milks the cow every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to plough, then the Hindi for to grow (of crops), then say duhnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to plough, then the Hindi for to grow (of crops), then say *duhnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दुहना (duhnā) mean? (\"To milk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

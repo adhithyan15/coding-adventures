@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:cb978fd7da312bce",
+  "lessonIds": [
+    "HI-C395-mamzuri",
+    "HI-C395-intazam",
+    "HI-C395-batorna",
+    "HI-C395-felhona",
+    "HI-C395-qatai"
+  ],
+  "tex": "hindi/book/chapters/ch395-getting-the-go-ahead.tex"
+}

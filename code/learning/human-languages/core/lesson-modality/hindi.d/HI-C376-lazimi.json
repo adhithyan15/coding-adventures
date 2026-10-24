@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C376-lazimi",
+    "language": "hindi",
+    "chapter": 376,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:57d41aedf4545643"
+  },
+  "findings": []
+}

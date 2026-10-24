@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C394-qabil",
+    "language": "hindi",
+    "chapter": 394,
+    "sequence": 21640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c55781919d30d8c"
+  },
+  "findings": []
+}

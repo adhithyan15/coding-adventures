@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C292-banduq",
+    "language": "hindi",
+    "chapter": 292,
+    "sequence": 16230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c36fd5bbf35ecbf"
+  },
+  "findings": []
+}

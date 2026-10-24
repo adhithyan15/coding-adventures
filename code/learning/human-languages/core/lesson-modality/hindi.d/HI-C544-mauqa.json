@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C544-mauqa",
+    "language": "hindi",
+    "chapter": 544,
+    "sequence": 29960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ce4a433e85356c2"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-R279-a-story-in-order",
+  "pathSegment": "HI-PATH-279-STORYORDER",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-279-STORYORDER",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:711bfc124d355afa",
+  "lessonIds": [
+    "HI-C433-qatar",
+    "HI-C433-tokan",
+    "HI-C433-kauntar",
+    "HI-C433-hat",
+    "HI-C433-thamana"
+  ],
+  "tex": "hindi/book/chapters/ch433-queues-and-counters.tex"
+}

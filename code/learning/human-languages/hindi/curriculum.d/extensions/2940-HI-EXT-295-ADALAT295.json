@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-295-ADALAT295",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how a case ended and say what happens if someone is caught.",
+  "prerequisites": []
+}

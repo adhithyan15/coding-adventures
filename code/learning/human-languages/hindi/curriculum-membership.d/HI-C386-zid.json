@@ -1,0 +1,11 @@
+{
+  "id": "HI-C386-zid",
+  "pathSegment": "HI-PATH-386-SAHARA386",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-386-SAHARA386",
+      "order": 3
+    }
+  ]
+}

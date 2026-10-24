@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:8b498111b64c537b",
+  "lessonIds": [
+    "HI-C308-bera",
+    "HI-C308-gotakhor",
+    "HI-C308-zinda",
+    "HI-C308-churana",
+    "HI-C308-lapakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch308.txt",
+  "json": "hindi/narration/ch308.json",
+  "textHash": "fnv1a64:643dcb7cc2cc8673",
+  "jsonHash": "fnv1a64:9a130d0b3e689703",
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-524-PAROSNA524",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-524-PAROSNA524"
+  ],
+  "after": []
+}

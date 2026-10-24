@@ -1,0 +1,18 @@
+{
+  "language": "hindi",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:c9a7fd0f5c1243a8",
+  "lessonIds": [
+    "HI-C282-batana",
+    "HI-C282-dur",
+    "HI-C282-kaisejatehain",
+    "HI-R282-asking-the-way"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "hindi/narration/ch282.txt",
+  "json": "hindi/narration/ch282.json",
+  "textHash": "fnv1a64:5ceed2b5acde2093",
+  "jsonHash": "fnv1a64:2bcb5a056482a874",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:92dbff361f25cea0",
+  "lessonIds": [
+    "HI-C538-sajona",
+    "HI-C538-taiyar",
+    "HI-C538-prabandh",
+    "HI-C538-sajna",
+    "HI-C538-binna"
+  ],
+  "tex": "hindi/book/chapters/ch538-getting-things-ready.tex"
+}

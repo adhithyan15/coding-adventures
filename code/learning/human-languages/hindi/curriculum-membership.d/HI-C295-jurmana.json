@@ -1,0 +1,11 @@
+{
+  "id": "HI-C295-jurmana",
+  "pathSegment": "HI-PATH-295-ADALAT295",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-295-ADALAT295",
+      "order": 3
+    }
+  ]
+}

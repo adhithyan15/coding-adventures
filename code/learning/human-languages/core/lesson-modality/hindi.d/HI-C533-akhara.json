@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C533-akhara",
+    "language": "hindi",
+    "chapter": 533,
+    "sequence": 29400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7065b863a0b81ff2"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-285-COMPARETIME",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-285-COMPARETIME"
+  ],
+  "after": []
+}

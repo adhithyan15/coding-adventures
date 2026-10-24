@@ -1,0 +1,19 @@
+{
+  "chapter": 329,
+  "title": "A Festival of Colours",
+  "label": "ch:hi-a-festival-of-colours",
+  "canDo": "I can tell how a spring festival was played.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C329-masti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can tell how a spring festival was played.",
+    "assesses": [
+      "HI-LEX-C329-RANG329-03",
+      "HI-LEX-C329-RANG329-04",
+      "HI-LEX-C329-RANG329-05"
+    ]
+  }
+}

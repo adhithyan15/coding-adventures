@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:625a7db5cc325e2f",
+  "lessonIds": [
+    "HI-C465-mazaq",
+    "HI-C465-hasana",
+    "HI-C465-rulana",
+    "HI-C465-ah",
+    "HI-C465-vilap"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch465.txt",
+  "json": "hindi/narration/ch465.json",
+  "textHash": "fnv1a64:5defb6e49dfee4ee",
+  "jsonHash": "fnv1a64:fc5126694bbef856",
+  "findings": []
+}

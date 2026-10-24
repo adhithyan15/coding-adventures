@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C464-rocak",
+    "language": "hindi",
+    "chapter": 464,
+    "sequence": 25650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3df5adaca7ff001"
+  },
+  "findings": []
+}

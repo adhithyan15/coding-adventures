@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-283-TICKETTROUBLE",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can buy a ticket and ask when the next train leaves (aglī ṭren kitne baje calegī?), and report a lost bag or a missed train (merā thailā kho gayā, merī ṭren chūṭ gaī).",
+  "prerequisites": []
+}

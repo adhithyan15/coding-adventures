@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C486-sujna",
+    "language": "hindi",
+    "chapter": 486,
+    "sequence": 26780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c5637594db4e224"
+  },
+  "findings": []
+}

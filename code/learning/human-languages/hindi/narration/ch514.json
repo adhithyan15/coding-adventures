@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 514,
+  "title": "Metal and Gold",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5a4757f3839d3af7",
+  "lessons": [
+    {
+      "id": "HI-C514-thappa",
+      "sequence": 28410,
+      "title": "ठप्पा (ṭhappā) — a stamp, a die",
+      "headword": "ठप्पा",
+      "romanization": "ṭhappā",
+      "gloss": "a stamp, a die",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25cc919c1cf8100e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to thread (a needle), then the Hindi for to come unstitched."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ठप्पा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठप्पा — ṭhappā — \"a stamp, a die\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अंगूठी पर सुनार का ठप्पा है। Aṅgūṭhī par sunār kā ṭhappā hai. The ring bears the goldsmith's stamp."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठप्पा (ṭhappā) is a tadbhava, inherited from ṭhapp, \"strike, press\", a form CDIAL reconstructs from its descendants (CDIAL 5495). CDIAL gives the Hindi word as \"stamp, mould\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhappā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhappā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhappā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhappā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aṅgūṭhī par sunār kā ṭhappā hai. — The ring bears the goldsmith's stamp.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aṅgūṭhī par sunār kā ṭhappā hai.* — The ring bears the goldsmith's stamp.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to thread (a needle), then the Hindi for to come unstitched, then say ṭhappā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to thread (a needle), then the Hindi for to come unstitched, then say *ṭhappā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ठप्पा (ṭhappā) mean? (\"A stamp, a die\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C514-retna",
+      "sequence": 28420,
+      "title": "रेतना (retnā) — to file (metal or wood)",
+      "headword": "रेतना",
+      "romanization": "retnā",
+      "gloss": "to file (metal or wood)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42b7d3964eaa60c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to come unstitched, then the Hindi for a stamp, a die."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रेतना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेतना — retnā — \"to file (metal or wood)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोहार ने चाबी का किनारा रेता। Lohār ne cābī kā kinārā retā. The blacksmith filed the edge of the key."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कील रेती, usne kīl retī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रेतना (retnā) is a tadbhava, inherited from Sanskrit rētra, \"perfumed powder\" (CDIAL 10816), the entry under which CDIAL lists Hindi ret, \"sand, a file\", and retnā, \"to file\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "retnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *retnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Lohār ne cābī kā kinārā retā. — The blacksmith filed the edge of the key.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Lohār ne cābī kā kinārā retā.* — The blacksmith filed the edge of the key.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to come unstitched, then the Hindi for a stamp, a die, then say retnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to come unstitched, then the Hindi for a stamp, a die, then say *retnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रेतना (retnā) mean? (\"To file (metal or wood)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C514-jarna",
+      "sequence": 28430,
+      "title": "जड़ना (jaṛnā) — to set (a stone); to inlay",
+      "headword": "जड़ना",
+      "romanization": "jaṛnā",
+      "gloss": "to set (a stone); to inlay",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fd577a22d298a468",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a stamp, a die, then the Hindi for to file (metal or wood)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: जड़ना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जड़ना — jaṛnā — \"to set (a stone); to inlay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुनार ने अंगूठी में एक लाल पत्थर जड़ा। Sunār ne aṅgūṭhī meṁ ek lāl patthar jaṛā. The goldsmith set a red stone in the ring."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कंगन में पत्थर जड़ा, usne kaṅgan meṁ patthar jaṛā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "जड़ना (jaṛnā) is a tadbhava, inherited from jaḍati, \"joins\", a form CDIAL reconstructs from its descendants (CDIAL 5091)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sunār ne aṅgūṭhī meṁ ek lāl patthar jaṛā. — The goldsmith set a red stone in the ring.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sunār ne aṅgūṭhī meṁ ek lāl patthar jaṛā.* — The goldsmith set a red stone in the ring.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a stamp, a die, then the Hindi for to file (metal or wood), then say jaṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a stamp, a die, then the Hindi for to file (metal or wood), then say *jaṛnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does जड़ना (jaṛnā) mean? (\"To set (a stone); to inlay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C514-camkana",
+      "sequence": 28440,
+      "title": "चमकाना (camkānā) — to polish, to make shine",
+      "headword": "चमकाना",
+      "romanization": "camkānā",
+      "gloss": "to polish, to make shine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f043a0da15214cc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to file (metal or wood), then the Hindi for to set (a stone)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चमकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चमकाना — camkānā — \"to polish, to make shine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने पुरानी चाँदी की थाली चमकाई। Mīrā ne purānī cā̃dī kī thālī camkāī. Mira polished the old silver platter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बर्तन चमकाए, usne bartan camkāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चमकाना (camkānā) is the causative of camaknā, \"to glitter\", which CDIAL derives from camakka, a reconstructed form (CDIAL 4676): it means \"to make glitter\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "camkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *camkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne purānī cā̃dī kī thālī camkāī. — Mira polished the old silver platter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne purānī cā̃dī kī thālī camkāī.* — Mira polished the old silver platter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to file (metal or wood), then the Hindi for to set (a stone), then say camkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to file (metal or wood), then the Hindi for to set (a stone), then say *camkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चमकाना (camkānā) mean? (\"To polish, to make shine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C514-pighlana",
+      "sequence": 28450,
+      "title": "पिघलाना (pighlānā) — to melt (something)",
+      "headword": "पिघलाना",
+      "romanization": "pighlānā",
+      "gloss": "to melt (something)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f28cbfa2029b7a15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to set (a stone), then the Hindi for to polish, to make shine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पिघलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिघलाना — pighlānā — \"to melt (something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सुनार ने आग पर चाँदी पिघलाई। Sunār ne āg par cā̃dī pighlāī. The goldsmith melted the silver over the fire."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने बर्फ़ पिघलाई, usne barf pighlāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पिघलाना (pighlānā) is the causative of pighalnā, \"to melt\", which CDIAL files under praghirati, a reconstructed form, noting the older causative paghilānā (CDIAL 8486)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighlānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighlānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pighlānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pighlānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Sunār ne āg par cā̃dī pighlāī. — The goldsmith melted the silver over the fire.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Sunār ne āg par cā̃dī pighlāī.* — The goldsmith melted the silver over the fire.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to set (a stone), then the Hindi for to polish, to make shine, then say pighlānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to set (a stone), then the Hindi for to polish, to make shine, then say *pighlānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पिघलाना (pighlānā) mean? (\"To melt (something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

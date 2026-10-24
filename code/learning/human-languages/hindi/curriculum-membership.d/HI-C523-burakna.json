@@ -1,0 +1,11 @@
+{
+  "id": "HI-C523-burakna",
+  "pathSegment": "HI-PATH-523-CHAKU523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-523-CHAKU523",
+      "order": 3
+    }
+  ]
+}

@@ -9,7 +9,7 @@
  * @module types
  */
 
-import type { CodeBlockNode } from "@coding-adventures/document-ast";
+import type { CodeBlockNode, FencedBlockNode } from "@coding-adventures/document-ast";
 
 /**
  * Token-type classification for a highlighted span.  The set is
@@ -92,4 +92,9 @@ export interface HighlightOptions {
    * forward-compatibility.
    */
   readonly theme?: string;
+}
+
+/** Source-preserving TE04 variant; legacy code interfaces remain unchanged. */
+export interface HighlightedFencedBlockNode extends FencedBlockNode {
+  readonly highlighted: readonly HighlightSpan[];
 }

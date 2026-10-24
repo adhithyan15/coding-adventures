@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:67dbedc129e36066",
+  "lessonIds": [
+    "HI-C462-abhiman",
+    "HI-C462-itrana",
+    "HI-C462-sekhi",
+    "HI-C462-akarna",
+    "HI-C462-nakhra"
+  ],
+  "tex": "hindi/book/chapters/ch462-showing-off.tex"
+}

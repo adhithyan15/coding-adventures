@@ -1,0 +1,19 @@
+{
+  "chapter": 455,
+  "title": "Sadness and Regret",
+  "label": "ch:hi-sadness-and-regret",
+  "canDo": "I can say that someone was let down or sorry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C455-dukhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 455: I can say that someone was let down or sorry.",
+    "assesses": [
+      "HI-LEX-C455-GAM455-03",
+      "HI-LEX-C455-GAM455-04",
+      "HI-LEX-C455-GAM455-05"
+    ]
+  }
+}

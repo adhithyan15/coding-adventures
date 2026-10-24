@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 503,
+  "sourceHash": "fnv1a64:e0986c08ccc49bd6",
+  "lessonIds": [
+    "HI-C503-grhasthi",
+    "HI-C503-mukhiya",
+    "HI-C503-buzurg",
+    "HI-C503-pirhi",
+    "HI-C503-posna"
+  ],
+  "tex": "hindi/book/chapters/ch503-the-generations.tex"
+}

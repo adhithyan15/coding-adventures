@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C512-kapas",
+    "language": "hindi",
+    "chapter": 512,
+    "sequence": 28300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3def276c94e8333"
+  },
+  "findings": []
+}

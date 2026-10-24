@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-406-TAIKSI406",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can take a taxi, deal with a flat tyre and carry a licence and a helmet.",
+  "prerequisites": []
+}

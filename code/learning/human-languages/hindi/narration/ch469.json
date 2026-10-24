@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 469,
+  "title": "Generous and Mean",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:65662a73f2843b46",
+  "lessons": [
+    {
+      "id": "HI-C469-krpan",
+      "sequence": 25870,
+      "title": "कृपण (kṛpaṇ) — miserly; tight-fisted",
+      "headword": "कृपण",
+      "romanization": "kṛpaṇ",
+      "gloss": "miserly; tight-fisted",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9c95351d18eac36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to snap at, then the Hindi for to snap irritably."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कृपण",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृपण — kṛpaṇ — \"miserly; tight-fisted\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा पड़ोसी बहुत कृपण है, अपने बच्चों को भी पैसे नहीं देता। merā paṛosī bahut kṛpaṇ hai, apne baccoṁ ko bhī paise nahīṃ detā. My neighbour is terribly tight-fisted; he won't give money even to his own children."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कृपण (kṛpaṇ) is a tatsama, borrowed from Sanskrit kṛpaṇa, first \"pitiable\" and then \"miserly, stingy\" (Monier-Williams). It is a formal word, the one books use for a miser."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛpaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛpaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṛpaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṛpaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā paṛosī bahut kṛpaṇ hai, apne baccoṁ ko bhī paise nahīṃ detā. — My neighbour is terribly tight-fisted; he won't give money even to his own children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā paṛosī bahut kṛpaṇ hai, apne baccoṁ ko bhī paise nahīṃ detā.* — My neighbour is terribly tight-fisted; he won't give money even to his own children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to snap at, then the Hindi for to snap irritably, then say kṛpaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to snap at, then the Hindi for to snap irritably, then say *kṛpaṇ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कृपण (kṛpaṇ) mean? (\"Miserly; tight-fisted\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C469-mitvyayi",
+      "sequence": 25880,
+      "title": "मितव्ययी (mitvyayī) — thrifty; careful with money",
+      "headword": "मितव्ययी",
+      "romanization": "mitvyayī",
+      "gloss": "thrifty; careful with money",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54717fe1ad27e7e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to snap irritably, then the Hindi for miserly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मितव्ययी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मितव्ययी — mitvyayī — \"thrifty; careful with money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी बहुत मितव्ययी हैं, एक पैसा भी बेकार नहीं करतीं। dādī bahut mitvyayī haiṁ, ek paisā bhī bekār nahīṃ kartīṃ. Grandmother is very thrifty; she doesn't waste a single paisa."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मितव्ययी (mitvyayī) is a tatsama, borrowed from Sanskrit mitavyayin, \"spending little, frugal\", built on mita, \"measured\", and vyaya, \"spending\" (Monier-Williams). kṛpaṇ is mean; mitvyayī is sensible. It is a formal word; speech often says someone is careful with money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitvyayī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitvyayī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mitvyayī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mitvyayī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī bahut mitvyayī haiṁ, ek paisā bhī bekār nahīṃ kartīṃ. — Grandmother is very thrifty; she doesn't waste a single paisa.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī bahut mitvyayī haiṁ, ek paisā bhī bekār nahīṃ kartīṃ.* — Grandmother is very thrifty; she doesn't waste a single paisa.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to snap irritably, then the Hindi for miserly, then say mitvyayī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to snap irritably, then the Hindi for miserly, then say *mitvyayī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मितव्ययी (mitvyayī) mean? (\"Thrifty; careful with money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C469-dan",
+      "sequence": 25890,
+      "title": "दान (dān) — a donation; charity",
+      "headword": "दान",
+      "romanization": "dān",
+      "gloss": "a donation; charity",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1167a1b8fe762706",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for miserly, then the Hindi for thrifty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दान — dān — \"a donation; charity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी हर साल मंदिर में दान देती हैं। dādī har sāl mandir meṁ dān detī haiṁ. Grandmother gives to the temple every year."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दान (dān) is a tatsama, borrowed from Sanskrit dāna, \"the act of giving\", from dā, \"to give\" (Monier-Williams), the same root as denā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī har sāl mandir meṁ dān detī haiṁ. — Grandmother gives to the temple every year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī har sāl mandir meṁ dān detī haiṁ.* — Grandmother gives to the temple every year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for miserly, then the Hindi for thrifty, then say dān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for miserly, then the Hindi for thrifty, then say *dān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दान (dān) mean? (\"A donation; charity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C469-lobhi",
+      "sequence": 25900,
+      "title": "लोभी (lobhī) — greedy; grasping",
+      "headword": "लोभी",
+      "romanization": "lobhī",
+      "gloss": "greedy; grasping",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87e72d8b18a18d76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for thrifty, then the Hindi for a donation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लोभी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभी — lobhī — \"greedy; grasping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "लोभी आदमी को कभी संतोष नहीं होता। lobhī ādmī ko kabhī santoṣ nahīṃ hotā. A greedy man is never content."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लोभी (lobhī) is a tatsama, borrowed from Sanskrit lobhin, \"covetous, avaricious\" (Monier-Williams), from lobha, \"greed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lobhī ādmī ko kabhī santoṣ nahīṃ hotā. — A greedy man is never content.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lobhī ādmī ko kabhī santoṣ nahīṃ hotā.* — A greedy man is never content.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for thrifty, then the Hindi for a donation, then say lobhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for thrifty, then the Hindi for a donation, then say *lobhī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लोभी (lobhī) mean? (\"Greedy; grasping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C469-bhikhari",
+      "sequence": 25910,
+      "title": "भिखारी (bhikhārī) — a beggar",
+      "headword": "भिखारी",
+      "romanization": "bhikhārī",
+      "gloss": "a beggar",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c193d620741db13e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a donation, then the Hindi for greedy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भिखारी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भिखारी — bhikhārī — \"a beggar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंदिर के सामने एक भिखारी बैठा था। mandir ke sāmne ek bhikhārī baiṭhā thā. A beggar was sitting in front of the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भिखारी (bhikhārī) is a tadbhava: CDIAL lists Hindi bhikhārī, \"mendicant\", under Sanskrit bhikṣācara, \"one who goes about begging\" (CDIAL 9486). The feminine is bhikhārin."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhikhārī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhikhārī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhikhārī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhikhārī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mandir ke sāmne ek bhikhārī baiṭhā thā. — A beggar was sitting in front of the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mandir ke sāmne ek bhikhārī baiṭhā thā.* — A beggar was sitting in front of the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a donation, then the Hindi for greedy, then say bhikhārī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a donation, then the Hindi for greedy, then say *bhikhārī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भिखारी (bhikhārī) mean? (\"A beggar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

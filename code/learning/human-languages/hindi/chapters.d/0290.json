@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "At the Police Station",
+  "label": "ch:hi-at-the-police-station",
+  "canDo": "I can report a crime at the police station.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C290-havalat",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can report a crime at the police station.",
+    "assesses": [
+      "HI-LEX-C290-THANA290-03",
+      "HI-LEX-C290-THANA290-04",
+      "HI-LEX-C290-THANA290-05"
+    ]
+  }
+}

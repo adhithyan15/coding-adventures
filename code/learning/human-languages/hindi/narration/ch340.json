@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 340,
+  "title": "A Novel",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ddd8f1ed2a91269",
+  "lessons": [
+    {
+      "id": "HI-C340-upanyas",
+      "sequence": 18660,
+      "title": "उपन्यास (upanyās) — a novel",
+      "headword": "उपन्यास",
+      "romanization": "upanyās",
+      "gloss": "a novel",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aa762121ba67d74c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for trickery, then the Hindi for to lure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उपन्यास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपन्यास — upanyās — \"a novel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने छुट्टी में एक लंबा उपन्यास पढ़ा। Mīrā ne chuṭṭī meṁ ek lambā upanyās paṛhā. Mira read a long novel during the holidays."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उपन्यास (upanyās) is Sanskrit upanyāsa, \"a placing near; a statement\" (Monier-Williams). Modern Hindi uses it for a novel; the dictionary gives only the older senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne chuṭṭī meṁ ek lambā upanyās paṛhā. — Mira read a long novel during the holidays.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne chuṭṭī meṁ ek lambā upanyās paṛhā.* — Mira read a long novel during the holidays.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for trickery, then the Hindi for to lure, then say upanyās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for trickery, then the Hindi for to lure, then say *upanyās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उपन्यास (upanyās) mean? (\"A novel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C340-nayak",
+      "sequence": 18670,
+      "title": "नायक (nāyak) — a hero (of a story); a leader",
+      "headword": "नायक",
+      "romanization": "nāyak",
+      "gloss": "a hero (of a story); a leader",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e4c18fd30ebf28d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to lure, then the Hindi for a novel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नायक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नायक — nāyak — \"a hero (of a story); a leader\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उपन्यास का नायक एक ग़रीब किसान है। upanyās kā nāyak ek ġarīb kisān hai. The hero of the novel is a poor farmer."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नायक (nāyak) is Sanskrit nāyaka, \"a leader\", and already in Sanskrit drama the hero (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāyak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāyak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyās kā nāyak ek ġarīb kisān hai. — The hero of the novel is a poor farmer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyās kā nāyak ek ġarīb kisān hai.* — The hero of the novel is a poor farmer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to lure, then the Hindi for a novel, then say nāyak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to lure, then the Hindi for a novel, then say *nāyak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नायक (nāyak) mean? (\"A hero (of a story); a leader\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C340-patra",
+      "sequence": 18680,
+      "title": "पात्र (pātra) — a character (in a story)",
+      "headword": "पात्र",
+      "romanization": "pātra",
+      "gloss": "a character (in a story)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa58ccef89909873",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a novel, then the Hindi for a hero (of a story)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पात्र",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पात्र — pātra — \"a character (in a story)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "इस कहानी में सिर्फ़ तीन पात्र हैं। is kahānī meṁ sirf tīn pātra haiṁ. There are only three characters in this story."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पात्र (pātra) is Sanskrit pātra (Monier-Williams), first a vessel and then a worthy person and an actor in a play; in Hindi it is any character in a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pātra, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pātra*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is kahānī meṁ sirf tīn pātra haiṁ. — There are only three characters in this story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is kahānī meṁ sirf tīn pātra haiṁ.* — There are only three characters in this story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a novel, then the Hindi for a hero (of a story), then say pātra again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a novel, then the Hindi for a hero (of a story), then say *pātra* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पात्र (pātra) mean? (\"A character (in a story)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C340-adhyay",
+      "sequence": 18690,
+      "title": "अध्याय (adhyāy) — a chapter of a book",
+      "headword": "अध्याय",
+      "romanization": "adhyāy",
+      "gloss": "a chapter of a book",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e19cc782a0875283",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a hero (of a story), then the Hindi for a character (in a story)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अध्याय",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अध्याय — adhyāy — \"a chapter of a book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पहले अध्याय में नायक गाँव छोड़ता है। pahle adhyāy meṁ nāyak gā̃v choṛtā hai. In the first chapter the hero leaves his village."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अध्याय (adhyāy) is Sanskrit adhyāya, \"a reading, a lesson\", and so a chapter (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāy*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "adhyāy, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *adhyāy*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahle adhyāy meṁ nāyak gā̃v choṛtā hai. — In the first chapter the hero leaves his village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahle adhyāy meṁ nāyak gā̃v choṛtā hai.* — In the first chapter the hero leaves his village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a hero (of a story), then the Hindi for a character (in a story), then say adhyāy again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a hero (of a story), then the Hindi for a character (in a story), then say *adhyāy* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अध्याय (adhyāy) mean? (\"A chapter of a book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C340-anjam",
+      "sequence": 18700,
+      "title": "अंजाम (añjām) — an outcome; the end",
+      "headword": "अंजाम",
+      "romanization": "añjām",
+      "gloss": "an outcome; the end",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0f554363e455c2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a character (in a story), then the Hindi for a chapter of a book."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अंजाम",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंजाम — añjām — \"an outcome; the end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उपन्यास का अंजाम मुझे पसंद नहीं आया। upanyās kā añjām mujhe pasand nahīṃ āyā. I didn't like the way the novel ended."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अंजाम (añjām) is usually traced to Persian anjām, \"an end, a completion\". It is how things turn out: इसका अंजाम बुरा होगा, this will end badly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añjām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añjām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "añjām, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *añjām*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upanyās kā añjām mujhe pasand nahīṃ āyā. — I didn't like the way the novel ended.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upanyās kā añjām mujhe pasand nahīṃ āyā.* — I didn't like the way the novel ended.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a character (in a story), then the Hindi for a chapter of a book, then say añjām again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a character (in a story), then the Hindi for a chapter of a book, then say *añjām* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अंजाम (añjām) mean? (\"An outcome; the end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

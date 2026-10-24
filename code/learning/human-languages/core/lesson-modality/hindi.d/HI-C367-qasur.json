@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C367-qasur",
+    "language": "hindi",
+    "chapter": 367,
+    "sequence": 20250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:58e65f6b6efb7b8e"
+  },
+  "findings": []
+}

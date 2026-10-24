@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C443-nirana",
+    "language": "hindi",
+    "chapter": 443,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce22c881cfa3bfaf"
+  },
+  "findings": []
+}

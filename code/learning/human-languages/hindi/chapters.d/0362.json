@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "What the Figures Say",
+  "label": "ch:hi-what-the-figures-say",
+  "canDo": "I can say what a test showed.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C362-pariksan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what a test showed.",
+    "assesses": [
+      "HI-LEX-C362-NISHKARSH362-03",
+      "HI-LEX-C362-NISHKARSH362-04",
+      "HI-LEX-C362-NISHKARSH362-05"
+    ]
+  }
+}

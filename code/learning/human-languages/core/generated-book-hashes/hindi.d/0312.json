@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:911982cafac87a2a",
+  "lessonIds": [
+    "HI-C312-rediyo",
+    "HI-C312-samacar",
+    "HI-C312-prasaran",
+    "HI-C312-surkhi",
+    "HI-C312-chapna"
+  ],
+  "tex": "hindi/book/chapters/ch312-the-morning-news.tex"
+}

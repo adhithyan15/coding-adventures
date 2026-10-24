@@ -6610,6 +6610,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // ALGOL 60 - exact normalizers may map distinct fractional conditional
+    // branches to one checked integer result.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure rightvalue; rightvalue := 3.5; boolean flag; real result; flag := rightvalue() > 0; result := entier(entier(if flag then 3.25 else 3.75) * sign(rightvalue())); output(result) end",
+        expect: Expect::Stdout("3"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -26119,6 +26130,32 @@ fn algol_normalized_conditional_reduction_runtime_real_output_runs_on_every_avai
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but the normalized conditional reduction program did not run"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_fractional_normalizer_reduction_runtime_real_output_runs_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program.src.contains(
+                    "result := entier(entier(if flag then 3.25 else 3.75) * sign(rightvalue()))",
+                )
+        })
+        .expect("the fractional normalizer reduction ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but the fractional normalizer reduction program did not run"
             );
             continue;
         };

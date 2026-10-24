@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Worry and Relief",
+  "label": "ch:hi-worry-and-relief",
+  "canDo": "I can say what is worrying someone and when it eased.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C458-asvasan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say what is worrying someone and when it eased.",
+    "assesses": [
+      "HI-LEX-C458-TANAV458-03",
+      "HI-LEX-C458-TANAV458-04",
+      "HI-LEX-C458-TANAV458-05"
+    ]
+  }
+}

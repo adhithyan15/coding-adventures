@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:57eeed6b64eefa83",
+  "lessonIds": [
+    "HI-C288-cori",
+    "HI-C288-curana",
+    "HI-C288-caukidar",
+    "HI-C288-gavah",
+    "HI-C288-bahar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch288.txt",
+  "json": "hindi/narration/ch288.json",
+  "textHash": "fnv1a64:da28fb911e88c8b4",
+  "jsonHash": "fnv1a64:57dce5f2fc72ab8f",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:45f134fad4bd2db4",
+  "lessonIds": [
+    "HI-C500-dulha",
+    "HI-C500-mehndi",
+    "HI-C500-sagai",
+    "HI-C500-barat",
+    "HI-C500-vidai"
+  ],
+  "tex": "hindi/book/chapters/ch500-a-wedding.tex"
+}

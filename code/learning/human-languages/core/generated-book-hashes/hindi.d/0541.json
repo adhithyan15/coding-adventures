@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 541,
+  "sourceHash": "fnv1a64:404f49af30b7a5ea",
+  "lessonIds": [
+    "HI-C541-rukavat",
+    "HI-C541-jhamela",
+    "HI-C541-atkana",
+    "HI-C541-phanda",
+    "HI-C541-uljhana"
+  ],
+  "tex": "hindi/book/chapters/ch541-something-in-the-way.tex"
+}

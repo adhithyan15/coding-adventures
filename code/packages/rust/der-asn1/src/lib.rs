@@ -539,6 +539,21 @@ pub fn decode_implicit_ia5_string(
 /// Validate one exact, empty NULL value.
 pub fn decode_null(element: Asn1Element<'_>) -> Result<(), Asn1Error> {
     expect_universal_primitive(element, NULL_TAG)?;
+    decode_null_contents(element)
+}
+
+/// Validate one implicitly tagged, empty NULL value.
+///
+/// The caller supplies the context-specific tag number from its ASN.1 schema.
+/// This helper validates only that exact primitive tag and the canonical empty
+/// NULL contents; it does not choose a schema tag or interpret the surrounding
+/// choice.
+pub fn decode_implicit_null(element: Asn1Element<'_>, tag_number: u32) -> Result<(), Asn1Error> {
+    expect_context_specific_primitive(element, tag_number)?;
+    decode_null_contents(element)
+}
+
+fn decode_null_contents(element: Asn1Element<'_>) -> Result<(), Asn1Error> {
     if element.value().is_empty() {
         Ok(())
     } else {

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:402526ea52d46c36",
+  "lessonIds": [
+    "HI-C496-anidra",
+    "HI-C496-uninda",
+    "HI-C496-pasarna",
+    "HI-C496-budbudana",
+    "HI-C496-bichauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch496.txt",
+  "json": "hindi/narration/ch496.json",
+  "textHash": "fnv1a64:501ca1ab503fdd90",
+  "jsonHash": "fnv1a64:3900725080ecb6ad",
+  "findings": []
+}

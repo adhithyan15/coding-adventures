@@ -1,0 +1,11 @@
+{
+  "id": "HI-C461-lajana",
+  "pathSegment": "HI-PATH-461-SANKOCH461",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-461-SANKOCH461",
+      "order": 3
+    }
+  ]
+}

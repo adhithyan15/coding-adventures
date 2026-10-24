@@ -414,6 +414,22 @@ function blockNode(value: unknown, path: string, depth: number, state: WalkState
       const node = exactFields(probe, path, ["type", "children"]);
       return { type, children: inlineNodes(node.children, `${path}.children`, depth + 1, state) };
     }
+    case "fenced_block": {
+      const node = exactFields(probe, path, ["type", "name", "info", "value"]);
+      const literal = stringValue(node.value, `${path}.value`, state.limits.maxStringScalars, { allowNewline: true });
+      if (literal !== "" && !literal.endsWith("\n")) invalidProject(`${path}.value`, "nonempty fenced blocks must end with a newline");
+      // Info has its own bounded text domain; legacy portableName rejects valid
+      // GFM names such as C++ and metadata containing spaces or tabs.
+      const hint = (key: "name" | "info") => node[key] === null ? null : stringValue(node[key], `${path}.${key}`, state.limits.maxStringScalars, { allowNewline: true });
+      const name = hint("name");
+      const info = hint("info");
+      // Import canonical AST data without decoding it again or trusting a
+      // separate dispatch name that contradicts the retained info string.
+      if (info === null ? name !== null : info === "" || info.trim() !== info || name !== info.split(/\s/u, 1)[0]) {
+        invalidProject(path, "fenced metadata must have a canonical info/name relationship");
+      }
+      return { type, name, info, value: literal };
+    }
     case "code_block": {
       const node = exactFields(probe, path, ["type", "language", "value"]);
       const literal = stringValue(node.value, `${path}.value`, state.limits.maxStringScalars, { allowNewline: true });

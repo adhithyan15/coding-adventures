@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C339-bhes",
+    "language": "hindi",
+    "chapter": 339,
+    "sequence": 18620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e32b88c14c4991f0"
+  },
+  "findings": []
+}

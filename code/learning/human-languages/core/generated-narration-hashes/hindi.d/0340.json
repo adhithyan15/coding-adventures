@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:2ddd8f1ed2a91269",
+  "lessonIds": [
+    "HI-C340-upanyas",
+    "HI-C340-nayak",
+    "HI-C340-patra",
+    "HI-C340-adhyay",
+    "HI-C340-anjam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch340.txt",
+  "json": "hindi/narration/ch340.json",
+  "textHash": "fnv1a64:e2fb0063b33748dc",
+  "jsonHash": "fnv1a64:3885b47918d42118",
+  "findings": []
+}

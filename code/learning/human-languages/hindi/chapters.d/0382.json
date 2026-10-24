@@ -1,0 +1,21 @@
+{
+  "chapter": 382,
+  "title": "Haste and Care",
+  "label": "ch:hi-haste-and-care",
+  "canDo": "I can warn someone what will happen if they rush.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R382-review-375-382",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can warn someone what will happen if they rush.",
+    "assesses": [
+      "HI-LEX-C382-JALDBAZI382-01",
+      "HI-LEX-C382-JALDBAZI382-02",
+      "HI-LEX-C382-JALDBAZI382-03",
+      "HI-LEX-C382-JALDBAZI382-04",
+      "HI-LEX-C382-JALDBAZI382-05"
+    ]
+  }
+}

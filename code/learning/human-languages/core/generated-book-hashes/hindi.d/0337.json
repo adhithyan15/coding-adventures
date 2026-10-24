@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:72f412d5a4f418f5",
+  "lessonIds": [
+    "HI-C337-khazana",
+    "HI-C337-garna",
+    "HI-C337-nag",
+    "HI-C337-mani",
+    "HI-C337-dasna"
+  ],
+  "tex": "hindi/book/chapters/ch337-buried-treasure.tex"
+}

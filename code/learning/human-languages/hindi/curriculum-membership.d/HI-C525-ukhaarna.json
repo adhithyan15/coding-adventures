@@ -1,0 +1,11 @@
+{
+  "id": "HI-C525-ukhaarna",
+  "pathSegment": "HI-PATH-525-PAUDHA525",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-525-PAUDHA525",
+      "order": 4
+    }
+  ]
+}

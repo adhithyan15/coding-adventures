@@ -1,0 +1,11 @@
+{
+  "id": "HI-C505-vidhva",
+  "pathSegment": "HI-PATH-505-SHOK505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-505-SHOK505",
+      "order": 3
+    }
+  ]
+}

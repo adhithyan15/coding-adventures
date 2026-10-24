@@ -1,0 +1,21 @@
+{
+  "chapter": 483,
+  "title": "Strength and Breath",
+  "label": "ch:hi-strength-and-breath",
+  "canDo": "I can say how strong or out of breath someone is.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R483-review-476-483",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say how strong or out of breath someone is.",
+    "assesses": [
+      "HI-LEX-C483-TAQAT483-01",
+      "HI-LEX-C483-TAQAT483-02",
+      "HI-LEX-C483-TAQAT483-03",
+      "HI-LEX-C483-TAQAT483-04",
+      "HI-LEX-C483-TAQAT483-05"
+    ]
+  }
+}

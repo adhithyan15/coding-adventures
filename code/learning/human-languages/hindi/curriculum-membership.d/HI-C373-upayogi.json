@@ -1,0 +1,11 @@
+{
+  "id": "HI-C373-upayogi",
+  "pathSegment": "HI-PATH-373-MUMKIN373",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-373-MUMKIN373",
+      "order": 4
+    }
+  ]
+}

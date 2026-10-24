@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Missing Someone",
+  "label": "ch:hi-missing-someone",
+  "canDo": "I can say that I miss someone far away.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C460-lalsa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say that I miss someone far away.",
+    "assesses": [
+      "HI-LEX-C460-BICHHAD460-03",
+      "HI-LEX-C460-BICHHAD460-04",
+      "HI-LEX-C460-BICHHAD460-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:09942e1f799d9b18",
+  "lessonIds": [
+    "HI-C508-intarvyu",
+    "HI-C508-niyukti",
+    "HI-C508-avedan",
+    "HI-C508-dakhila",
+    "HI-C508-vetan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch508.txt",
+  "json": "hindi/narration/ch508.json",
+  "textHash": "fnv1a64:1ae9cc6cb22db5c0",
+  "jsonHash": "fnv1a64:0017a30f11413cfe",
+  "findings": []
+}

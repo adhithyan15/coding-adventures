@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C442-sikhar",
+    "language": "hindi",
+    "chapter": 442,
+    "sequence": 24250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7900cc685729b4ef"
+  },
+  "findings": []
+}

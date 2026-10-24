@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 555,
+  "sourceHash": "fnv1a64:478f33bb0cb497a8",
+  "lessonIds": [
+    "HI-C555-phalna",
+    "HI-C555-dolna",
+    "HI-C555-tikana",
+    "HI-C555-giravat",
+    "HI-C555-patan"
+  ],
+  "tex": "hindi/book/chapters/ch555-ups-and-downs.tex"
+}

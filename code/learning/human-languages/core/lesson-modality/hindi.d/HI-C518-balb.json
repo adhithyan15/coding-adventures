@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C518-balb",
+    "language": "hindi",
+    "chapter": 518,
+    "sequence": 28620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8555b1804d4bde0"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:77c951bb3f992bd2",
+  "lessonIds": [
+    "HI-C345-uddesya",
+    "HI-C345-maqsad",
+    "HI-C345-khatir",
+    "HI-C345-sadhan",
+    "HI-C345-irada"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch345.txt",
+  "json": "hindi/narration/ch345.json",
+  "textHash": "fnv1a64:c26590ab98993cbd",
+  "jsonHash": "fnv1a64:0e043a1df0d3ffc6",
+  "findings": []
+}

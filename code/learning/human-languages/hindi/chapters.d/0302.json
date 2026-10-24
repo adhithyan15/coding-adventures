@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "An Announcement",
+  "label": "ch:hi-an-announcement",
+  "canDo": "I can pass on a warning that was announced.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C302-ttalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can pass on a warning that was announced.",
+    "assesses": [
+      "HI-LEX-C302-AILAN302-03",
+      "HI-LEX-C302-AILAN302-04",
+      "HI-LEX-C302-AILAN302-05"
+    ]
+  }
+}

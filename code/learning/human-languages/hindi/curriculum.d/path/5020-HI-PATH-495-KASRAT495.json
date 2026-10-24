@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-495-KASRAT495",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-495-KASRAT495"
+  ],
+  "after": []
+}

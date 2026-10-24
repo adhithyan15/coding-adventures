@@ -1,0 +1,11 @@
+{
+  "id": "HI-C527-kuci",
+  "pathSegment": "HI-PATH-527-KALA527",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-527-KALA527",
+      "order": 2
+    }
+  ]
+}

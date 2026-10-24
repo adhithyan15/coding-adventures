@@ -1,0 +1,919 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 559,
+  "title": "Looking Ahead",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:89dc9937591332d8",
+  "lessons": [
+    {
+      "id": "HI-C559-kalpna",
+      "sequence": 30710,
+      "title": "कल्पना (kalpnā) — imagination; an idea of what could be",
+      "headword": "कल्पना",
+      "romanization": "kalpnā",
+      "gloss": "imagination; an idea of what could be",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef6fbe754e8a9426",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an ambition, then the Hindi for a passion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: कल्पना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पना — kalpnā — \"imagination; an idea of what could be\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चों की कल्पना बहुत तेज़ होती है। Baccoṁ kī kalpnā bahut tez hotī hai. Children have very lively imaginations."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल्पना (kalpnā) is a tatsama, taken whole from Sanskrit kalpanā, \"making; creating in the mind, fiction\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalpnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalpnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Baccoṁ kī kalpnā bahut tez hotī hai. — Children have very lively imaginations.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Baccoṁ kī kalpnā bahut tez hotī hai.* — Children have very lively imaginations.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an ambition, then the Hindi for a passion, then say kalpnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an ambition, then the Hindi for a passion, then say *kalpnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does कल्पना (kalpnā) mean? (\"Imagination; an idea of what could be\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C559-suruat",
+      "sequence": 30720,
+      "title": "शुरुआत (śuruāt) — a beginning; a start",
+      "headword": "शुरुआत",
+      "romanization": "śuruāt",
+      "gloss": "a beginning; a start",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea025c5feccec889",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a passion, then the Hindi for imagination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शुरुआत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुरुआत — śuruāt — \"a beginning; a start\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नए साल की शुरुआत अच्छी हुई। Nae sāl kī śuruāt acchī huī. The new year got off to a good start."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शुरुआत (śuruāt) is usually traced to Arabic shurūʿ, \"a beginning\", through Persian. Hindi adds -āt to make a noun of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuruāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuruāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śuruāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śuruāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Nae sāl kī śuruāt acchī huī. — The new year got off to a good start.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Nae sāl kī śuruāt acchī huī.* — The new year got off to a good start.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a passion, then the Hindi for imagination, then say śuruāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a passion, then the Hindi for imagination, then say *śuruāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शुरुआत (śuruāt) mean? (\"A beginning; a start\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C559-udghatan",
+      "sequence": 30730,
+      "title": "उद्घाटन (udghāṭan) — an opening; an inauguration",
+      "headword": "उद्घाटन",
+      "romanization": "udghāṭan",
+      "gloss": "an opening; an inauguration",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32e8389c5ec9da6c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for imagination, then the Hindi for a beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उद्घाटन",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्घाटन — udghāṭan — \"an opening; an inauguration\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मंत्री ने नए पुल का उद्घाटन किया। Mantrī ne nae pul kā udghāṭan kiyā. The minister opened the new bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्घाटन (udghāṭan) is a tatsama, taken whole from Sanskrit udghāṭana, \"opening, unlocking\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udghāṭan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udghāṭan*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "udghāṭan, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *udghāṭan*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mantrī ne nae pul kā udghāṭan kiyā. — The minister opened the new bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mantrī ne nae pul kā udghāṭan kiyā.* — The minister opened the new bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for imagination, then the Hindi for a beginning, then say udghāṭan again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for imagination, then the Hindi for a beginning, then say *udghāṭan* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उद्घाटन (udghāṭan) mean? (\"An opening; an inauguration\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C559-bhavi",
+      "sequence": 30740,
+      "title": "भावी (bhāvī) — future; to come",
+      "headword": "भावी",
+      "romanization": "bhāvī",
+      "gloss": "future; to come",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:023027c111acfaac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a beginning, then the Hindi for an opening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भावी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावी — bhāvī — \"future; to come\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भावी (bhāvī) डाक्टर मेहनत से पढ़ रहे हैं। Bhāvī ḍākṭar mehnat se paṛh rahe haiṁ. The doctors of the future are studying hard."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भावी (bhāvī) is a tatsama, taken whole from Sanskrit bhāvin, \"becoming; future\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāvī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāvī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Bhāvī ḍākṭar mehnat se paṛh rahe haiṁ. — The doctors of the future are studying hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Bhāvī ḍākṭar mehnat se paṛh rahe haiṁ.* — The doctors of the future are studying hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a beginning, then the Hindi for an opening, then say bhāvī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a beginning, then the Hindi for an opening, then say *bhāvī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भावी (bhāvī) mean? (\"Future; to come\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C559-zindagi",
+      "sequence": 30750,
+      "title": "ज़िंदगी (zindagī) — life (as one lives it)",
+      "headword": "ज़िंदगी",
+      "romanization": "zindagī",
+      "gloss": "life (as one lives it)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcaf0077a3a4bf3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an opening, then the Hindi for future."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़िंदगी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़िंदगी — zindagī — \"life (as one lives it)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाँव की ज़िंदगी शहर से अलग है। Gā̃v kī zindagī śahar se alag hai. Village life is different from city life."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़िंदगी (zindagī) is usually traced to Persian zindagī, \"life\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zindagī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zindagī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zindagī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zindagī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Gā̃v kī zindagī śahar se alag hai. — Village life is different from city life.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Gā̃v kī zindagī śahar se alag hai.* — Village life is different from city life.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an opening, then the Hindi for future, then say zindagī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an opening, then the Hindi for future, then say *zindagī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़िंदगी (zindagī) mean? (\"Life (as one lives it)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R559-review-553-559",
+      "sequence": 30760,
+      "title": "Looking back: from In the Right Order to Looking Ahead",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from In the Right Order to Looking Ahead",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91b9a4774c1fe351",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for except (के सिवा) and a series."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "except (के सिवा), a series, order, a stage, a phase, a date (formal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: except (के सिवा), a series, order, a stage, a phase, a date (formal)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lesson (learned), ultimately, as a result, approximately, actually",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lesson (learned), ultimately, as a result, approximately, actually]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to bear fruit, to sway, to rest (something) against, a fall, a downfall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to bear fruit, to sway, to rest (something) against, a fall, a downfall]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "doubt (formal), certainly, surely, ever, a groundless fear, a firm decision",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: doubt (formal), certainly, surely, ever, a groundless fear, a firm decision]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a worry, peace of mind, ease, a guarantee, misfortune, fear, dread",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a worry, peace of mind, ease, a guarantee, misfortune, fear, dread]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a wish, a longing (for something), crazy (about), an interest, an ambition, a passion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a wish, a longing (for something), crazy (about), an interest, an ambition, a passion]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imagination, a beginning, an opening, future, life (as one lives it)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: imagination, a beginning, an opening, future, life (as one lives it)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Except (के सिवा)? (सिवा, sivā.) A series? (सिलसिला, silsilā.) Order? (क्रम, kram.) A stage, a phase? (चरण, caraṇ.) A date (formal)? (तिथि, tithi.) A lesson (learned)? (सबक़, sabaq.) Ultimately? (अंततः, antataḥ.) As a result? (नतीजतन, natījatan.) Approximately? (तक़रीबन, taqrīban.) Actually? (दरअसल, darasal.) To bear fruit? (फलना, phalnā.) To sway? (डोलना, ḍolnā.) To rest (something) against? (टिकाना, ṭikānā.) A fall? (गिरावट, girāvaṭ.) A downfall? (पतन, patan.) Doubt (formal)? (संदेह, sandeh.) Certainly, surely? (यक़ीनन, yaqīnan.) Ever? (हरगिज़, hargiz.) A groundless fear? (वहम, vaham.) A firm decision? (निश्चय, niścay.) A worry? (अंदेशा, andeśā.) Peace of mind, ease? (इत्मीनान, itmīnān.) A guarantee? (गारंटी, gāraṇṭī.) Misfortune? (दुर्भाग्य, durbhāgya.) Fear, dread? (ख़ौफ़, khauf.) A wish, a longing (for something)? (ख़्वाहिश, khvāhiś.) Crazy (about)? (दीवाना, dīvānā.) An interest? (रुचि, ruci.) An ambition? (आकांक्षा, ākāṅkṣā.) A passion? (जुनून, junūn.) Imagination? (कल्पना, kalpnā.) A beginning? (शुरुआत, śuruāt.) An opening? (उद्घाटन, udghāṭan.) Future? (भावी, bhāvī.) Life (as one lives it)? (ज़िंदगी, zindagī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R559-review-final-559",
+      "sequence": 30770,
+      "title": "Looking Ahead — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea7d213aea40e953",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for imagination and a beginning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imagination, a beginning, an opening, future, life (as one lives it)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: imagination, a beginning, an opening, future, life (as one lives it)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Imagination? (कल्पना, kalpnā.) A beginning? (शुरुआत, śuruāt.) An opening? (उद्घाटन, udghāṭan.) Future? (भावी, bhāvī.) Life (as one lives it)? (ज़िंदगी, zindagī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

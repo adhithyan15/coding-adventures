@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:4a2e736b5cb7e6c1",
+  "lessonIds": [
+    "HI-C395-mamzuri",
+    "HI-C395-intazam",
+    "HI-C395-batorna",
+    "HI-C395-felhona",
+    "HI-C395-qatai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch395.txt",
+  "json": "hindi/narration/ch395.json",
+  "textHash": "fnv1a64:eb23ddd2f8499a24",
+  "jsonHash": "fnv1a64:3b8722283aa54202",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 286,
+  "title": "If, and Otherwise",
+  "label": "ch:hi-if-and-otherwise",
+  "canDo": "I can say what will happen if something happens (agar … to …), with the future or the plain past after agar, and warn with nahīṃ to and varnā.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R286-if-and-otherwise",
+    "kind": "production",
+    "summary": "Complete HI-R286-if-and-otherwise: say what will happen if, and what will happen otherwise.",
+    "assesses": [
+      "HI-GRAMMAR-C286-AGAR-TO-01",
+      "HI-LEX-C286-VARNA-01",
+      "HI-GRAMMAR-C286-IF-NOW-01",
+      "HI-GRAMMAR-C286-IF-PERFECTIVE-01",
+      "HI-GRAMMAR-C286-NAHIN-TO-01"
+    ]
+  }
+}

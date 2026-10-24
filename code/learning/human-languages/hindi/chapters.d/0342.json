@@ -1,0 +1,21 @@
+{
+  "chapter": 342,
+  "title": "Books and Their Makers",
+  "label": "ch:hi-books-and-their-makers",
+  "canDo": "I can talk about how a book came to be.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R342-review-final-342",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about how a book came to be.",
+    "assesses": [
+      "HI-LEX-C342-PRAKASHAK342-01",
+      "HI-LEX-C342-PRAKASHAK342-02",
+      "HI-LEX-C342-PRAKASHAK342-03",
+      "HI-LEX-C342-PRAKASHAK342-04",
+      "HI-LEX-C342-PRAKASHAK342-05"
+    ]
+  }
+}

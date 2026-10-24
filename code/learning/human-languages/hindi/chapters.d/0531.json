@@ -1,0 +1,19 @@
+{
+  "chapter": 531,
+  "title": "Drums and Pipes",
+  "label": "ch:hi-drums-and-pipes",
+  "canDo": "I can name instruments and say who plays them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C531-mrdang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 531: I can name instruments and say who plays them.",
+    "assesses": [
+      "HI-LEX-C531-DHOLAK531-03",
+      "HI-LEX-C531-DHOLAK531-04",
+      "HI-LEX-C531-DHOLAK531-05"
+    ]
+  }
+}

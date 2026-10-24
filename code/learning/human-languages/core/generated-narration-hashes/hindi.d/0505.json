@@ -1,0 +1,21 @@
+{
+  "language": "hindi",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:0ee89777dff94e77",
+  "lessonIds": [
+    "HI-C505-sok",
+    "HI-C505-smasan",
+    "HI-C505-cita",
+    "HI-C505-vidhva",
+    "HI-C505-dafnana",
+    "HI-R505-review-499-505",
+    "HI-R505-review-final-505"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "hindi/narration/ch505.txt",
+  "json": "hindi/narration/ch505.json",
+  "textHash": "fnv1a64:e7eaf68ae93f1e08",
+  "jsonHash": "fnv1a64:5141a0cb7b4b7451",
+  "findings": []
+}

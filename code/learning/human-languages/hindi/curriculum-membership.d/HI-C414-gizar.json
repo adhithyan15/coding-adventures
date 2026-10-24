@@ -1,0 +1,11 @@
+{
+  "id": "HI-C414-gizar",
+  "pathSegment": "HI-PATH-414-GUSALKHANA414",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-414-GUSALKHANA414",
+      "order": 2
+    }
+  ]
+}

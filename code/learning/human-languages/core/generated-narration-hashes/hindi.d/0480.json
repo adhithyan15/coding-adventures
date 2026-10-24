@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:f7966208d3acd3c1",
+  "lessonIds": [
+    "HI-C480-svad",
+    "HI-C480-spars",
+    "HI-C480-gandh",
+    "HI-C480-mahak",
+    "HI-C480-catna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch480.txt",
+  "json": "hindi/narration/ch480.json",
+  "textHash": "fnv1a64:0300cfe3d27dd32c",
+  "jsonHash": "fnv1a64:6acb812012340609",
+  "findings": []
+}

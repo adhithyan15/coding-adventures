@@ -1,0 +1,11 @@
+{
+  "id": "HI-C369-samstha",
+  "pathSegment": "HI-PATH-369-SANSTHA369",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-369-SANSTHA369",
+      "order": 2
+    }
+  ]
+}

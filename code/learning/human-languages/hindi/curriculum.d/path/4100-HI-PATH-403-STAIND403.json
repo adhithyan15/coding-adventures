@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-403-STAIND403",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "HI-EXT-403-STAIND403"
+  ],
+  "after": []
+}

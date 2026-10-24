@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:9e8fa0aebfa5840f",
+  "lessonIds": [
+    "HI-C551-manzur",
+    "HI-C551-azad",
+    "HI-C551-lacar",
+    "HI-C551-ariyal",
+    "HI-C551-zabardasti"
+  ],
+  "tex": "hindi/book/chapters/ch551-free-to-choose.tex"
+}

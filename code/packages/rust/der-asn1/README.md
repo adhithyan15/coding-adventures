@@ -26,9 +26,11 @@ reject alternate BER value encodings for BOOLEAN, INTEGER, BIT STRING, NULL,
 ENUMERATED, and OBJECT IDENTIFIER. INTEGER and ENUMERATED retain their distinct
 universal tags and result types while sharing canonical two's-complement
 content validation. OCTET STRING contents remain borrowed and IA5String
-contents must be ASCII. Schema-selected implicit BIT STRING, OCTET STRING,
+contents must be ASCII. Schema-selected implicit NULL, BIT STRING, OCTET STRING,
 IA5String, and OBJECT IDENTIFIER values require an exact primitive
-context-specific tag while reusing the universal value checks. SEQUENCE, SET,
+context-specific tag while reusing the universal value checks. The implicit
+NULL helper also requires empty contents; the caller remains responsible for
+selecting the schema tag and interpreting the surrounding choice. SEQUENCE, SET,
 schema-selected context-specific IMPLICIT constructed values, and explicit
 context wrappers can be opened without recursion or allocation. Every
 constructed cursor shares the same depth and total-element budget. Errors
@@ -37,8 +39,9 @@ contain only a category and local byte offset.
 This crate does not parse X.509 fields, time or string semantics, PEM, paths,
 signatures, trust roots, TLS, or network traffic. Successful decoding proves
 only canonical framing and the typed value checks invoked by the caller.
-In particular, ENUMERATED decoding does not define a value registry or grant
-CRL, OCSP, revocation, or freshness semantics.
+In particular, ENUMERATED decoding does not define a value registry, and
+implicit NULL decoding does not establish an OCSP status. Neither grants CRL,
+OCSP, revocation, authentication, or freshness semantics.
 
 The package-native conformance test executes the 122-case language-neutral
 DER ASN.1 v1 corpus. Its framing tranche resolves and executes the referenced

@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Learning a Raga",
+  "label": "ch:hi-learning-a-raga",
+  "canDo": "I can talk about music lessons.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C530-gungunana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about music lessons.",
+    "assesses": [
+      "HI-LEX-C530-SANGEET530-03",
+      "HI-LEX-C530-SANGEET530-04",
+      "HI-LEX-C530-SANGEET530-05"
+    ]
+  }
+}

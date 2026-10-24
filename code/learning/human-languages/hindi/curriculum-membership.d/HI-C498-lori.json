@@ -1,0 +1,11 @@
+{
+  "id": "HI-C498-lori",
+  "pathSegment": "HI-PATH-498-PARVARISH498",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-498-PARVARISH498",
+      "order": 1
+    }
+  ]
+}

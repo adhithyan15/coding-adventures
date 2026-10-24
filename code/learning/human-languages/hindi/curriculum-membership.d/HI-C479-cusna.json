@@ -1,0 +1,11 @@
+{
+  "id": "HI-C479-cusna",
+  "pathSegment": "HI-PATH-479-MUNH479",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-479-MUNH479",
+      "order": 2
+    }
+  ]
+}

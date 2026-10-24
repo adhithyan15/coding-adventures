@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C391-dohrana",
+    "language": "hindi",
+    "chapter": 391,
+    "sequence": 21500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cbc0e8bc6e436ada"
+  },
+  "findings": []
+}

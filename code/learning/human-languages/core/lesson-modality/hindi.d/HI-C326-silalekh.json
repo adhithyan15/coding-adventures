@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C326-silalekh",
+    "language": "hindi",
+    "chapter": 326,
+    "sequence": 17970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:452c96716ec0a1ea"
+  },
+  "findings": []
+}

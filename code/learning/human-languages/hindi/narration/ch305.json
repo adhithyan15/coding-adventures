@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 305,
+  "title": "The Water Rose",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a82db51f80b13129",
+  "lessons": [
+    {
+      "id": "HI-C305-uphanna",
+      "sequence": 16870,
+      "title": "उफनना (uphannā) — to swell up; to boil over",
+      "headword": "उफनना",
+      "romanization": "uphannā",
+      "gloss": "to swell up; to boil over",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aed37c4a1c4318af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for torrential (of rain), then the Hindi for destruction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उफनना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उफनना — uphannā — \"to swell up; to boil over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भारी बारिश के बाद नदी उफन गई। bhārī bāriś ke bād nadī uphan gaī. After the heavy rain the river swelled over its banks."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह नदी उफनी, vah nadī uphnī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उफनना (uphannā) is inherited from utphaṇati, a form CDIAL reconstructs (CDIAL 1836). Milk on the fire उफनता है, and so does a river in flood."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uphannā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uphannā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uphannā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uphannā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhārī bāriś ke bād nadī uphan gaī. — After the heavy rain the river swelled over its banks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhārī bāriś ke bād nadī uphan gaī.* — After the heavy rain the river swelled over its banks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for torrential (of rain), then the Hindi for destruction, then say uphannā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for torrential (of rain), then the Hindi for destruction, then say *uphannā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उफनना (uphannā) mean? (\"To swell up; to boil over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C305-badh",
+      "sequence": 16880,
+      "title": "बाँध (bā̃dh) — a dam; an embankment",
+      "headword": "बाँध",
+      "romanization": "bā̃dh",
+      "gloss": "a dam; an embankment",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c2e27a54e17437fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for destruction, then the Hindi for to swell up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बाँध",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बाँध — bā̃dh — \"a dam; an embankment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पानी के ज़ोर से बाँध टूट गया। pānī ke zor se bā̃dh ṭūṭ gayā. The force of the water broke the dam."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comes from Sanskrit bandha, \"a binding, a fastening\" (Monier-Williams), the family of बाँधना, to tie: a बाँध (bā̃dh) ties the water in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bā̃dh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bā̃dh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pānī ke zor se bā̃dh ṭūṭ gayā. — The force of the water broke the dam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pānī ke zor se bā̃dh ṭūṭ gayā.* — The force of the water broke the dam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for destruction, then the Hindi for to swell up, then say bā̃dh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for destruction, then the Hindi for to swell up, then say *bā̃dh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बाँध (bā̃dh) mean? (\"A dam; an embankment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C305-kramsah",
+      "sequence": 16890,
+      "title": "क्रमशः (kramśaḥ) — little by little; by degrees",
+      "headword": "क्रमशः",
+      "romanization": "kramśaḥ",
+      "gloss": "little by little; by degrees",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d495c953b84bb6d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to swell up, then the Hindi for a dam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: क्रमशः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रमशः — kramśaḥ — \"little by little; by degrees\"."
+            },
+            {
+              "kind": "speech",
+              "text": "नदी का पानी क्रमशः ऊपर आ रहा था। nadī kā pānī kramśaḥ ūpar ā rahā thā. The river water was rising little by little."
+            },
+            {
+              "kind": "speech",
+              "text": "Formal and written; speech says धीरे-धीरे."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क्रमशः (kramśaḥ) is Sanskrit kramaśas, \"step by step, by degrees\" (Monier-Williams), from krama, a step. It ends in the sign ः. At the end of a newspaper story printed in parts it means \"to be continued\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramśaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramśaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kramśaḥ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kramśaḥ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nadī kā pānī kramśaḥ ūpar ā rahā thā. — The river water was rising little by little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nadī kā pānī kramśaḥ ūpar ā rahā thā.* — The river water was rising little by little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to swell up, then the Hindi for a dam, then say kramśaḥ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to swell up, then the Hindi for a dam, then say *kramśaḥ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does क्रमशः (kramśaḥ) mean? (\"Little by little; by degrees\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C305-sailab",
+      "sequence": 16900,
+      "title": "सैलाब (sailāb) — a deluge; a flood",
+      "headword": "सैलाब",
+      "romanization": "sailāb",
+      "gloss": "a deluge; a flood",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fcf8ef73407c6bbe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a dam, then the Hindi for little by little."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सैलाब",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सैलाब — sailāb — \"a deluge; a flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "इस साल का सैलाब पिछले साल से ज़्यादा बड़ा था। is sāl kā sailāb pichle sāl se zyādā baṛā thā. This year's flood was bigger than last year's."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सैलाब (sailāb) is usually traced to Persian sailāb, \"a flood\", which joins Arabic sayl, a torrent, and Persian āb, water. Beside बाढ़, it is the word for a great rush of water."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sailāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sailāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sailāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sailāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "is sāl kā sailāb pichle sāl se zyādā baṛā thā. — This year's flood was bigger than last year's.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *is sāl kā sailāb pichle sāl se zyādā baṛā thā.* — This year's flood was bigger than last year's.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a dam, then the Hindi for little by little, then say sailāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a dam, then the Hindi for little by little, then say *sailāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सैलाब (sailāb) mean? (\"A deluge; a flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C305-bhavar",
+      "sequence": 16910,
+      "title": "भँवर (bhãvar) — a whirlpool",
+      "headword": "भँवर",
+      "romanization": "bhãvar",
+      "gloss": "a whirlpool",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91ef2c7b724a2c81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for little by little, then the Hindi for a deluge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भँवर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भँवर — bhãvar — \"a whirlpool\"."
+            },
+            {
+              "kind": "speech",
+              "text": "भँवर में एक नाव डूब गई। bhãvar meṁ ek nāv ḍūb gaī. A boat went down in the whirlpool."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is listed by CDIAL under Sanskrit bhramara, \"moving unsteadily, revolving\" (CDIAL 9650), beside bhramaraka, a spinning top or a whirlpool, of the family of bhram, to whirl about. Water that turns round and round is a भँवर (bhãvar)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhãvar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhãvar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhãvar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhãvar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhãvar meṁ ek nāv ḍūb gaī. — A boat went down in the whirlpool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhãvar meṁ ek nāv ḍūb gaī.* — A boat went down in the whirlpool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for little by little, then the Hindi for a deluge, then say bhãvar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for little by little, then the Hindi for a deluge, then say *bhãvar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भँवर (bhãvar) mean? (\"A whirlpool\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

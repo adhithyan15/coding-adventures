@@ -1,0 +1,11 @@
+{
+  "id": "HI-C287-hotatoata",
+  "pathSegment": "HI-PATH-287-DEPENDSWOULD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-287-DEPENDSWOULD",
+      "order": 2
+    }
+  ]
+}

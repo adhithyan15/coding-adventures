@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "Catching Something",
+  "label": "ch:hi-catching-something",
+  "canDo": "I can talk about illnesses that spread.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C487-pakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about illnesses that spread.",
+    "assesses": [
+      "HI-LEX-C487-SANKRAMAN487-03",
+      "HI-LEX-C487-SANKRAMAN487-04",
+      "HI-LEX-C487-SANKRAMAN487-05"
+    ]
+  }
+}

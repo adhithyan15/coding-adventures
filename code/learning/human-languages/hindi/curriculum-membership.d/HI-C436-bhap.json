@@ -1,0 +1,11 @@
+{
+  "id": "HI-C436-bhap",
+  "pathSegment": "HI-PATH-436-BUND436",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-436-BUND436",
+      "order": 2
+    }
+  ]
+}

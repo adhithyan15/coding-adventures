@@ -1684,6 +1684,48 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_parallel_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCAR ||--o{ PERSON : \"insured for\"\nCAR }o--|| PERSON : \"owned by\"\n",
+        );
+        let car_ids = tokens.iter().filter(|token| token.value == "CAR").count();
+        let person_ids = tokens
+            .iter()
+            .filter(|token| token.value == "PERSON")
+            .count();
+
+        assert_eq!(car_ids, 2);
+        assert_eq!(person_ids, 2);
+        assert!(tokens.iter().any(|token| token.value == "insured for"));
+        assert!(tokens.iter().any(|token| token.value == "owned by"));
+    }
+
+    #[test]
+    fn tokenizes_er_leading_asterisk_attribute_names() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  string *title\n  id *the_Primary_Key PK\n}\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(values.contains(&"*title"));
+        assert!(values.contains(&"*the_Primary_Key"));
+    }
+
+    #[test]
+    fn tokenizes_er_mixed_relationship_operators() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER 1.-one or more DELIVERY_ADDRESS : mixed left\nCUSTOMER 1-.one or more POSTAL_ADDRESS : mixed right\n",
+        );
+        let operators: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("NON_IDENTIFYING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(operators, [".-", "-."]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

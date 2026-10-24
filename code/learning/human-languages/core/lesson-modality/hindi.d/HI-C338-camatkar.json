@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C338-camatkar",
+    "language": "hindi",
+    "chapter": 338,
+    "sequence": 18600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:93a2f12ad1860aee"
+  },
+  "findings": []
+}

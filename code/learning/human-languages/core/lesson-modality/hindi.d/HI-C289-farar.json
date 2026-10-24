@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C289-farar",
+    "language": "hindi",
+    "chapter": 289,
+    "sequence": 16080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6996d2d9094946a7"
+  },
+  "findings": []
+}

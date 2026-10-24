@@ -1,6 +1,6 @@
 # Marwadi pre-A1 mock rubric
 
-This rubric scores mock 1 against [`task-shapes/pre-a1.json`](../../task-shapes/pre-a1.json).
+This rubric scores mocks 1 and 2 against [`task-shapes/pre-a1.json`](../../task-shapes/pre-a1.json).
 Each of reading, listening, writing, and speaking is a separate 100-point
 paper. The project-defined threshold is at least 60/100 on every paper; a high
 score on another paper cannot compensate for one below the threshold.

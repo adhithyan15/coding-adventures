@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "The Craftsman's Bench",
+  "label": "ch:hi-the-craftsman-s-bench",
+  "canDo": "I can name skilled trades and the tools they use.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C506-mistri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can name skilled trades and the tools they use.",
+    "assesses": [
+      "HI-LEX-C506-KARIGAR506-03",
+      "HI-LEX-C506-KARIGAR506-04",
+      "HI-LEX-C506-KARIGAR506-05"
+    ]
+  }
+}

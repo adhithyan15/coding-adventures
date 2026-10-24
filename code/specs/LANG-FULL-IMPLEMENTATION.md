@@ -35,9 +35,10 @@ also participate; none of these forms requires a standard function in the base.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
-Exact integral straight-line local real snapshots may enter those reductions
-through built-in `entier`; fractional, oversized, dynamic, captured, array-backed,
-and by-name real values fail closed.
+Finite straight-line local real snapshots may enter those reductions through
+built-in `entier` when the normalized result remains in the exact binary64
+integer range; oversized, dynamic, captured, array-backed, and by-name real
+values fail closed.
 Exact perfect-square roots of those checked reductions may also pass through
 built-in `sqrt`; non-square, negative, dynamic, and overridden roots fail
 closed. Their radicands may contain checked integer `div`/`mod`, bounded powers,
@@ -50,6 +51,10 @@ closed.
 Exact built-in normalizers may consume a pure runtime conditional when every
 branch maps independently to the same checked integer result. Unequal mapped
 results, procedure-calling selectors, and dynamic branches fail closed.
+Finite fractional static-real inputs may feed those normalizers when the result
+is an exact integer, including nested call-free conditionals whose normalized
+branches agree. Nonintegral, path-dependent, dynamic, and oversized results
+fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.

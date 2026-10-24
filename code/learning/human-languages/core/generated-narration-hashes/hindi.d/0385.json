@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:b4a01aad150daafd",
+  "lessonIds": [
+    "HI-C385-chitrana",
+    "HI-C385-mitna",
+    "HI-C385-latarna",
+    "HI-C385-dhalna",
+    "HI-C385-adhura"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "hindi/narration/ch385.txt",
+  "json": "hindi/narration/ch385.json",
+  "textHash": "fnv1a64:29d7b7a62f8ac357",
+  "jsonHash": "fnv1a64:903dcc435b53715e",
+  "findings": []
+}

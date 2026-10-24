@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C379-patakna",
+    "language": "hindi",
+    "chapter": 379,
+    "sequence": 20880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:df3ade9fe9fe23df"
+  },
+  "findings": []
+}

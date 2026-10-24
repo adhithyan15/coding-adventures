@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Near and Across",
+  "label": "ch:hi-near-and-across",
+  "canDo": "I can say a place is close by, across the river or beside the bank, and take someone there.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C418-pahucana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can say a place is close by, across the river or beside the bank, and take someone there.",
+    "assesses": [
+      "HI-LEX-C418-NAZDIK418-03",
+      "HI-LEX-C418-NAZDIK418-04",
+      "HI-LEX-C418-NAZDIK418-05"
+    ]
+  }
+}

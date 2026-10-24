@@ -1,0 +1,21 @@
+{
+  "chapter": 295,
+  "title": "The Case in Court",
+  "label": "ch:hi-the-case-in-court",
+  "canDo": "I can tell how a case ended and say what happens if someone is caught.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-R295-review-288-295",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can tell how a case ended and say what happens if someone is caught.",
+    "assesses": [
+      "HI-LEX-C295-ADALAT295-01",
+      "HI-LEX-C295-ADALAT295-02",
+      "HI-LEX-C295-ADALAT295-03",
+      "HI-LEX-C295-ADALAT295-04",
+      "HI-LEX-C295-ADALAT295-05"
+    ]
+  }
+}

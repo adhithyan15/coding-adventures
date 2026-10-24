@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C295-muqadma",
+    "language": "hindi",
+    "chapter": 295,
+    "sequence": 16360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:909b9fbf9eed470c"
+  },
+  "findings": []
+}

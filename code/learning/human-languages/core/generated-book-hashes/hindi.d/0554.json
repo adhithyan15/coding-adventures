@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 554,
+  "sourceHash": "fnv1a64:2183543230e4f030",
+  "lessonIds": [
+    "HI-C554-sabaq",
+    "HI-C554-antatah",
+    "HI-C554-natijatan",
+    "HI-C554-taqriban",
+    "HI-C554-darasal"
+  ],
+  "tex": "hindi/book/chapters/ch554-how-it-turned-out.tex"
+}

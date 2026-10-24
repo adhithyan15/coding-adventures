@@ -1,0 +1,21 @@
+{
+  "chapter": 350,
+  "title": "For Example",
+  "label": "ch:hi-for-example",
+  "canDo": "I can back up a point with an example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R350-review-343-350",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can back up a point with an example.",
+    "assesses": [
+      "HI-LEX-C350-MISAAL350-01",
+      "HI-LEX-C350-MISAAL350-02",
+      "HI-LEX-C350-MISAAL350-03",
+      "HI-LEX-C350-MISAAL350-04",
+      "HI-LEX-C350-MISAAL350-05"
+    ]
+  }
+}

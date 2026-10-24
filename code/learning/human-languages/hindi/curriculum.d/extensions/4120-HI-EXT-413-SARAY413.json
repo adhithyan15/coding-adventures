@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-413-SARAY413",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can stay at an inn or a rest house, take the lift and get a fresh sheet on the bed.",
+  "prerequisites": []
+}

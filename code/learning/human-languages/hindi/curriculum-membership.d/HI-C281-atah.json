@@ -1,0 +1,11 @@
+{
+  "id": "HI-C281-atah",
+  "pathSegment": "HI-PATH-281-SHOULDSO",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-281-SHOULDSO",
+      "order": 1
+    }
+  ]
+}

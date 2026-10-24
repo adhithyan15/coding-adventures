@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C285-sezyada",
+    "language": "hindi",
+    "chapter": 285,
+    "sequence": 15680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f949cf16cbd766f8"
+  },
+  "findings": []
+}

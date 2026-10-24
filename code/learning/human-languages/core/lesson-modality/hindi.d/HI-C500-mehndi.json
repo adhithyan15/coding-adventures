@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C500-mehndi",
+    "language": "hindi",
+    "chapter": 500,
+    "sequence": 27470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a93930213208e4f1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C517-lipna",
+    "language": "hindi",
+    "chapter": 517,
+    "sequence": 28590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7e9acfd44eb4dfe4"
+  },
+  "findings": []
+}

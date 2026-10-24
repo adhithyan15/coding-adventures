@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:f455b49def8046eb",
+  "lessonIds": [
+    "HI-C302-apda",
+    "HI-C302-cetavni",
+    "HI-C302-ailan",
+    "HI-C302-savdhan",
+    "HI-C302-ttalna"
+  ],
+  "tex": "hindi/book/chapters/ch302-an-announcement.tex"
+}

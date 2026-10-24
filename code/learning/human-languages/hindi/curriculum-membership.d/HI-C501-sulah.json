@@ -1,0 +1,11 @@
+{
+  "id": "HI-C501-sulah",
+  "pathSegment": "HI-PATH-501-NATA501",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-501-NATA501",
+      "order": 4
+    }
+  ]
+}

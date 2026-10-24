@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:3c1f4d5cf10b9234",
+  "lessonIds": [
+    "HI-C530-sangit",
+    "HI-C530-sur",
+    "HI-C530-tal",
+    "HI-C530-rag",
+    "HI-C530-gungunana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch530.txt",
+  "json": "hindi/narration/ch530.json",
+  "textHash": "fnv1a64:04334fa0ff259b72",
+  "jsonHash": "fnv1a64:7dbd0a365ed48856",
+  "findings": []
+}

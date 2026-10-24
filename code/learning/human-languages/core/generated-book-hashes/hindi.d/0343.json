@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:8abdab0640dd35af",
+  "lessonIds": [
+    "HI-C343-cuki",
+    "HI-C343-asar",
+    "HI-C343-jurna",
+    "HI-C343-adhar",
+    "HI-C343-zimmedar"
+  ],
+  "tex": "hindi/book/chapters/ch343-what-caused-it.tex"
+}

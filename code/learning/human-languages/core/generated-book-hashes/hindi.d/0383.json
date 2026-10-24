@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:b39702e4c6b7e504",
+  "lessonIds": [
+    "HI-C383-sankat",
+    "HI-C383-hani",
+    "HI-C383-ghatak",
+    "HI-C383-udherna",
+    "HI-C383-bhigna"
+  ],
+  "tex": "hindi/book/chapters/ch383-danger-and-damage.tex"
+}

@@ -1,0 +1,705 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 376,
+  "title": "Clearly So",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:815b53cc1fdd12e0",
+  "lessons": [
+    {
+      "id": "HI-C376-zahir",
+      "sequence": 20690,
+      "title": "ज़ाहिर (zāhir) — evident, plain",
+      "headword": "ज़ाहिर",
+      "romanization": "zāhir",
+      "gloss": "evident, plain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb7dc5638f170b66",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a hint, then the Hindi for to charm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़ाहिर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़ाहिर — zāhir — \"evident, plain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ज़ाहिर है कि अगर तुम सोओगे नहीं तो थक जाओगे। zāhir hai ki agar tum sooge nahīṃ to thak jāoge. It's plain that if you don't sleep, you'll get tired."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़ाहिर (zāhir) is usually traced to Arabic ẓāhir, \"outward, apparent\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāhir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāhir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāhir, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāhir*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zāhir hai ki agar tum sooge nahīṃ to thak jāoge. — It's plain that if you don't sleep, you'll get tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zāhir hai ki agar tum sooge nahīṃ to thak jāoge.* — It's plain that if you don't sleep, you'll get tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a hint, then the Hindi for to charm, then say zāhir again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a hint, then the Hindi for to charm, then say *zāhir* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़ाहिर (zāhir) mean? (\"Evident, plain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C376-niscit",
+      "sequence": 20700,
+      "title": "निश्चित (niścit) — definite, fixed",
+      "headword": "निश्चित",
+      "romanization": "niścit",
+      "gloss": "definite, fixed",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cce3d79aa581877e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to charm, then the Hindi for evident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: निश्चित",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निश्चित — niścit — \"definite, fixed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तारीख़ निश्चित होगी तो मैं टिकट ले लूँगा। agar tārīkh niścit hogī to maiṁ ṭikaṭ le lūṅgā. If the date is fixed, I'll get a ticket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "निश्चित (niścit) is a tatsama, borrowed from Sanskrit niścita, \"ascertained, settled\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "niścit, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *niścit*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tārīkh niścit hogī to maiṁ ṭikaṭ le lūṅgā. — If the date is fixed, I'll get a ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tārīkh niścit hogī to maiṁ ṭikaṭ le lūṅgā.* — If the date is fixed, I'll get a ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to charm, then the Hindi for evident, then say niścit again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to charm, then the Hindi for evident, then say *niścit* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does निश्चित (niścit) mean? (\"Definite, fixed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C376-avasya",
+      "sequence": 20710,
+      "title": "अवश्य (avaśya) — without fail, certainly (formal)",
+      "headword": "अवश्य",
+      "romanization": "avaśya",
+      "gloss": "without fail, certainly (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d13bf36d59c7414a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for evident, then the Hindi for definite."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवश्य",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवश्य — avaśya — \"without fail, certainly (formal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर समय मिलेगा तो मैं अवश्य आऊँगा। agar samay milegā to maiṁ avaśya āūṅgā. If I get the time, I'll come without fail."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवश्य (avaśya) is a tatsama, borrowed from Sanskrit avaśyam, \"necessarily, inevitably\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaśya, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaśya*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar samay milegā to maiṁ avaśya āūṅgā. — If I get the time, I'll come without fail.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar samay milegā to maiṁ avaśya āūṅgā.* — If I get the time, I'll come without fail.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for evident, then the Hindi for definite, then say avaśya again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for evident, then the Hindi for definite, then say *avaśya* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवश्य (avaśya) mean? (\"Without fail, certainly (formal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C376-lazimi",
+      "sequence": 20720,
+      "title": "लाज़िमी (lāzimī) — bound to happen, inevitable",
+      "headword": "लाज़िमी",
+      "romanization": "lāzimī",
+      "gloss": "bound to happen, inevitable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57d41aedf4545643",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for definite, then the Hindi for without fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाज़िमी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाज़िमी — lāzimī — \"bound to happen, inevitable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम बहुत ज़्यादा काम करोगे तो थकान होना लाज़िमी है। agar tum bahut zyādā kām karoge to thakān honā lāzimī hai. If you work far too much, you're bound to get tired."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाज़िमी (lāzimī) is usually traced to Persian lāzimī, \"necessary\", which is built on Arabic lāzim, \"binding, necessary\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāzimī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāzimī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāzimī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāzimī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum bahut zyādā kām karoge to thakān honā lāzimī hai. — If you work far too much, you're bound to get tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum bahut zyādā kām karoge to thakān honā lāzimī hai.* — If you work far too much, you're bound to get tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for definite, then the Hindi for without fail, then say lāzimī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for definite, then the Hindi for without fail, then say *lāzimī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाज़िमी (lāzimī) mean? (\"Bound to happen, inevitable\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C376-ubharna",
+      "sequence": 20730,
+      "title": "उभरना (ubharnā) — to emerge, to come to the surface",
+      "headword": "उभरना",
+      "romanization": "ubharnā",
+      "gloss": "to emerge, to come to the surface",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89f43084996c1bda",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for without fail, then the Hindi for bound to happen."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उभरना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उभरना — ubharnā — \"to emerge, to come to the surface\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर पानी कम होगा तो नदी के पत्थर उभरेंगे। agar pānī kam hogā to nadī ke patthar ubhreṅge. If the water goes down, the stones in the river will show."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वह सवाल फिर उभरा, vah savāl phir ubhrā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उभरना (ubharnā) is a tadbhava, inherited from Sanskrit udbharati, \"rises up\" (CDIAL 2038)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubharnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubharnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubharnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubharnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar pānī kam hogā to nadī ke patthar ubhreṅge. — If the water goes down, the stones in the river will show.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar pānī kam hogā to nadī ke patthar ubhreṅge.* — If the water goes down, the stones in the river will show.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for without fail, then the Hindi for bound to happen, then say ubharnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for without fail, then the Hindi for bound to happen, then say *ubharnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उभरना (ubharnā) mean? (\"To emerge, to come to the surface\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

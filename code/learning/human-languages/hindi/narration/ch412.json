@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 412,
+  "title": "Abroad and Away",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:49386a445bec55f5",
+  "lessons": [
+    {
+      "id": "HI-C412-vides",
+      "sequence": 22710,
+      "title": "विदेश (videś) — abroad; a foreign country",
+      "headword": "विदेश",
+      "romanization": "videś",
+      "gloss": "abroad; a foreign country",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e53c41d4368813f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for cancelled, then the Hindi for departure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विदेश",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदेश — videś — \"abroad; a foreign country\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरा भाई विदेश में काम करता है। merā bhāī videś meṁ kām kartā hai. My brother works abroad."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विदेश (videś) is a tatsama, Sanskrit videśa, \"another country, abroad\" (Monier-Williams), from vi-, \"apart\", and deśa, \"country\"; विदेशी, foreign, is its adjective."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videś",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videś*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "videś, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *videś*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā bhāī videś meṁ kām kartā hai. — My brother works abroad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā bhāī videś meṁ kām kartā hai.* — My brother works abroad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for cancelled, then the Hindi for departure, then say videś again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for cancelled, then the Hindi for departure, then say *videś* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विदेश (videś) mean? (\"Abroad; a foreign country\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C412-pardes",
+      "sequence": 22720,
+      "title": "परदेस (pardes) — a land far from home",
+      "headword": "परदेस",
+      "romanization": "pardes",
+      "gloss": "a land far from home",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5317129f60fca1c7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for departure, then the Hindi for abroad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: परदेस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परदेस — pardes — \"a land far from home\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परदेस में अपने घर की बहुत याद आती है। pardes meṁ apne ghar kī bahut yād ātī hai. Far from home, you miss your own house a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "परदेस (pardes) is a tadbhava of Sanskrit paradeśa, \"another or a foreign country\" (Monier-Williams). It may be another state of India: anywhere that is not home."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardes*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardes, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardes*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pardes meṁ apne ghar kī bahut yād ātī hai. — Far from home, you miss your own house a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pardes meṁ apne ghar kī bahut yād ātī hai.* — Far from home, you miss your own house a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for departure, then the Hindi for abroad, then say pardes again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for departure, then the Hindi for abroad, then say *pardes* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does परदेस (pardes) mean? (\"A land far from home\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C412-sarhad",
+      "sequence": 22730,
+      "title": "सरहद (sarhad) — a frontier; a border",
+      "headword": "सरहद",
+      "romanization": "sarhad",
+      "gloss": "a frontier; a border",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fe355787d299bdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for abroad, then the Hindi for a land far from home."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सरहद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरहद — sarhad — \"a frontier; a border\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सरहद पर बहुत सिपाही थे। sarhad par bahut sipāhī the. There were many soldiers at the frontier."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरहद (sarhad) is usually traced to Persian sarhad, \"a frontier\", literally the head of the boundary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarhad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarhad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarhad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarhad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarhad par bahut sipāhī the. — There were many soldiers at the frontier.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarhad par bahut sipāhī the.* — There were many soldiers at the frontier.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for abroad, then the Hindi for a land far from home, then say sarhad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for abroad, then the Hindi for a land far from home, then say *sarhad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सरहद (sarhad) mean? (\"A frontier; a border\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C412-utaarna",
+      "sequence": 22740,
+      "title": "उतारना (utārnā) — to unload; to take down",
+      "headword": "उतारना",
+      "romanization": "utārnā",
+      "gloss": "to unload; to take down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:acb888516e43ce27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a land far from home, then the Hindi for a frontier."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उतारना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतारना — utārnā — \"to unload; to take down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "कुली ने ट्रेन से हमारा सामान उतारा। kulī ne ṭren se hamārā sāmān utārā. The porter unloaded our luggage from the train."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने छत से कपड़े उतारे, usne chat se kapṛe utāre."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उतारना (utārnā) is the causative partner of उतरना, from Sanskrit uttārayati, \"makes descend\" (CDIAL 1770), which lists Hindi utārnā, \"to make descend\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "utārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *utārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kulī ne ṭren se hamārā sāmān utārā. — The porter unloaded our luggage from the train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kulī ne ṭren se hamārā sāmān utārā.* — The porter unloaded our luggage from the train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a land far from home, then the Hindi for a frontier, then say utārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a land far from home, then the Hindi for a frontier, then say *utārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उतारना (utārnā) mean? (\"To unload; to take down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C412-carhana",
+      "sequence": 22750,
+      "title": "चढ़ाना (caṛhānā) — to put on board; to put up",
+      "headword": "चढ़ाना",
+      "romanization": "caṛhānā",
+      "gloss": "to put on board; to put up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dbdfd490f16bac5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a frontier, then the Hindi for to unload."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चढ़ाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चढ़ाना — caṛhānā — \"to put on board; to put up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हमने अटैची बस की छत पर चढ़ाई। hamne aṭaicī bas kī chat par caṛhāī. We put the suitcase up on the roof of the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने सामान ट्रेन में चढ़ाया, usne sāmān ṭren meṁ caṛhāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चढ़ाना (caṛhānā) is the causative partner of चढ़ना, from cāḍhayati, \"raises\", a form CDIAL reconstructs (CDIAL 4578), which lists Hindi caṛhānā."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṛhānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṛhānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "caṛhānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *caṛhānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hamne aṭaicī bas kī chat par caṛhāī. — We put the suitcase up on the roof of the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hamne aṭaicī bas kī chat par caṛhāī.* — We put the suitcase up on the roof of the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a frontier, then the Hindi for to unload, then say caṛhānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a frontier, then the Hindi for to unload, then say *caṛhānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चढ़ाना (caṛhānā) mean? (\"To put on board; to put up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

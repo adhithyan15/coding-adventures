@@ -1,0 +1,11 @@
+{
+  "id": "HI-C317-andaza",
+  "pathSegment": "HI-PATH-317-RAHASYA317",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-317-RAHASYA317",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 452,
+  "title": "Naming a Feeling",
+  "label": "ch:hi-naming-a-feeling",
+  "canDo": "I can name a feeling and say that I felt it.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C452-umarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 452: I can name a feeling and say that I felt it.",
+    "assesses": [
+      "HI-LEX-C452-BHAVNA452-03",
+      "HI-LEX-C452-BHAVNA452-04",
+      "HI-LEX-C452-BHAVNA452-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C529-manc",
+    "language": "hindi",
+    "chapter": 529,
+    "sequence": 29180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fc9545bacf2863b2"
+  },
+  "findings": []
+}

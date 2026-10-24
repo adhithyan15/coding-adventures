@@ -1,0 +1,21 @@
+{
+  "chapter": 413,
+  "title": "Inns and Rest Houses",
+  "label": "ch:hi-inns-and-rest-houses",
+  "canDo": "I can stay at an inn or a rest house, take the lift and get a fresh sheet on the bed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-R413-review-406-413",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can stay at an inn or a rest house, take the lift and get a fresh sheet on the bed.",
+    "assesses": [
+      "HI-LEX-C413-SARAY413-01",
+      "HI-LEX-C413-SARAY413-02",
+      "HI-LEX-C413-SARAY413-03",
+      "HI-LEX-C413-SARAY413-04",
+      "HI-LEX-C413-SARAY413-05"
+    ]
+  }
+}

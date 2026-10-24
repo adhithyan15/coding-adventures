@@ -1,0 +1,19 @@
+{
+  "chapter": 401,
+  "title": "Gates and Junctions",
+  "label": "ch:hi-gates-and-junctions",
+  "canDo": "I can talk about a level crossing, a signal and a junction, and gaze out at the fields.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C401-takna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about a level crossing, a signal and a junction, and gaze out at the fields.",
+    "assesses": [
+      "HI-LEX-C401-PHATAK401-03",
+      "HI-LEX-C401-PHATAK401-04",
+      "HI-LEX-C401-PHATAK401-05"
+    ]
+  }
+}

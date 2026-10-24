@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Fasting and Offerings",
+  "label": "ch:hi-fasting-and-offerings",
+  "canDo": "I can say how a family kept a festival day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C331-pakvan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can say how a family kept a festival day.",
+    "assesses": [
+      "HI-LEX-C331-VRAT331-03",
+      "HI-LEX-C331-VRAT331-04",
+      "HI-LEX-C331-VRAT331-05"
+    ]
+  }
+}

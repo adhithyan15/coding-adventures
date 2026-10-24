@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 551,
+  "sourceHash": "fnv1a64:6edca5a75945d09c",
+  "lessonIds": [
+    "HI-C551-manzur",
+    "HI-C551-azad",
+    "HI-C551-lacar",
+    "HI-C551-ariyal",
+    "HI-C551-zabardasti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch551.txt",
+  "json": "hindi/narration/ch551.json",
+  "textHash": "fnv1a64:eefe5c34cc618d6f",
+  "jsonHash": "fnv1a64:fde54e96b2827076",
+  "findings": []
+}

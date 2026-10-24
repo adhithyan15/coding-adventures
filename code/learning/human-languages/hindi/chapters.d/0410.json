@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Passports and Customs",
+  "label": "ch:hi-passports-and-customs",
+  "canDo": "I can show my passport and visa, go through security and customs, and pay a duty.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C410-sulk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can show my passport and visa, go through security and customs, and pay a duty.",
+    "assesses": [
+      "HI-LEX-C410-PASPORT410-03",
+      "HI-LEX-C410-PASPORT410-04",
+      "HI-LEX-C410-PASPORT410-05"
+    ]
+  }
+}

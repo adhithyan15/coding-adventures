@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C502-nati",
+    "language": "hindi",
+    "chapter": 502,
+    "sequence": 27570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2dab85451c82c482"
+  },
+  "findings": []
+}

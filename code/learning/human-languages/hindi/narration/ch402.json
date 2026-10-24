@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 402,
+  "title": "Bundles and Naps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9575f5f5c0968868",
+  "lessons": [
+    {
+      "id": "HI-C402-gathri",
+      "sequence": 22200,
+      "title": "गठरी (gaṭhrī) — a bundle (tied in cloth)",
+      "headword": "गठरी",
+      "romanization": "gaṭhrī",
+      "gloss": "a bundle (tied in cloth)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:158994f850bd4c27",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to step over, then the Hindi for to look out (at)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: गठरी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गठरी — gaṭhrī — \"a bundle (tied in cloth)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी के पास कपड़ों की एक गठरी थी। dādī ke pās kapṛoṁ kī ek gaṭhrī thī. Grandmother had a bundle of clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "गठरी (gaṭhrī) is a tadbhava of Sanskrit grathna, \"a bunch\" (CDIAL 4348), from the root of tying knots; CDIAL lists Hindi gaṭhṛī, \"bundle\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭhrī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭhrī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaṭhrī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaṭhrī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī ke pās kapṛoṁ kī ek gaṭhrī thī. — Grandmother had a bundle of clothes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī ke pās kapṛoṁ kī ek gaṭhrī thī.* — Grandmother had a bundle of clothes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to step over, then the Hindi for to look out (at), then say gaṭhrī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to step over, then the Hindi for to look out (at), then say *gaṭhrī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does गठरी (gaṭhrī) mean? (\"A bundle (tied in cloth)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C402-ataici",
+      "sequence": 22210,
+      "title": "अटैची (aṭaicī) — a suitcase",
+      "headword": "अटैची",
+      "romanization": "aṭaicī",
+      "gloss": "a suitcase",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80e37d5c0ccd3bdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to look out (at), then the Hindi for a bundle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अटैची",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटैची — aṭaicī — \"a suitcase\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेरी अटैची बहुत भारी है। merī aṭaicī bahut bhārī hai. My suitcase is very heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अटैची (aṭaicī) is borrowed from English attaché, short for attaché case; in India it names any small suitcase, and it is feminine."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaicī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaicī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṭaicī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṭaicī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī aṭaicī bahut bhārī hai. — My suitcase is very heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī aṭaicī bahut bhārī hai.* — My suitcase is very heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to look out (at), then the Hindi for a bundle, then say aṭaicī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to look out (at), then the Hindi for a bundle, then say *aṭaicī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अटैची (aṭaicī) mean? (\"A suitcase\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C402-sarkana",
+      "sequence": 22220,
+      "title": "सरकाना (sarkānā) — to slide (something) along; to push aside",
+      "headword": "सरकाना",
+      "romanization": "sarkānā",
+      "gloss": "to slide (something) along; to push aside",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2e2a2563ffe45e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a bundle, then the Hindi for a suitcase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सरकाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरकाना — sarkānā — \"to slide (something) along; to push aside\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैंने अपनी अटैची सीट के नीचे सरकाई। maiṁne apnī aṭaicī sīṭ ke nīce sarkāī. I slid my suitcase under the seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कुर्सी पीछे सरकाई, usne kursī pīche sarkāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सरकाना (sarkānā) is the causative partner of सरकना, from Sanskrit sarati, \"glides\" (CDIAL 13250): सरकना is to slide, सरकाना to make a thing slide."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁne apnī aṭaicī sīṭ ke nīce sarkāī. — I slid my suitcase under the seat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁne apnī aṭaicī sīṭ ke nīce sarkāī.* — I slid my suitcase under the seat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a bundle, then the Hindi for a suitcase, then say sarkānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a bundle, then the Hindi for a suitcase, then say *sarkānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सरकाना (sarkānā) mean? (\"To slide (something) along; to push aside\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C402-ughna",
+      "sequence": 22230,
+      "title": "ऊँघना (ū̃ghnā) — to doze",
+      "headword": "ऊँघना",
+      "romanization": "ū̃ghnā",
+      "gloss": "to doze",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7239ba11f9eb53a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a suitcase, then the Hindi for to slide (something)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ऊँघना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊँघना — ū̃ghnā — \"to doze\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बस में बहुत लोग ऊँघ रहे थे। bas meṁ bahut log ū̃gh rahe the. A lot of people on the bus were dozing."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह थोड़ी देर ऊँघा, vah thoṛī der ū̃ghā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ऊँघना (ū̃ghnā) goes back to uṅghati, \"sleeps\", a form CDIAL reconstructs (CDIAL 1632), which lists Hindi ū̃ghnā, \"to be drowsy\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ū̃ghnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ū̃ghnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ū̃ghnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ū̃ghnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bas meṁ bahut log ū̃gh rahe the. — A lot of people on the bus were dozing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bas meṁ bahut log ū̃gh rahe the.* — A lot of people on the bus were dozing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a suitcase, then the Hindi for to slide (something), then say ū̃ghnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a suitcase, then the Hindi for to slide (something), then say *ū̃ghnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ऊँघना (ū̃ghnā) mean? (\"To doze\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C402-sustana",
+      "sequence": 22240,
+      "title": "सुस्ताना (sustānā) — to rest a while",
+      "headword": "सुस्ताना",
+      "romanization": "sustānā",
+      "gloss": "to rest a while",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbb5fbbc4dd21b6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to slide (something), then the Hindi for to doze."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सुस्ताना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुस्ताना — sustānā — \"to rest a while\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हम पेड़ के नीचे थोड़ी देर सुस्ताए। ham peṛ ke nīce thoṛī der sustāe. We rested for a while under the tree."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह पेड़ के नीचे सुस्ताया, vah peṛ ke nīce sustāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सुस्ताना (sustānā) is built on sust, \"slack, weary\", usually traced to Persian sust, with the Hindi verb ending -ānā: to let your tiredness go for a while."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sustānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sustānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sustānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sustānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ham peṛ ke nīce thoṛī der sustāe. — We rested for a while under the tree.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ham peṛ ke nīce thoṛī der sustāe.* — We rested for a while under the tree.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to slide (something), then the Hindi for to doze, then say sustānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to slide (something), then the Hindi for to doze, then say *sustānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सुस्ताना (sustānā) mean? (\"To rest a while\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

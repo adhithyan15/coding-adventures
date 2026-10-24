@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:74dcae3bcb72b752",
+  "lessonIds": [
+    "HI-C365-siddhant",
+    "HI-C365-vyavahar",
+    "HI-C365-apvad",
+    "HI-C365-tikna",
+    "HI-C365-manvana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch365.txt",
+  "json": "hindi/narration/ch365.json",
+  "textHash": "fnv1a64:897ed0eb38887db8",
+  "jsonHash": "fnv1a64:44f588ea47a963c2",
+  "findings": []
+}

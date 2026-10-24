@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:94b143a34221453a",
+  "lessonIds": [
+    "HI-C321-hamla",
+    "HI-C321-gherna",
+    "HI-C321-top",
+    "HI-C321-bhirna",
+    "HI-C321-jujhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch321.txt",
+  "json": "hindi/narration/ch321.json",
+  "textHash": "fnv1a64:b4b127ed0f523339",
+  "jsonHash": "fnv1a64:af9c6e1038aec3fb",
+  "findings": []
+}

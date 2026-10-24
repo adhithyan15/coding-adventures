@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:75efde65083e241e",
+  "lessonIds": [
+    "HI-C513-silna",
+    "HI-C513-silvana",
+    "HI-C513-katarna",
+    "HI-C513-pirona",
+    "HI-C513-udharna",
+    "HI-R513-review-506-513"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch513.txt",
+  "json": "hindi/narration/ch513.json",
+  "textHash": "fnv1a64:ac0334d0b29d9bb3",
+  "jsonHash": "fnv1a64:50be94dc73f10476",
+  "findings": []
+}

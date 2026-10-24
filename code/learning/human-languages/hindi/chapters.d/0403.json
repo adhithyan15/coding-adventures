@@ -1,0 +1,19 @@
+{
+  "chapter": 403,
+  "title": "Stands and Footpaths",
+  "label": "ch:hi-stands-and-footpaths",
+  "canDo": "I can find the bus stand, walk along the pavement and say I am out of breath.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C403-haphna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can find the bus stand, walk along the pavement and say I am out of breath.",
+    "assesses": [
+      "HI-LEX-C403-STAIND403-03",
+      "HI-LEX-C403-STAIND403-04",
+      "HI-LEX-C403-STAIND403-05"
+    ]
+  }
+}

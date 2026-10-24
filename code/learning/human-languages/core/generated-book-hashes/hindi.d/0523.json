@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:be3008de8645919a",
+  "lessonIds": [
+    "HI-C523-caku",
+    "HI-C523-chiilna",
+    "HI-C523-kutna",
+    "HI-C523-burakna",
+    "HI-C523-dalnagrind"
+  ],
+  "tex": "hindi/book/chapters/ch523-peel-pound-strain.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 358,
+  "title": "Serving Others",
+  "label": "ch:hi-serving-others",
+  "canDo": "I can talk about selfless and selfish acts.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-R358-review-351-358",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about selfless and selfish acts.",
+    "assesses": [
+      "HI-LEX-C358-SEVA358-01",
+      "HI-LEX-C358-SEVA358-02",
+      "HI-LEX-C358-SEVA358-03",
+      "HI-LEX-C358-SEVA358-04",
+      "HI-LEX-C358-SEVA358-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:2f8c495308183b7f",
+  "lessonIds": [
+    "HI-C400-araksan",
+    "HI-C400-barth",
+    "HI-C400-pratiksa",
+    "HI-C400-jacna",
+    "HI-C400-ravana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch400.txt",
+  "json": "hindi/narration/ch400.json",
+  "textHash": "fnv1a64:e3335a10eecc33e7",
+  "jsonHash": "fnv1a64:21f503564bf53776",
+  "findings": []
+}

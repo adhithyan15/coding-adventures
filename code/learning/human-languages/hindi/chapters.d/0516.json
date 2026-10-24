@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "A Leak in the Roof",
+  "label": "ch:hi-a-leak-in-the-roof",
+  "canDo": "I can describe leaks, damp and cracks at home.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C516-dhalakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can describe leaks, damp and cracks at home.",
+    "assesses": [
+      "HI-LEX-C516-RISNA516-03",
+      "HI-LEX-C516-RISNA516-04",
+      "HI-LEX-C516-RISNA516-05"
+    ]
+  }
+}

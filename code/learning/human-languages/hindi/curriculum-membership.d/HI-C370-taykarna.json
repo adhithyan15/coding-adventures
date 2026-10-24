@@ -1,0 +1,11 @@
+{
+  "id": "HI-C370-taykarna",
+  "pathSegment": "HI-PATH-370-SABHA370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-370-SABHA370",
+      "order": 4
+    }
+  ]
+}

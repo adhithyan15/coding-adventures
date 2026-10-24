@@ -1,0 +1,19 @@
+{
+  "chapter": 510,
+  "title": "In the Carpenter's Shop",
+  "label": "ch:hi-in-the-carpenter-s-shop",
+  "canDo": "I can describe how wood is shaped and finished.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C510-chedna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 510: I can describe how wood is shaped and finished.",
+    "assesses": [
+      "HI-LEX-C510-BADHAI510-03",
+      "HI-LEX-C510-BADHAI510-04",
+      "HI-LEX-C510-BADHAI510-05"
+    ]
+  }
+}

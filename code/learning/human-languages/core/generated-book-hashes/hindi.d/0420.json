@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:5914b09b63ab64c2",
+  "lessonIds": [
+    "HI-C420-dhalan",
+    "HI-C420-galiyara",
+    "HI-C420-ghusna",
+    "HI-C420-lurhakna",
+    "HI-C420-garnaintr"
+  ],
+  "tex": "hindi/book/chapters/ch420-slopes-and-passages.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C291-ghurna",
+    "language": "hindi",
+    "chapter": 291,
+    "sequence": 16190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b87dc2c4af7db0c"
+  },
+  "findings": []
+}

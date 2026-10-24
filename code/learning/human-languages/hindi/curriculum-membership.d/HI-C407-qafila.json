@@ -1,0 +1,11 @@
+{
+  "id": "HI-C407-qafila",
+  "pathSegment": "HI-PATH-407-NAKA407",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-407-NAKA407",
+      "order": 3
+    }
+  ]
+}

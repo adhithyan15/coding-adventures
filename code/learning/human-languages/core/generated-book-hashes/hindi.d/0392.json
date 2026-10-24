@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:11d4f6649b304904",
+  "lessonIds": [
+    "HI-C392-taiyari",
+    "HI-C392-azmana",
+    "HI-C392-tariqa",
+    "HI-C392-anubhav",
+    "HI-C392-sujhna"
+  ],
+  "tex": "hindi/book/chapters/ch392-getting-ready.tex"
+}

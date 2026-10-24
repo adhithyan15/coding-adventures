@@ -1,0 +1,11 @@
+{
+  "id": "HI-C381-afsos",
+  "pathSegment": "HI-PATH-381-KASH381",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-381-KASH381",
+      "order": 1
+    }
+  ]
+}

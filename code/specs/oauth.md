@@ -506,10 +506,13 @@ itself. The typed `der-asn1` layer is now shipped above that framing primitive:
 it provides allocation-free canonical BOOLEAN, INTEGER, ENUMERATED, BIT STRING,
 OCTET STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It also validates universal IA5String and schema-selected implicit BIT
-STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
+budget. It also validates universal IA5String and schema-selected implicit NULL,
+BIT STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
 primitive context-specific tags, providing typed value prerequisites for
-later X.509 schemas without claiming their semantics. The generic ENUMERATED
+later X.509 schemas without claiming their semantics. The implicit NULL helper
+requires the exact caller-selected primitive context-specific tag and empty
+contents; it does not select a schema tag or grant CertStatus, OCSP, revocation,
+freshness, or authentication semantics. The generic ENUMERATED
 decoder requires the exact primitive universal tag and canonical non-empty
 two's-complement contents, preserves signed values as borrowed bytes, and
 offers checked conversion to `u64`; it does not define an enum registry or
@@ -1187,6 +1190,67 @@ authenticate a response signature, authorize a responder, bind the identifier
 to a certificate or constructed path, decide status or freshness, fetch or
 cache revocation data, read a clock, or grant path, trust, TLS, HTTP, OAuth
 transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-cert-status` prerequisite now decodes exactly one RFC
+6960 `CertStatus` CHOICE within caller-owned DER depth, element, and length
+limits. It accepts the exact primitive empty `good [0]` and `unknown [2]`
+forms, or the exact constructed `revoked [1]` form containing one required
+OCSP GeneralizedTime and one optional explicit `CRLReason`. The reason registry
+is the fixed RFC 5280 set used by RFC 6960; canonical negative, unassigned, and
+out-of-range ENUMERATED values fail closed. Success retains only a clock-free
+validated revocation time and the optional typed reason. This structural layer
+does not parse a `SingleResponse` or larger OCSP response, authenticate a
+response signature, authorize a responder, bind status to a `CertID`,
+certificate, or constructed path, decide freshness, fetch or cache revocation
+data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or network
+authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-single-response` prerequisite now composes exactly one
+RFC 6960 `SingleResponse` SEQUENCE within caller-owned DER depth, element,
+length, OID-arc, and extension-count limits. It requires one structural
+`CertID`, one structural `CertStatus`, and one OCSP GeneralizedTime
+`thisUpdate`, followed in schema order by an optional explicit `nextUpdate [0]`
+and optional explicit `singleExtensions [1]`. Present extension collections
+reuse the bounded generic RFC 5280 `Extensions` decoder, remain non-empty and
+unique by OID, and retain no OCSP extension semantics. The structural layer
+does not select or validate the CertID hash algorithm, authenticate a response
+signature, authorize a responder, bind the identifier or status to a
+certificate or constructed path, interpret extensions, decide freshness,
+fetch or cache revocation data, read a clock, or grant path, trust, TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-response-data` prerequisite now composes exactly one RFC
+6960 `ResponseData` SEQUENCE within caller-owned DER depth, element, length,
+OID-arc, extension-count, and fixed response-count limits. DER's default `v1`
+version is accepted only by omission; a present explicit version is rejected
+as either the encoded default or an unsupported value. The responder identifier
+must be exactly one explicit `byName [1]` RFC 5280 Name or explicit `byKey [2]`
+OCTET STRING, `producedAt` uses the strict OCSP GeneralizedTime profile, and
+the non-empty ordered response sequence composes bounded structural
+`SingleResponse` values. One optional explicit `responseExtensions [1]` field
+may follow and remains a generic, non-empty, unique-OID extension collection.
+Success retains the exact canonical DER `ResponseData` bytes that a later
+repository-owned verifier must authenticate, without reserialization.
+The structural layer does not interpret the responder key hash or extensions,
+select or validate CertID hash algorithms, authenticate a response signature,
+authorize a responder, bind any response to a certificate or constructed path,
+decide freshness or revocation, fetch or cache data, read a clock, or grant
+path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+remains unavailable.
+A bounded `x509-ocsp-basic-response` prerequisite now composes exactly one RFC
+6960 `BasicOCSPResponse` SEQUENCE under a shared caller-owned DER depth,
+element, length, OID-arc, extension-count, response-count, and fixed
+certificate-count budget. It requires one structural `ResponseData`, one
+generic signature `AlgorithmIdentifier`, and one canonical signature BIT
+STRING in schema order, followed by an optional explicit `certs [0]` sequence.
+Each present certificate is decoded by the complete repository-owned RFC 5280
+certificate structure layer through the same enclosing DER decoder; no nested
+budget is reset. Success retains the exact complete response encoding, the
+exact signed `ResponseData` bytes, the generic algorithm identifier, the
+borrowed signature bits, and the ordered bounded certificate values without
+reserialization. The structural layer does not recognize or enable a signature
+algorithm, verify the signature, authorize or select a responder certificate,
+match `ResponderID`, build or validate a certificate path, apply certificate
+role or critical-extension policy, decide freshness or revocation, fetch or
+cache data, read a clock, or grant path, trust, TLS, HTTP, OAuth transport, or
+network authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C377-zarurat",
+  "pathSegment": "HI-PATH-377-HALAT377",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-377-HALAT377",
+      "order": 2
+    }
+  ]
+}

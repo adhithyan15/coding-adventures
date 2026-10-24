@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C391-parisram",
+    "language": "hindi",
+    "chapter": 391,
+    "sequence": 21470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:511cf852ffa83a1b"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C487-pakna",
+  "pathSegment": "HI-PATH-487-SANKRAMAN487",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-487-SANKRAMAN487",
+      "order": 4
+    }
+  ]
+}

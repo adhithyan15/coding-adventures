@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:75b12346f8b4444e",
+  "lessonIds": [
+    "HI-C312-rediyo",
+    "HI-C312-samacar",
+    "HI-C312-prasaran",
+    "HI-C312-surkhi",
+    "HI-C312-chapna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch312.txt",
+  "json": "hindi/narration/ch312.json",
+  "textHash": "fnv1a64:3b8cbd9eb09f0d47",
+  "jsonHash": "fnv1a64:731a8f294b8216ac",
+  "findings": []
+}

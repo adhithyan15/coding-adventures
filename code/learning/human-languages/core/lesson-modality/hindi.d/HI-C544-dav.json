@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C544-dav",
+    "language": "hindi",
+    "chapter": 544,
+    "sequence": 29980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b530997af2e13f2"
+  },
+  "findings": []
+}

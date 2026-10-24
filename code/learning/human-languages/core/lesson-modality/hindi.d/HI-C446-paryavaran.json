@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C446-paryavaran",
+    "language": "hindi",
+    "chapter": 446,
+    "sequence": 24470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:90ad34a15d3c273b"
+  },
+  "findings": []
+}

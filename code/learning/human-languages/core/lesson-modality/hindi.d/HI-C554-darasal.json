@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C554-darasal",
+    "language": "hindi",
+    "chapter": 554,
+    "sequence": 30500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87463ea625863048"
+  },
+  "findings": []
+}

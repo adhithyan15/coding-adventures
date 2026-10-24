@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:08fa9810734f23af",
+  "lessonIds": [
+    "HI-C353-samsad",
+    "HI-C353-sasan",
+    "HI-C353-niti",
+    "HI-C353-prastav",
+    "HI-C353-thahrana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch353.txt",
+  "json": "hindi/narration/ch353.json",
+  "textHash": "fnv1a64:8a6008466e152451",
+  "jsonHash": "fnv1a64:69610c7ed78d0db4",
+  "findings": []
+}

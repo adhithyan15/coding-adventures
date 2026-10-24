@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:9575f5f5c0968868",
+  "lessonIds": [
+    "HI-C402-gathri",
+    "HI-C402-ataici",
+    "HI-C402-sarkana",
+    "HI-C402-ughna",
+    "HI-C402-sustana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch402.txt",
+  "json": "hindi/narration/ch402.json",
+  "textHash": "fnv1a64:ccfc8af37a6a6d1b",
+  "jsonHash": "fnv1a64:59f4254ae32889c7",
+  "findings": []
+}

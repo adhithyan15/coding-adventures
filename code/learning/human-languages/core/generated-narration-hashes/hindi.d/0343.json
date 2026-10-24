@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:f9ff60243fda10d4",
+  "lessonIds": [
+    "HI-C343-cuki",
+    "HI-C343-asar",
+    "HI-C343-jurna",
+    "HI-C343-adhar",
+    "HI-C343-zimmedar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch343.txt",
+  "json": "hindi/narration/ch343.json",
+  "textHash": "fnv1a64:d9c5c939fea0d0e1",
+  "jsonHash": "fnv1a64:e6bc0492b3118cb0",
+  "findings": []
+}

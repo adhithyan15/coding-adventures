@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C371-arna",
+    "language": "hindi",
+    "chapter": 371,
+    "sequence": 20470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8200c8fa43ba233a"
+  },
+  "findings": []
+}

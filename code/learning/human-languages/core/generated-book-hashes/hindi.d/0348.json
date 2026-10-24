@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:54541d874c2e3d76",
+  "lessonIds": [
+    "HI-C348-praman",
+    "HI-C348-sabitkarna",
+    "HI-C348-tathya",
+    "HI-C348-pukhta",
+    "HI-C348-arop"
+  ],
+  "tex": "hindi/book/chapters/ch348-proof.tex"
+}

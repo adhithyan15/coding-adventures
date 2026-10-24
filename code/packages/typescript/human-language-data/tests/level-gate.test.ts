@@ -399,6 +399,13 @@ describe("the gate that would have caught the A2 claim", () => {
     // -তাম, realizing all five B1 nodes, plus twelve letter and sign lessons
     // from ঘ to ঙ) and chapters 276-545 (1,350 headwords, 380 verbs), which
     // moved it from the A2 row of HELD to B1.
+    // Hindi followed as the sixteenth, with chapters 276-287 (the B1 core: the
+    // perfective with ने and the verb agreeing with its object, the full future,
+    // -रहा था and -कर, reasons with की वजह से / चाहिए / -ना पड़ता है / इसलिए,
+    // travel, feelings with को and से ज़्यादा / सबसे, and अगर … तो / वरना / the
+    // -ता counterfactual, realizing all five B1 nodes, plus letter lessons for ऐ
+    // and ः) and chapters 288-559 (1,360 headwords, 368 verbs), which moved it
+    // from the A2 row of HELD to B1.
     for (const level of Object.values(HELD)) {
       expectedByLevel.set(level, (expectedByLevel.get(level) ?? 0) + 1);
     }

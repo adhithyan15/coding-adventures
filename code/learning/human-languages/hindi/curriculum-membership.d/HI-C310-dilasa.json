@@ -1,0 +1,11 @@
+{
+  "id": "HI-C310-dilasa",
+  "pathSegment": "HI-PATH-310-BICHHUD310",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-310-BICHHUD310",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 347,
+  "title": "Taking Sides",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2e8c98a4436a6cc8",
+  "lessons": [
+    {
+      "id": "HI-C347-paks",
+      "sequence": 19200,
+      "title": "पक्ष (pakṣ) — a side (in a dispute)",
+      "headword": "पक्ष",
+      "romanization": "pakṣ",
+      "gloss": "a side (in a dispute)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a79433f97b9ef07d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to interrupt, then the Hindi for but rather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पक्ष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पक्ष — pakṣ — \"a side (in a dispute)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बहस में मैं मीरा के पक्ष में हूँ। bahas meṁ maiṁ Mīrā ke pakṣ meṁ hūṁ. In the argument I'm on Mira's side."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पक्ष (pakṣ) is a tatsama, borrowed from Sanskrit pakṣa, \"a wing, a side\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pakṣ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pakṣ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahas meṁ maiṁ Mīrā ke pakṣ meṁ hūṁ. — In the argument I'm on Mira's side.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahas meṁ maiṁ Mīrā ke pakṣ meṁ hūṁ.* — In the argument I'm on Mira's side.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to interrupt, then the Hindi for but rather, then say pakṣ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to interrupt, then the Hindi for but rather, then say *pakṣ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पक्ष (pakṣ) mean? (\"A side (in a dispute)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C347-khilaf",
+      "sequence": 19210,
+      "title": "ख़िलाफ़ (khilāf) — against (के ख़िलाफ़)",
+      "headword": "ख़िलाफ़",
+      "romanization": "khilāf",
+      "gloss": "against (के ख़िलाफ़)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3258050ead544d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for but rather, then the Hindi for a side."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ख़िलाफ़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़िलाफ़ — khilāf — \"against (के ख़िलाफ़)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "गाँव के लोग नई सड़क के ख़िलाफ़ हैं। gā̃v ke log naī saṛak ke khilāf haiṁ. The villagers are against the new road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ख़िलाफ़ (khilāf) is usually traced to Arabic khilāf, \"opposition, the contrary\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilāf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilāf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khilāf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khilāf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gā̃v ke log naī saṛak ke khilāf haiṁ. — The villagers are against the new road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gā̃v ke log naī saṛak ke khilāf haiṁ.* — The villagers are against the new road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for but rather, then the Hindi for a side, then say khilāf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for but rather, then the Hindi for a side, then say *khilāf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ख़िलाफ़ (khilāf) mean? (\"Against (के ख़िलाफ़ (khilāf))\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C347-virodhkarna",
+      "sequence": 19220,
+      "title": "विरोध करना (virodh karnā) — to oppose",
+      "headword": "विरोध करना",
+      "romanization": "virodh karnā",
+      "gloss": "to oppose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3759fcd7fad355",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a side, then the Hindi for against."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरोध करना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरोध करना — virodh karnā — \"to oppose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "किसान नए क़ानून का विरोध कर रहे हैं। kisān nae qānūn kā virodh kar rahe haiṁ. The farmers are opposing the new law."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने क़ानून का विरोध किया, usne qānūn kā virodh kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरोध करना (virodh karnā) joins विरोध to करना, \"to do\". विरोध is a tatsama, borrowed from Sanskrit virodha, \"opposition, hostility\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virodh karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virodh karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virodh karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virodh karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kisān nae qānūn kā virodh kar rahe haiṁ. — The farmers are opposing the new law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kisān nae qānūn kā virodh kar rahe haiṁ.* — The farmers are opposing the new law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a side, then the Hindi for against, then say virodh karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a side, then the Hindi for against, then say *virodh karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरोध करना (virodh karnā) mean? (\"To oppose\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C347-samarthankarna",
+      "sequence": 19230,
+      "title": "समर्थन करना (samarthan karnā) — to support (an idea, a person)",
+      "headword": "समर्थन करना",
+      "romanization": "samarthan karnā",
+      "gloss": "to support (an idea, a person)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8070d91c6425ddf8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for against, then the Hindi for to oppose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समर्थन करना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थन करना — samarthan karnā — \"to support (an idea, a person)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं तुम्हारे विचार का समर्थन करता हूँ। maiṁ tumhāre vicār kā samarthan kartā hūṁ. I support your idea."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने अरुण का समर्थन किया, usne Aruṇ kā samarthan kiyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समर्थन करना (samarthan karnā) joins समर्थन to करना, \"to do\". समर्थन is a tatsama, borrowed from Sanskrit samarthana, \"upholding; reconciling\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthan karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthan karnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samarthan karnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samarthan karnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ tumhāre vicār kā samarthan kartā hūṁ. — I support your idea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ tumhāre vicār kā samarthan kartā hūṁ.* — I support your idea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for against, then the Hindi for to oppose, then say samarthan karnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for against, then the Hindi for to oppose, then say *samarthan karnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समर्थन करना (samarthan karnā) mean? (\"To support (an idea, a person)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C347-sahmathona",
+      "sequence": 19240,
+      "title": "सहमत होना (sahmat honā) — to agree",
+      "headword": "सहमत होना",
+      "romanization": "sahmat honā",
+      "gloss": "to agree",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4460f2d1040f83eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to oppose, then the Hindi for to support."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सहमत होना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहमत होना — sahmat honā — \"to agree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं तुमसे सहमत हूँ, लेकिन मीरा सहमत नहीं है। maiṁ tumse sahmat hūṁ, lekin Mīrā sahmat nahīṃ hai. I agree with you, but Mira doesn't."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह सहमत हुआ, vah sahmat huā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सहमत होना (sahmat honā) joins सहमत to होना, \"to be, to become\". सहमत is built from two Sanskrit words, saha, \"together with\", and mata, \"an opinion\" (Monier-Williams): of one opinion with someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahmat honā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahmat honā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahmat honā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahmat honā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ tumse sahmat hūṁ, lekin Mīrā sahmat nahīṃ hai. — I agree with you, but Mira doesn't.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ tumse sahmat hūṁ, lekin Mīrā sahmat nahīṃ hai.* — I agree with you, but Mira doesn't.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to oppose, then the Hindi for to support, then say sahmat honā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to oppose, then the Hindi for to support, then say *sahmat honā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सहमत होना (sahmat honā) mean? (\"To agree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

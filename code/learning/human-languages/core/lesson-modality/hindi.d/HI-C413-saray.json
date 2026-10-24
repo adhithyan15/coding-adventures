@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C413-saray",
+    "language": "hindi",
+    "chapter": 413,
+    "sequence": 22760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c156cb5dee385dd"
+  },
+  "findings": []
+}

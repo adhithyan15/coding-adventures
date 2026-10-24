@@ -1,0 +1,11 @@
+{
+  "id": "HI-C542-sahmati",
+  "pathSegment": "HI-PATH-542-SAMJHAUTA542",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-542-SAMJHAUTA542",
+      "order": 2
+    }
+  ]
+}

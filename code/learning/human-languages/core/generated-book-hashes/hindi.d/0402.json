@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:1636c7c34405bde5",
+  "lessonIds": [
+    "HI-C402-gathri",
+    "HI-C402-ataici",
+    "HI-C402-sarkana",
+    "HI-C402-ughna",
+    "HI-C402-sustana"
+  ],
+  "tex": "hindi/book/chapters/ch402-bundles-and-naps.tex"
+}

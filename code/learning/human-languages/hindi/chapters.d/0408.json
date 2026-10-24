@@ -1,0 +1,19 @@
+{
+  "chapter": 408,
+  "title": "Miles and Distances",
+  "label": "ch:hi-miles-and-distances",
+  "canDo": "I can say how far apart two places are, in miles or in kos, and say a driver went too fast.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C408-bhagana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can say how far apart two places are, in miles or in kos, and say a driver went too fast.",
+    "assesses": [
+      "HI-LEX-C408-MIL408-03",
+      "HI-LEX-C408-MIL408-04",
+      "HI-LEX-C408-MIL408-05"
+    ]
+  }
+}

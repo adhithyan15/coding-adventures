@@ -1,0 +1,11 @@
+{
+  "id": "HI-C316-fasad",
+  "pathSegment": "HI-PATH-316-UPADRAV316",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-316-UPADRAV316",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 290,
+  "title": "At the Police Station",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0d6efe39e74fd051",
+  "lessons": [
+    {
+      "id": "HI-C290-sikayat",
+      "sequence": 16100,
+      "title": "शिकायत (śikāyat) — a complaint",
+      "headword": "शिकायत",
+      "romanization": "śikāyat",
+      "gloss": "a complaint",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5871ac80d520610",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for on the run, then the Hindi for a chase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिकायत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिकायत — śikāyat — \"a complaint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुलिस क्या करेगी, यह आपकी शिकायत पर निर्भर करता है। pulis kyā karegī, yah āpkī śikāyat par nirbhar kartā hai. What the police will do depends on your complaint."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is usually traced, through Persian, to Arabic shikāya, \"a complaint\". शिकायत (śikāyat) करना is to complain; at a police station, शिकायत (śikāyat) is the formal complaint."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikāyat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikāyat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śikāyat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śikāyat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulis kyā karegī, yah āpkī śikāyat par nirbhar kartā hai. — What the police will do depends on your complaint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulis kyā karegī, yah āpkī śikāyat par nirbhar kartā hai.* — What the police will do depends on your complaint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for on the run, then the Hindi for a chase, then say śikāyat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for on the run, then the Hindi for a chase, then say *śikāyat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिकायत (śikāyat) mean? (\"A complaint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C290-riport",
+      "sequence": 16110,
+      "title": "रिपोर्ट (riporṭ) — a report (to the police)",
+      "headword": "रिपोर्ट",
+      "romanization": "riporṭ",
+      "gloss": "a report (to the police)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a823d438b0dde5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a chase, then the Hindi for a complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: रिपोर्ट",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रिपोर्ट — riporṭ — \"a report (to the police)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा ने थाने जाकर चोरी की रिपोर्ट की। Mīrā ne thāne jākar corī kī riporṭ kī. Mira went to the police station and reported the theft."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "रिपोर्ट (riporṭ) is borrowed from English report, taken into Hindi as a feminine noun: चोरी की रिपोर्ट, the report of a theft, and रिपोर्ट करना, to report it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riporṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riporṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "riporṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *riporṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ne thāne jākar corī kī riporṭ kī. — Mira went to the police station and reported the theft.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ne thāne jākar corī kī riporṭ kī.* — Mira went to the police station and reported the theft.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a chase, then the Hindi for a complaint, then say riporṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a chase, then the Hindi for a complaint, then say *riporṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does रिपोर्ट (riporṭ) mean? (\"A report (to the police)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C290-likhvana",
+      "sequence": 16120,
+      "title": "लिखवाना (likhvānā) — to have written down",
+      "headword": "लिखवाना",
+      "romanization": "likhvānā",
+      "gloss": "to have written down",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6103b3e9377e4d12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a complaint, then the Hindi for a report (to the police)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लिखवाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिखवाना — likhvānā — \"to have written down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण ने पुलिस से अपनी शिकायत लिखवाई। Aruṇ ne pulis se apnī śikāyat likhvāī. Arun had the police write down his complaint."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने रिपोर्ट लिखवाई, usne riporṭ likhvāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लिखवाना (likhvānā) is the second causative of लिखना, to write, which goes back to Sanskrit likhati, \"scratches, writes\" (CDIAL 11048). The ending -vā- hands the work to someone else: शिकायत (śikāyat) लिखवाई, got the complaint written down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "likhvānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *likhvānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "likhvānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *likhvānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ ne pulis se apnī śikāyat likhvāī. — Arun had the police write down his complaint.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ ne pulis se apnī śikāyat likhvāī.* — Arun had the police write down his complaint.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a complaint, then the Hindi for a report (to the police), then say likhvānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a complaint, then the Hindi for a report (to the police), then say *likhvānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लिखवाना (likhvānā) mean? (\"To have written down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C290-daroga",
+      "sequence": 16130,
+      "title": "दरोगा (darogā) — a police inspector",
+      "headword": "दरोगा",
+      "romanization": "darogā",
+      "gloss": "a police inspector",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62990be36837ffa3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a report (to the police), then the Hindi for to have written down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दरोगा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरोगा — darogā — \"a police inspector\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दरोगा ने चौकीदार से बात की। darogā ne caukīdār se bāt kī. The inspector talked to the watchman."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दरोगा (darogā) is usually traced to Persian dārōġa, \"an overseer\", a title that once named many kinds of official. In Hindi it is the inspector in charge of a police station."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darogā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darogā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darogā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darogā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darogā ne caukīdār se bāt kī. — The inspector talked to the watchman.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darogā ne caukīdār se bāt kī.* — The inspector talked to the watchman.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a report (to the police), then the Hindi for to have written down, then say darogā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a report (to the police), then the Hindi for to have written down, then say *darogā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दरोगा (darogā) mean? (\"A police inspector\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C290-havalat",
+      "sequence": 16140,
+      "title": "हवालात (havālāt) — a lock-up",
+      "headword": "हवालात",
+      "romanization": "havālāt",
+      "gloss": "a lock-up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb52310242c05282",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to have written down, then the Hindi for a police inspector."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हवालात",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हवालात — havālāt — \"a lock-up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पुलिस ने चोर को रात भर हवालात में रखा। pulis ne cor ko rāt bhar havālāt meṁ rakhā. The police kept the thief in the lock-up all night."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "is usually traced, through Persian, to Arabic ḥawāla, \"a handing over, custody\": the room where a person handed over to the police is held. It is not जेल, prison: हवालात (havālāt) is for a night or two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havālāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havālāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "havālāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *havālāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulis ne cor ko rāt bhar havālāt meṁ rakhā. — The police kept the thief in the lock-up all night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulis ne cor ko rāt bhar havālāt meṁ rakhā.* — The police kept the thief in the lock-up all night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to have written down, then the Hindi for a police inspector, then say havālāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to have written down, then the Hindi for a police inspector, then say *havālāt* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हवालात (havālāt) mean? (\"A lock-up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

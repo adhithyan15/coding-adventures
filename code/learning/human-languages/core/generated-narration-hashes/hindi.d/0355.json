@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:c8dcbd4f24f3593b",
+  "lessonIds": [
+    "HI-C355-vibhag",
+    "HI-C355-arzi",
+    "HI-C355-adhikari",
+    "HI-C355-ades",
+    "HI-C355-sujhana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch355.txt",
+  "json": "hindi/narration/ch355.json",
+  "textHash": "fnv1a64:7225f34378a8cbb8",
+  "jsonHash": "fnv1a64:3bccd66e189ed424",
+  "findings": []
+}

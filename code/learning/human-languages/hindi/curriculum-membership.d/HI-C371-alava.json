@@ -1,0 +1,11 @@
+{
+  "id": "HI-C371-alava",
+  "pathSegment": "HI-PATH-371-HALANKI371",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-371-HALANKI371",
+      "order": 3
+    }
+  ]
+}

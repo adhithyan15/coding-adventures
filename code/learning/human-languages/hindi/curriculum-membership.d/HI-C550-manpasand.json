@@ -1,0 +1,11 @@
+{
+  "id": "HI-C550-manpasand",
+  "pathSegment": "HI-PATH-550-CHAYAN550",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-550-CHAYAN550",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C386-yogya",
+  "pathSegment": "HI-PATH-386-SAHARA386",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-386-SAHARA386",
+      "order": 4
+    }
+  ]
+}

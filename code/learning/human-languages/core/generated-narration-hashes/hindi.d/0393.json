@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:a2e301013d67eb53",
+  "lessonIds": [
+    "HI-C393-saphalta",
+    "HI-C393-upalabdhi",
+    "HI-C393-hasilkarna",
+    "HI-C393-taraqqi",
+    "HI-C393-gaurav"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch393.txt",
+  "json": "hindi/narration/ch393.json",
+  "textHash": "fnv1a64:ee4eb0d00bec20b6",
+  "jsonHash": "fnv1a64:b96ce0b4f5451d2e",
+  "findings": []
+}

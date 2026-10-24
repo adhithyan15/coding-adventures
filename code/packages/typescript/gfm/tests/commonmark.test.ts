@@ -112,12 +112,9 @@ describe("pipeline — Document AST node types", () => {
     expect(parse("Hello\n").children[0]?.type).toBe("paragraph");
   });
 
-  it("produces CodeBlockNode with language", () => {
+  it("produces FencedBlockNode with full info", () => {
     const node = parse("```ts\nconst x = 1;\n```\n").children[0]!;
-    expect(node.type).toBe("code_block");
-    if (node.type === "code_block") {
-      expect(node.language).toBe("ts");
-    }
+    expect(node).toEqual({ type: "fenced_block", name: "ts", info: "ts", value: "const x = 1;\n" });
   });
 
   it("produces ThematicBreakNode from ---", () => {

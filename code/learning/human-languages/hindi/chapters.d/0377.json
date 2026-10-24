@@ -1,0 +1,19 @@
+{
+  "chapter": 377,
+  "title": "As Things Stand",
+  "label": "ch:hi-as-things-stand",
+  "canDo": "I can say what we will do if the situation changes.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C377-phasana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can say what we will do if the situation changes.",
+    "assesses": [
+      "HI-LEX-C377-HALAT377-03",
+      "HI-LEX-C377-HALAT377-04",
+      "HI-LEX-C377-HALAT377-05"
+    ]
+  }
+}

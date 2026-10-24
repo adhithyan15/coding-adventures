@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Abroad and Away",
+  "label": "ch:hi-abroad-and-away",
+  "canDo": "I can talk about going abroad and living far from home, a frontier, and loading and unloading.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C412-carhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about going abroad and living far from home, a frontier, and loading and unloading.",
+    "assesses": [
+      "HI-LEX-C412-VIDESH412-03",
+      "HI-LEX-C412-VIDESH412-04",
+      "HI-LEX-C412-VIDESH412-05"
+    ]
+  }
+}

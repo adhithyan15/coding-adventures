@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Peel, Pound, Strain",
+  "label": "ch:hi-peel-pound-strain",
+  "canDo": "I can describe getting food ready to cook.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C523-dalnagrind",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can describe getting food ready to cook.",
+    "assesses": [
+      "HI-LEX-C523-CHAKU523-03",
+      "HI-LEX-C523-CHAKU523-04",
+      "HI-LEX-C523-CHAKU523-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:8c863e26f1cb0fa4",
+  "lessonIds": [
+    "HI-C351-adhikar",
+    "HI-C351-kartavya",
+    "HI-C351-palankarna",
+    "HI-C351-ucit",
+    "HI-C351-nyay"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch351.txt",
+  "json": "hindi/narration/ch351.json",
+  "textHash": "fnv1a64:b14e4adec17b244d",
+  "jsonHash": "fnv1a64:06baf622776facd0",
+  "findings": []
+}

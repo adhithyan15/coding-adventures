@@ -1,0 +1,11 @@
+{
+  "id": "HI-C308-gotakhor",
+  "pathSegment": "HI-PATH-308-BACHAV308",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-308-BACHAV308",
+      "order": 1
+    }
+  ]
+}

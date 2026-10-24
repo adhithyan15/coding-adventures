@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C456-bipharna",
+    "language": "hindi",
+    "chapter": 456,
+    "sequence": 25230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a610757253002f9"
+  },
+  "findings": []
+}

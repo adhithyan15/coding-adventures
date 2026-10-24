@@ -1,0 +1,11 @@
+{
+  "id": "HI-C542-riyayat",
+  "pathSegment": "HI-PATH-542-SAMJHAUTA542",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-542-SAMJHAUTA542",
+      "order": 1
+    }
+  ]
+}

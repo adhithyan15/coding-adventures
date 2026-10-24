@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:9c862d9d5bd03bca",
+  "lessonIds": [
+    "HI-C318-dhamaka",
+    "HI-C318-bam",
+    "HI-C318-gujna",
+    "HI-C318-tharrana",
+    "HI-C318-sadma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch318.txt",
+  "json": "hindi/narration/ch318.json",
+  "textHash": "fnv1a64:6764adac19748ee2",
+  "jsonHash": "fnv1a64:870f49306eed0737",
+  "findings": []
+}

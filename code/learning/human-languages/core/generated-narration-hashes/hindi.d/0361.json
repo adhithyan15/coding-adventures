@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:b4a5f180dd89a6eb",
+  "lessonIds": [
+    "HI-C361-sodh",
+    "HI-C361-prayog",
+    "HI-C361-vaijnanik",
+    "HI-C361-mapna",
+    "HI-C361-prayogsala"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch361.txt",
+  "json": "hindi/narration/ch361.json",
+  "textHash": "fnv1a64:72dfc791758e4b64",
+  "jsonHash": "fnv1a64:1f8f21c5aa8cfbfa",
+  "findings": []
+}

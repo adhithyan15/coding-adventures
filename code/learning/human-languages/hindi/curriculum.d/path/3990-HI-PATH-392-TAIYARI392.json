@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-392-TAIYARI392",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-392-TAIYARI392"
+  ],
+  "after": []
+}

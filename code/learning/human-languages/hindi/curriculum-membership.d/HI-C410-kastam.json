@@ -1,0 +1,11 @@
+{
+  "id": "HI-C410-kastam",
+  "pathSegment": "HI-PATH-410-PASPORT410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-410-PASPORT410",
+      "order": 3
+    }
+  ]
+}

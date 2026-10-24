@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "Clouds Gather and Clear",
+  "label": "ch:hi-clouds-gather-and-clear",
+  "canDo": "I can say a village was cut off by water, the rain let up, the sky cleared and the wind blew things away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C440-urana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can say a village was cut off by water, the rain let up, the sky cleared and the wind blew things away.",
+    "assesses": [
+      "HI-LEX-C440-GHIRNA440-03",
+      "HI-LEX-C440-GHIRNA440-04",
+      "HI-LEX-C440-GHIRNA440-05"
+    ]
+  }
+}

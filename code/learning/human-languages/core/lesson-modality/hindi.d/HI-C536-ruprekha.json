@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C536-ruprekha",
+    "language": "hindi",
+    "chapter": 536,
+    "sequence": 29560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:42c4e907e42250e1"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C318-sadma",
+  "pathSegment": "HI-PATH-318-DHAMAKA318",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-318-DHAMAKA318",
+      "order": 4
+    }
+  ]
+}

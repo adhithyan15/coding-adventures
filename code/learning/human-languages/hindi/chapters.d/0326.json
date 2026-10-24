@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Ruins of the Past",
+  "label": "ch:hi-ruins-of-the-past",
+  "canDo": "I can describe old ruins and what was found there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C326-avses",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can describe old ruins and what was found there.",
+    "assesses": [
+      "HI-LEX-C326-KHANDAHAR326-03",
+      "HI-LEX-C326-KHANDAHAR326-04",
+      "HI-LEX-C326-KHANDAHAR326-05"
+    ]
+  }
+}

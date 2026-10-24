@@ -1,0 +1,11 @@
+{
+  "id": "HI-C424-thela",
+  "pathSegment": "HI-PATH-424-DHABA424",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-424-DHABA424",
+      "order": 2
+    }
+  ]
+}

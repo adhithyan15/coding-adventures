@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C528-godna",
+    "language": "hindi",
+    "chapter": 528,
+    "sequence": 29150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9051a08cb7b18842"
+  },
+  "findings": []
+}

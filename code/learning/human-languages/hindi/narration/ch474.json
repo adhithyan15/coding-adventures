@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 474,
+  "title": "Sense and Folly",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:551c388d5cae2ba5",
+  "lessons": [
+    {
+      "id": "HI-C474-aql",
+      "sequence": 26120,
+      "title": "अक़्ल (aql) — sense; wits",
+      "headword": "अक़्ल",
+      "romanization": "aql",
+      "gloss": "sense; wits",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1d131cb6bb520460",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to grumble, then the Hindi for silence."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अक़्ल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अक़्ल — aql — \"sense; wits\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अरुण छोटा है, लेकिन उसकी अक़्ल बहुत तेज़ है। Aruṇ choṭā hai, lekin uskī aql bahut tez hai. Arun is young, but he's very sharp-witted."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अक़्ल (aql) is usually traced to Arabic ʿaql, \"reason, intelligence\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aql",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aql*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aql, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aql*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aruṇ choṭā hai, lekin uskī aql bahut tez hai. — Arun is young, but he's very sharp-witted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aruṇ choṭā hai, lekin uskī aql bahut tez hai.* — Arun is young, but he's very sharp-witted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to grumble, then the Hindi for silence, then say aql again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to grumble, then the Hindi for silence, then say *aql* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अक़्ल (aql) mean? (\"Sense; wits\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C474-bevkuf",
+      "sequence": 26130,
+      "title": "बेवकूफ़ (bevkūf) — a fool; foolish",
+      "headword": "बेवकूफ़",
+      "romanization": "bevkūf",
+      "gloss": "a fool; foolish",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fbabaceba7884f9f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for silence, then the Hindi for sense."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बेवकूफ़",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेवकूफ़ — bevkūf — \"a fool; foolish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मैं कितना बेवकूफ़ हूँ, छाता घर पर भूल गया! maiṁ kitnā bevkūf hūṁ, chātā ghar par bhūl gayā! What a fool I am — I left my umbrella at home!"
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine or feminine, by the person meant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बेवकूफ़ (bevkūf) is usually traced to Persian bēvuqūf, \"ignorant\", which joins Persian bē-, \"without\", to Arabic vuqūf, \"knowledge, understanding\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bevkūf",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bevkūf*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bevkūf, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bevkūf*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kitnā bevkūf hūṁ, chātā ghar par bhūl gayā! — What a fool I am — I left my umbrella at home!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kitnā bevkūf hūṁ, chātā ghar par bhūl gayā!* — What a fool I am — I left my umbrella at home!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for silence, then the Hindi for sense, then say bevkūf again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for silence, then the Hindi for sense, then say *bevkūf* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बेवकूफ़ (bevkūf) mean? (\"A fool; foolish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C474-nadan",
+      "sequence": 26140,
+      "title": "नादान (nādān) — naive; innocent",
+      "headword": "नादान",
+      "romanization": "nādān",
+      "gloss": "naive; innocent",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:173e8b96ef000900",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for sense, then the Hindi for a fool."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नादान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नादान — nādān — \"naive; innocent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "वह बच्चा अभी नादान है, ख़तरा नहीं समझता। vah baccā abhī nādān hai, khatrā nahīṃ samajhtā. That child is still naive; he doesn't understand danger."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नादान (nādān) is usually traced to Persian nādān, \"not knowing\", built on nā-, \"not\", and dān, \"knowing\". Hindi uses it kindly, for someone too young to know."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nādān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nādān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nādān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nādān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vah baccā abhī nādān hai, khatrā nahīṃ samajhtā. — That child is still naive; he doesn't understand danger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vah baccā abhī nādān hai, khatrā nahīṃ samajhtā.* — That child is still naive; he doesn't understand danger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for sense, then the Hindi for a fool, then say nādān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for sense, then the Hindi for a fool, then say *nādān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नादान (nādān) mean? (\"Naive; innocent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C474-pagal",
+      "sequence": 26150,
+      "title": "पागल (pāgal) — mad; crazy",
+      "headword": "पागल",
+      "romanization": "pāgal",
+      "gloss": "mad; crazy",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66f928f065ff5f74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a fool, then the Hindi for naive."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पागल",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पागल — pāgal — \"mad; crazy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "क्या तुम पागल हो गए हो? kyā tum pāgal ho gae ho? Have you gone mad?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पागल (pāgal) is a tadbhava: CDIAL lists Hindi pāgal, \"mad\", under paggala, a form it reconstructs (CDIAL 7643)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāgal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāgal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāgal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāgal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kyā tum pāgal ho gae ho? — Have you gone mad?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kyā tum pāgal ho gae ho?* — Have you gone mad?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a fool, then the Hindi for naive, then say pāgal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a fool, then the Hindi for naive, then say *pāgal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पागल (pāgal) mean? (\"Mad; crazy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C474-bahakna",
+      "sequence": 26160,
+      "title": "बहकना (bahaknā) — to go astray",
+      "headword": "बहकना",
+      "romanization": "bahaknā",
+      "gloss": "to go astray",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1ad21a0af96ce3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for naive, then the Hindi for mad."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बहकना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहकना — bahaknā — \"to go astray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बुरे दोस्तों के साथ रहकर अरुण का भाई बहक गया। bure dostoṁ ke sāth rahkar Aruṇ kā bhāī bahak gayā. Mixing with bad friends, Arun's brother went astray."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): वह बहक गया, vah bahak gayā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बहकना (bahaknā) is inherited: CDIAL lists Hindi bahaknā, \"to be misled\", under Sanskrit vyáthatē, \"wavers, is disturbed\" (CDIAL 12164)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahaknā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahaknā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahaknā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahaknā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bure dostoṁ ke sāth rahkar Aruṇ kā bhāī bahak gayā. — Mixing with bad friends, Arun's brother went astray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bure dostoṁ ke sāth rahkar Aruṇ kā bhāī bahak gayā.* — Mixing with bad friends, Arun's brother went astray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for naive, then the Hindi for mad, then say bahaknā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for naive, then the Hindi for mad, then say *bahaknā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बहकना (bahaknā) mean? (\"To go astray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

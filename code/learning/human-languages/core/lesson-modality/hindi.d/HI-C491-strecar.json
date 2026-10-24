@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C491-strecar",
+    "language": "hindi",
+    "chapter": 491,
+    "sequence": 27010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e74b70331ce2f5c"
+  },
+  "findings": []
+}

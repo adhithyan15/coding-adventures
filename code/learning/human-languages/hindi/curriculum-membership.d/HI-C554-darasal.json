@@ -1,0 +1,11 @@
+{
+  "id": "HI-C554-darasal",
+  "pathSegment": "HI-PATH-554-NATIJATAN554",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-554-NATIJATAN554",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,923 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 505,
+  "title": "Mourning",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:0ee89777dff94e77",
+  "lessons": [
+    {
+      "id": "HI-C505-sok",
+      "sequence": 27710,
+      "title": "शोक (śok) — mourning; grief",
+      "headword": "शोक",
+      "romanization": "śok",
+      "gloss": "mourning; grief",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cd7913cc7875d6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to slip from memory, then the Hindi for an inheritance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शोक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शोक — śok — \"mourning; grief\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादा की मौत पर पूरे गाँव ने शोक मनाया। dādā kī maut par pūre gā̃v ne śok manāyā. The whole village mourned my grandfather's death."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शोक (śok) is a tatsama, borrowed from Sanskrit śoka, \"sorrow, anguish, grief\" (Monier-Williams). śok manānā is to observe mourning."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śok",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śok*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śok, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śok*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādā kī maut par pūre gā̃v ne śok manāyā. — The whole village mourned my grandfather's death.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādā kī maut par pūre gā̃v ne śok manāyā.* — The whole village mourned my grandfather's death.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to slip from memory, then the Hindi for an inheritance, then say śok again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to slip from memory, then the Hindi for an inheritance, then say *śok* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शोक (śok) mean? (\"Mourning; grief\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C505-smasan",
+      "sequence": 27720,
+      "title": "श्मशान (śmaśān) — a cremation ground",
+      "headword": "श्मशान",
+      "romanization": "śmaśān",
+      "gloss": "a cremation ground",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:711dbc6596fe8c7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for an inheritance, then the Hindi for mourning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: श्मशान",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श्मशान — śmaśān — \"a cremation ground\"."
+            },
+            {
+              "kind": "speech",
+              "text": "परिवार के लोग श्मशान तक गए। parivār ke log śmaśān tak gae. The family went as far as the cremation ground."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "श्मशान (śmaśān) is a tatsama, borrowed from Sanskrit śmaśāna, \"a place for burning dead bodies\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śmaśān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śmaśān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parivār ke log śmaśān tak gae. — The family went as far as the cremation ground.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parivār ke log śmaśān tak gae.* — The family went as far as the cremation ground.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for an inheritance, then the Hindi for mourning, then say śmaśān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for an inheritance, then the Hindi for mourning, then say *śmaśān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does श्मशान (śmaśān) mean? (\"A cremation ground\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C505-cita",
+      "sequence": 27730,
+      "title": "चिता (citā) — a funeral pyre",
+      "headword": "चिता",
+      "romanization": "citā",
+      "gloss": "a funeral pyre",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:937869688e132855",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for mourning, then the Hindi for a cremation ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिता",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिता — citā — \"a funeral pyre\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेटे ने पिता की चिता को आग दी। beṭe ne pitā kī citā ko āg dī. The son lit his father's funeral pyre."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिता (citā) is a tatsama, borrowed from Sanskrit citā, \"a layer, a pile of wood, a funeral pile\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "citā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *citā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭe ne pitā kī citā ko āg dī. — The son lit his father's funeral pyre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭe ne pitā kī citā ko āg dī.* — The son lit his father's funeral pyre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for mourning, then the Hindi for a cremation ground, then say citā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for mourning, then the Hindi for a cremation ground, then say *citā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिता (citā) mean? (\"A funeral pyre\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C505-vidhva",
+      "sequence": 27740,
+      "title": "विधवा (vidhvā) — a widow",
+      "headword": "विधवा",
+      "romanization": "vidhvā",
+      "gloss": "a widow",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:181d6634bb323f1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a cremation ground, then the Hindi for a funeral pyre."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विधवा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विधवा — vidhvā — \"a widow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा की दादी तीस साल से विधवा हैं। Mīrā kī dādī tīs sāl se vidhvā haiṁ. Mira's grandmother has been a widow for thirty years."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विधवा (vidhvā) is a tatsama, borrowed from Sanskrit vidhavā, \"a widow\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhvā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhvā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vidhvā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vidhvā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā kī dādī tīs sāl se vidhvā haiṁ. — Mira's grandmother has been a widow for thirty years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā kī dādī tīs sāl se vidhvā haiṁ.* — Mira's grandmother has been a widow for thirty years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a cremation ground, then the Hindi for a funeral pyre, then say vidhvā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a cremation ground, then the Hindi for a funeral pyre, then say *vidhvā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विधवा (vidhvā) mean? (\"A widow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C505-dafnana",
+      "sequence": 27750,
+      "title": "दफ़नाना (dafnānā) — to bury (the dead)",
+      "headword": "दफ़नाना",
+      "romanization": "dafnānā",
+      "gloss": "to bury (the dead)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22095a6a42a2e760",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a funeral pyre, then the Hindi for a widow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दफ़नाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दफ़नाना — dafnānā — \"to bury (the dead)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "चिड़िया मर गई, तो बच्चों ने उसे बाग़ में दफ़नाया। ciṛiyā mar gaī, to baccoṁ ne use bāġ meṁ dafnāyā. The bird died, so the children buried it in the garden."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने चिड़िया को दफ़नाया, usne ciṛiyā ko dafnāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दफ़नाना (dafnānā) is dafn, \"burial\", made into a verb with -ānā; dafn is usually traced to Arabic dafn, \"burial\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafnānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafnānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dafnānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dafnānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ciṛiyā mar gaī, to baccoṁ ne use bāġ meṁ dafnāyā. — The bird died, so the children buried it in the garden.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ciṛiyā mar gaī, to baccoṁ ne use bāġ meṁ dafnāyā.* — The bird died, so the children buried it in the garden.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a funeral pyre, then the Hindi for a widow, then say dafnānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a funeral pyre, then the Hindi for a widow, then say *dafnānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दफ़नाना (dafnānā) mean? (\"To bury (the dead)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R505-review-499-505",
+      "sequence": 27760,
+      "title": "Looking back: from Growing Up to Mourning",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Growing Up to Mourning",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c47108480aabd4a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for an adolescent and of age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an adolescent, of age, mischief, the prime of youth, to whimper",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an adolescent, of age, mischief, the prime of youth, to whimper]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bridegroom, henna, an engagement (to marry), the groom's wedding procession, a farewell",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bridegroom, henna, an engagement (to marry), the groom's wedding procession, a farewell]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bond, to marry, a divorce, to keep up, a reconciliation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bond, to marry, a divorce, to keep up, a reconciliation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grandson (a son's son), a grandson (a daughter's son), a nephew (a sister's son), to rock, only (child)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grandson (a son's son), a grandson (a daughter's son), a nephew (a sister's son), to rock, only (child)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a household, the head (of a family or village), an elder, a generation, to nurture",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a household, the head (of a family or village), an elder, a generation, to nurture]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "memory (the power to remember), a walking stick, a pension, to slip from memory, an inheritance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: memory (the power to remember), a walking stick, a pension, to slip from memory, an inheritance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "An adolescent? (किशोर, kiśor.) Of age? (बालिग़, bāliġ.) Mischief? (शरारत, śarārat.) The prime of youth? (यौवन, yauvan.) To whimper? (बिसूरना, bisūrnā.) A bridegroom? (दूल्हा, dūlhā.) Henna? (मेहंदी, mehndī.) An engagement (to marry)? (सगाई, sagāī.) The groom's wedding procession? (बारात, bārāt.) A farewell? (विदाई, vidāī.) A bond? (नाता, nātā.) To marry? (ब्याहना, byāhnā.) A divorce? (तलाक़, talāq.) To keep up? (निभाना, nibhānā.) A reconciliation? (सुलह, sulah.) A grandson (a son's son)? (पोता, potā.) A grandson (a daughter's son)? (नाती, nātī.) A nephew (a sister's son)? (भांजा, bhāñjā.) To rock? (झुलाना, jhulānā.) Only (child)? (इकलौता, iklautā.) A household? (गृहस्थी, gṛhasthī.) The head (of a family or village)? (मुखिया, mukhiyā.) An elder? (बुज़ुर्ग, buzurg.) A generation? (पीढ़ी, pīṛhī.) To nurture? (पोसना, posnā.) Memory (the power to remember)? (याददाश्त, yāddāśt.) A walking stick? (छड़ी, chaṛī.) A pension? (पेंशन, peṁśan.) To slip from memory? (बिसरना, bisarnā.) An inheritance? (विरासत, virāsat.) Mourning? (शोक, śok.) A cremation ground? (श्मशान, śmaśān.) A funeral pyre? (चिता, citā.) A widow? (विधवा, vidhvā.) To bury (the dead)? (दफ़नाना, dafnānā.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R505-review-final-505",
+      "sequence": 27770,
+      "title": "Mourning — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3055ecb59a5b1cf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Hindi for mourning and a cremation ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: mourning, a cremation ground, a funeral pyre, a widow, to bury (the dead)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Mourning? (शोक, śok.) A cremation ground? (श्मशान, śmaśān.) A funeral pyre? (चिता, citā.) A widow? (विधवा, vidhvā.) To bury (the dead)? (दफ़नाना, dafnānā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

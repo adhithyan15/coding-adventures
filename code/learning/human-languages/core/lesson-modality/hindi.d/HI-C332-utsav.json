@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C332-utsav",
+    "language": "hindi",
+    "chapter": 332,
+    "sequence": 18270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98c662bb8625f3b3"
+  },
+  "findings": []
+}

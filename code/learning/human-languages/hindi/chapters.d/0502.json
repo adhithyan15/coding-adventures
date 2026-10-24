@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Grandchildren and Nephews",
+  "label": "ch:hi-grandchildren-and-nephews",
+  "canDo": "I can name more members of the family.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C502-iklauta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can name more members of the family.",
+    "assesses": [
+      "HI-LEX-C502-POTA502-03",
+      "HI-LEX-C502-POTA502-04",
+      "HI-LEX-C502-POTA502-05"
+    ]
+  }
+}

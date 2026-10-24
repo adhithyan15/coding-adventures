@@ -1,0 +1,19 @@
+{
+  "chapter": 388,
+  "title": "More and Less",
+  "label": "ch:hi-more-and-less",
+  "canDo": "I can say how much will be enough if things go to plan.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C388-qarib",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can say how much will be enough if things go to plan.",
+    "assesses": [
+      "HI-LEX-C388-PARYAPT388-03",
+      "HI-LEX-C388-PARYAPT388-04",
+      "HI-LEX-C388-PARYAPT388-05"
+    ]
+  }
+}

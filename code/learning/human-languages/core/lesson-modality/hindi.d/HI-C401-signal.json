@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C401-signal",
+    "language": "hindi",
+    "chapter": 401,
+    "sequence": 22160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51d1c06005a733b6"
+  },
+  "findings": []
+}

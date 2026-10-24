@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:bf977bae98f72fbe",
+  "lessonIds": [
+    "HI-C307-phasna",
+    "HI-C307-pukarna",
+    "HI-C307-sannata",
+    "HI-C307-nikalna",
+    "HI-C307-behal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch307.txt",
+  "json": "hindi/narration/ch307.json",
+  "textHash": "fnv1a64:53f2fa5b49fa34a7",
+  "jsonHash": "fnv1a64:fae369c722295c36",
+  "findings": []
+}

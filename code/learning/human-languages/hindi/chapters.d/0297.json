@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "A Slip and a Fall",
+  "label": "ch:hi-a-slip-and-a-fall",
+  "canDo": "I can say how someone slipped and got hurt.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C297-lahuluhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say how someone slipped and got hurt.",
+    "assesses": [
+      "HI-LEX-C297-PHISAL297-03",
+      "HI-LEX-C297-PHISAL297-04",
+      "HI-LEX-C297-PHISAL297-05"
+    ]
+  }
+}

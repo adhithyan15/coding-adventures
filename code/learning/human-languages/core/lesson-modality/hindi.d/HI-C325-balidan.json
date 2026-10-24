@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C325-balidan",
+    "language": "hindi",
+    "chapter": 325,
+    "sequence": 17920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca496ab3590f75cc"
+  },
+  "findings": []
+}

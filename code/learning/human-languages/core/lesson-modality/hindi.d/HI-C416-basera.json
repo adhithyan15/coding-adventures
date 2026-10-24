@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C416-basera",
+    "language": "hindi",
+    "chapter": 416,
+    "sequence": 22940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:84423ae6c734bf5b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C465-hasana",
+    "language": "hindi",
+    "chapter": 465,
+    "sequence": 25670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ae772900807b527"
+  },
+  "findings": []
+}

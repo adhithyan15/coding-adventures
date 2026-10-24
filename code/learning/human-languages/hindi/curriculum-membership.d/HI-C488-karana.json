@@ -1,0 +1,11 @@
+{
+  "id": "HI-C488-karana",
+  "pathSegment": "HI-PATH-488-JANCH488",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-488-JANCH488",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "HI-EXT-306-AKAL306",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can tell how hunger and disease spread.",
+  "prerequisites": []
+}

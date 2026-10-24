@@ -1,0 +1,11 @@
+{
+  "id": "HI-C332-putla",
+  "pathSegment": "HI-PATH-332-PARAMPARA332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-332-PARAMPARA332",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 326,
+  "title": "Ruins of the Past",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ff0925256022507c",
+  "lessons": [
+    {
+      "id": "HI-C326-khandhar",
+      "sequence": 17940,
+      "title": "खंडहर (khaṇḍhar) — ruins",
+      "headword": "खंडहर",
+      "romanization": "khaṇḍhar",
+      "gloss": "ruins",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16a2c17eb863dd49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a sacrifice, then the Hindi for to entrust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खंडहर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंडहर — khaṇḍhar — \"ruins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खंडहर के लिए सीधे जाइए और मंदिर के बाद दाएँ मुड़िए। khaṇḍhar ke liye sīdhe jāie aur mandir ke bād dāẽ muṛiye. For the ruins, go straight on and turn right after the temple."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खंडहर (khaṇḍhar) is probably khaṇḍ, broken, from Sanskrit khaṇḍa, \"a piece, a fragment\" (Monier-Williams), with घर, a house, worn down: a house in pieces."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍhar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍhar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍhar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍhar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍhar ke liye sīdhe jāie aur mandir ke bād dāẽ muṛiye. — For the ruins, go straight on and turn right after the temple.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍhar ke liye sīdhe jāie aur mandir ke bād dāẽ muṛiye.* — For the ruins, go straight on and turn right after the temple.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a sacrifice, then the Hindi for to entrust, then say khaṇḍhar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a sacrifice, then the Hindi for to entrust, then say *khaṇḍhar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खंडहर (khaṇḍhar) mean? (\"Ruins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C326-khodna",
+      "sequence": 17950,
+      "title": "खोदना (khodnā) — to dig",
+      "headword": "खोदना",
+      "romanization": "khodnā",
+      "gloss": "to dig",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0ebf15338c361a7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to entrust, then the Hindi for ruins."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: खोदना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदना — khodnā — \"to dig\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मज़दूरों ने खंडहर के पास मिट्टी खोदी। mazdūroṁ ne khaṇḍhar ke pās miṭṭī khodī. The labourers dug up the earth near the ruins."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने कुआँ खोदा, usne kuā̃ khodā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "खोदना (khodnā) is inherited from khōdd, a form CDIAL reconstructs for digging (CDIAL 3934). What is dug agrees: मिट्टी खोदी, कुआँ खोदा."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khodnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khodnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūroṁ ne khaṇḍhar ke pās miṭṭī khodī. — The labourers dug up the earth near the ruins.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūroṁ ne khaṇḍhar ke pās miṭṭī khodī.* — The labourers dug up the earth near the ruins.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to entrust, then the Hindi for ruins, then say khodnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to entrust, then the Hindi for ruins, then say *khodnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does खोदना (khodnā) mean? (\"To dig\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C326-murti",
+      "sequence": 17960,
+      "title": "मूर्ति (mūrti) — a statue; an image",
+      "headword": "मूर्ति",
+      "romanization": "mūrti",
+      "gloss": "a statue; an image",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50feafcd0a054467",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for ruins, then the Hindi for to dig."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मूर्ति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूर्ति — mūrti — \"a statue; an image\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मज़दूरों को मिट्टी में एक पत्थर की मूर्ति मिली। mazdūroṁ ko miṭṭī meṁ ek patthar kī mūrti milī. The labourers found a stone statue in the earth."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मूर्ति (mūrti) is Sanskrit mūrti, \"a solid body, a form\" (Monier-Williams): a figure of stone, metal or clay, and in a temple the image of a god."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mūrti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mūrti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazdūroṁ ko miṭṭī meṁ ek patthar kī mūrti milī. — The labourers found a stone statue in the earth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazdūroṁ ko miṭṭī meṁ ek patthar kī mūrti milī.* — The labourers found a stone statue in the earth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for ruins, then the Hindi for to dig, then say mūrti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for ruins, then the Hindi for to dig, then say *mūrti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मूर्ति (mūrti) mean? (\"A statue; an image\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C326-silalekh",
+      "sequence": 17970,
+      "title": "शिलालेख (śilālekh) — an inscription (on stone)",
+      "headword": "शिलालेख",
+      "romanization": "śilālekh",
+      "gloss": "an inscription (on stone)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:452c96716ec0a1ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to dig, then the Hindi for a statue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: शिलालेख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिलालेख — śilālekh — \"an inscription (on stone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "उस शिलालेख पर एक राजा का नाम है। us śilālekh par ek rājā kā nām hai. That inscription bears a king's name."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "शिलालेख (śilālekh) joins Sanskrit śilā, \"a stone\", and lekha, \"a writing\" (Monier-Williams): words cut into rock, one of the oldest sources of history."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilālekh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilālekh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śilālekh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śilālekh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us śilālekh par ek rājā kā nām hai. — That inscription bears a king's name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us śilālekh par ek rājā kā nām hai.* — That inscription bears a king's name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to dig, then the Hindi for a statue, then say śilālekh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to dig, then the Hindi for a statue, then say *śilālekh* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does शिलालेख (śilālekh) mean? (\"An inscription (on stone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C326-avses",
+      "sequence": 17980,
+      "title": "अवशेष (avśeṣ) — remains",
+      "headword": "अवशेष",
+      "romanization": "avśeṣ",
+      "gloss": "remains",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9acbddde3678546",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a statue, then the Hindi for an inscription (on stone)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अवशेष",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशेष — avśeṣ — \"remains\"."
+            },
+            {
+              "kind": "speech",
+              "text": "खंडहर में एक पुराने मंदिर के अवशेष भी हैं। khaṇḍhar meṁ ek purāne mandir ke avśeṣ bhī haiṁ. Among the ruins are the remains of an old temple too."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अवशेष (avśeṣ) is Sanskrit avaśeṣa, \"a remainder, what is left\" (Monier-Williams). It is mostly used in the plural sense: what is left of a building or a body."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avśeṣ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avśeṣ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avśeṣ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avśeṣ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khaṇḍhar meṁ ek purāne mandir ke avśeṣ bhī haiṁ. — Among the ruins are the remains of an old temple too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khaṇḍhar meṁ ek purāne mandir ke avśeṣ bhī haiṁ.* — Among the ruins are the remains of an old temple too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a statue, then the Hindi for an inscription (on stone), then say avśeṣ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a statue, then the Hindi for an inscription (on stone), then say *avśeṣ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अवशेष (avśeṣ) mean? (\"Remains\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

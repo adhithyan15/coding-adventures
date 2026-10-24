@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C371-bavjud",
+    "language": "hindi",
+    "chapter": 371,
+    "sequence": 20440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d69da77c1300a7c"
+  },
+  "findings": []
+}

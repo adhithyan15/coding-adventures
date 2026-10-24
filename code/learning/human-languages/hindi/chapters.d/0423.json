@@ -1,0 +1,19 @@
+{
+  "chapter": 423,
+  "title": "Guards and Street Dogs",
+  "label": "ch:hi-guards-and-street-dogs",
+  "canDo": "I can talk about the guard and the lamp posts, the noise of the street and the dogs at night.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C423-bhaukna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can talk about the guard and the lamp posts, the noise of the street and the dogs at night.",
+    "assesses": [
+      "HI-LEX-C423-GARD423-03",
+      "HI-LEX-C423-GARD423-04",
+      "HI-LEX-C423-GARD423-05"
+    ]
+  }
+}

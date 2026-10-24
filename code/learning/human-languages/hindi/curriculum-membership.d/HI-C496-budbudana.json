@@ -1,0 +1,11 @@
+{
+  "id": "HI-C496-budbudana",
+  "pathSegment": "HI-PATH-496-NEEND496",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-496-NEEND496",
+      "order": 3
+    }
+  ]
+}

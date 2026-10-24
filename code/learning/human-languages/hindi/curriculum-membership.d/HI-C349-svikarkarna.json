@@ -1,0 +1,11 @@
+{
+  "id": "HI-C349-svikarkarna",
+  "pathSegment": "HI-PATH-349-INKAR349",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-349-INKAR349",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C519-makri",
+    "language": "hindi",
+    "chapter": 519,
+    "sequence": 28670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca4bd5ffc8d4d51d"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C422-ahata",
+  "pathSegment": "HI-PATH-422-KOTHI422",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-422-KOTHI422",
+      "order": 3
+    }
+  ]
+}

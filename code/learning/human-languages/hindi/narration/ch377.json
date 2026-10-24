@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 377,
+  "title": "As Things Stand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:34ad76829ec2a7c1",
+  "lessons": [
+    {
+      "id": "HI-C377-sthiti",
+      "sequence": 20740,
+      "title": "स्थिति (sthiti) — a situation",
+      "headword": "स्थिति",
+      "romanization": "sthiti",
+      "gloss": "a situation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5db86ec7e203200",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for bound to happen, then the Hindi for to emerge."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: स्थिति",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थिति — sthiti — \"a situation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर स्थिति बिगड़ेगी तो हम शहर छोड़ देंगे। agar sthiti bigṛegī to ham śahar choṛ deṅge. If the situation gets worse, we'll leave the city."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "स्थिति (sthiti) is a tatsama, borrowed from Sanskrit sthiti, \"standing, a state\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sthiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sthiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar sthiti bigṛegī to ham śahar choṛ deṅge. — If the situation gets worse, we'll leave the city.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar sthiti bigṛegī to ham śahar choṛ deṅge.* — If the situation gets worse, we'll leave the city.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for bound to happen, then the Hindi for to emerge, then say sthiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for bound to happen, then the Hindi for to emerge, then say *sthiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does स्थिति (sthiti) mean? (\"A situation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C377-halat",
+      "sequence": 20750,
+      "title": "हालत (hālat) — a state (of health, repair), a condition",
+      "headword": "हालत",
+      "romanization": "hālat",
+      "gloss": "a state (of health, repair), a condition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fab34f2b81cb7c0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to emerge, then the Hindi for a situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हालत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हालत — hālat — \"a state (of health, repair), a condition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर गाड़ी की हालत ठीक होती तो हम आज निकलते। agar gāṛī kī hālat ṭhīk hotī to ham āj nikalte. If the car were in good condition, we'd set off today."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हालत (hālat) is usually traced to Arabic ḥāla, \"a state, a condition\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hālat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hālat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar gāṛī kī hālat ṭhīk hotī to ham āj nikalte. — If the car were in good condition, we'd set off today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar gāṛī kī hālat ṭhīk hotī to ham āj nikalte.* — If the car were in good condition, we'd set off today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to emerge, then the Hindi for a situation, then say hālat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to emerge, then the Hindi for a situation, then say *hālat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हालत (hālat) mean? (\"A state (of health, repair), a condition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C377-zarurat",
+      "sequence": 20760,
+      "title": "ज़रूरत (zarūrat) — a need",
+      "headword": "ज़रूरत",
+      "romanization": "zarūrat",
+      "gloss": "a need",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0c79919fa96ce80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a situation, then the Hindi for a state (of health, repair)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ज़रूरत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रूरत — zarūrat — \"a need\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम्हें पैसों की ज़रूरत होगी तो मुझे बताओ। agar tumhẽ paisoṁ kī zarūrat hogī to mujhe batāo. If you need money, tell me."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ज़रूरत (zarūrat) is usually traced to Arabic ḍarūra, \"necessity\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarūrat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarūrat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zarūrat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zarūrat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tumhẽ paisoṁ kī zarūrat hogī to mujhe batāo. — If you need money, tell me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tumhẽ paisoṁ kī zarūrat hogī to mujhe batāo.* — If you need money, tell me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a situation, then the Hindi for a state (of health, repair), then say zarūrat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a situation, then the Hindi for a state (of health, repair), then say *zarūrat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ज़रूरत (zarūrat) mean? (\"A need\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C377-musibat",
+      "sequence": 20770,
+      "title": "मुसीबत (musībat) — a hardship, trouble",
+      "headword": "मुसीबत",
+      "romanization": "musībat",
+      "gloss": "a hardship, trouble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ad51f3d8bb0ae67",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a state (of health, repair), then the Hindi for a need."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मुसीबत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुसीबत — musībat — \"a hardship, trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम झूठ बोलोगे तो मुसीबत में पड़ोगे। agar tum jhūṭh bologe to musībat meṁ paṛoge. If you lie, you'll land in trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मुसीबत (musībat) is usually traced to Arabic muṣība, \"a misfortune\", which reached Hindi through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "musībat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *musībat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum jhūṭh bologe to musībat meṁ paṛoge. — If you lie, you'll land in trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum jhūṭh bologe to musībat meṁ paṛoge.* — If you lie, you'll land in trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a state (of health, repair), then the Hindi for a need, then say musībat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a state (of health, repair), then the Hindi for a need, then say *musībat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मुसीबत (musībat) mean? (\"A hardship, trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C377-phasana",
+      "sequence": 20780,
+      "title": "फँसाना (phãsānā) — to trap, to land (someone) in trouble",
+      "headword": "फँसाना",
+      "romanization": "phãsānā",
+      "gloss": "to trap, to land (someone) in trouble",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a280428a83ab0d15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for a need, then the Hindi for a hardship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फँसाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फँसाना — phãsānā — \"to trap, to land (someone) in trouble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "अगर तुम उस आदमी की बात मानोगे तो वह तुम्हें फँसा देगा। agar tum us ādmī kī bāt mānoge to vah tumhẽ phãsā degā. If you listen to that man, he'll land you in trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Past, with ने (he or she …): उसने मुझे फँसाया, usne mujhe phãsāyā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फँसाना (phãsānā) is a tadbhava, inherited from Sanskrit spāśayati, \"causes to be bound\" (CDIAL 13814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phãsānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phãsānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phãsānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phãsānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agar tum us ādmī kī bāt mānoge to vah tumhẽ phãsā degā. — If you listen to that man, he'll land you in trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agar tum us ādmī kī bāt mānoge to vah tumhẽ phãsā degā.* — If you listen to that man, he'll land you in trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for a need, then the Hindi for a hardship, then say phãsānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for a need, then the Hindi for a hardship, then say *phãsānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फँसाना (phãsānā) mean? (\"To trap, to land (someone) in trouble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

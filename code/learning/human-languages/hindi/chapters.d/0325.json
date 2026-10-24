@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "A Movement for Freedom",
+  "label": "ch:hi-a-movement-for-freedom",
+  "canDo": "I can tell how a freedom movement grew.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "HI-C325-saumpna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can tell how a freedom movement grew.",
+    "assesses": [
+      "HI-LEX-C325-ANDOLAN325-03",
+      "HI-LEX-C325-ANDOLAN325-04",
+      "HI-LEX-C325-ANDOLAN325-05"
+    ]
+  }
+}

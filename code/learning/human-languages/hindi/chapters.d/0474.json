@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Sense and Folly",
+  "label": "ch:hi-sense-and-folly",
+  "canDo": "I can say whether someone acted wisely or foolishly.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C474-bahakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can say whether someone acted wisely or foolishly.",
+    "assesses": [
+      "HI-LEX-C474-AQL474-03",
+      "HI-LEX-C474-AQL474-04",
+      "HI-LEX-C474-AQL474-05"
+    ]
+  }
+}

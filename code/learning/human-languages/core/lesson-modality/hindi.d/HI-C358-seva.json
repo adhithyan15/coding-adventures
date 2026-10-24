@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C358-seva",
+    "language": "hindi",
+    "chapter": 358,
+    "sequence": 19760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f4a0ec921da5c4ae"
+  },
+  "findings": []
+}

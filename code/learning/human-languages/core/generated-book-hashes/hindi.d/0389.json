@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:de2014178d196649",
+  "lessonIds": [
+    "HI-C389-behtar",
+    "HI-C389-badtar",
+    "HI-C389-barhiya",
+    "HI-C389-samanya",
+    "HI-C389-nikharna"
+  ],
+  "tex": "hindi/book/chapters/ch389-better-and-worse.tex"
+}

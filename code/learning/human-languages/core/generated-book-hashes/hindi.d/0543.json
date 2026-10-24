@@ -1,0 +1,13 @@
+{
+  "language": "hindi",
+  "chapter": 543,
+  "sourceHash": "fnv1a64:032e70f02b3ba2d7",
+  "lessonIds": [
+    "HI-C543-vacan",
+    "HI-C543-qasam",
+    "HI-C543-razi",
+    "HI-C543-sapath",
+    "HI-C543-paband"
+  ],
+  "tex": "hindi/book/chapters/ch543-keeping-one-s-word.tex"
+}

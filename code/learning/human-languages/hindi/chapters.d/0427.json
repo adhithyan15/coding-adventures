@@ -1,0 +1,19 @@
+{
+  "chapter": 427,
+  "title": "Credit and Instalments",
+  "label": "ch:hi-credit-and-instalments",
+  "canDo": "I can buy on credit, pay in instalments, keep accounts and pay off a debt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C427-cukana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can buy on credit, pay in instalments, keep accounts and pay off a debt.",
+    "assesses": [
+      "HI-LEX-C427-UDHAR427-03",
+      "HI-LEX-C427-UDHAR427-04",
+      "HI-LEX-C427-UDHAR427-05"
+    ]
+  }
+}

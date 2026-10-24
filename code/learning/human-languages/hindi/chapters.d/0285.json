@@ -1,0 +1,21 @@
+{
+  "chapter": 285,
+  "title": "Taller, the Tallest, and How Long",
+  "label": "ch:hi-taller-the-tallest-and-how-long",
+  "canDo": "I can compare two things (se zyādā, se kam), say which is the most (sabse), and say how long something has gone on (do sāl se, din bhar).",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R285-comparing-and-time",
+    "kind": "production",
+    "summary": "Complete HI-R285-comparing-and-time: compare, pick the most, and say how long.",
+    "assesses": [
+      "HI-LEX-C285-SABSE-01",
+      "HI-GRAMMAR-C285-MORE-LESS-01",
+      "HI-GRAMMAR-C285-SUPERLATIVE-GROUP-01",
+      "HI-GRAMMAR-C285-SINCE-FOR-01",
+      "HI-GRAMMAR-C285-ALL-DAY-01"
+    ]
+  }
+}

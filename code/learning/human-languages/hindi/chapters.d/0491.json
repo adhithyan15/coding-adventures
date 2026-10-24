@@ -1,0 +1,21 @@
+{
+  "chapter": 491,
+  "title": "In Hospital",
+  "label": "ch:hi-in-hospital",
+  "canDo": "I can talk about someone who is in hospital.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-R491-review-484-491",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about someone who is in hospital.",
+    "assesses": [
+      "HI-LEX-C491-DAKHIL491-01",
+      "HI-LEX-C491-DAKHIL491-02",
+      "HI-LEX-C491-DAKHIL491-03",
+      "HI-LEX-C491-DAKHIL491-04",
+      "HI-LEX-C491-DAKHIL491-05"
+    ]
+  }
+}

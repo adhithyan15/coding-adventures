@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-521-TADKA521",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "HI-EXT-521-TADKA521"
+  ],
+  "after": []
+}

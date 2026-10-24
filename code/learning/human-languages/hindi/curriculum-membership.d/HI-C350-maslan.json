@@ -1,0 +1,11 @@
+{
+  "id": "HI-C350-maslan",
+  "pathSegment": "HI-PATH-350-MISAAL350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-350-MISAAL350",
+      "order": 1
+    }
+  ]
+}

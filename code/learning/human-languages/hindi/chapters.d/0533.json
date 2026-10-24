@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "In the Wrestling Pit",
+  "label": "ch:hi-in-the-wrestling-pit",
+  "canDo": "I can describe a wrestling match.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C533-paitra",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can describe a wrestling match.",
+    "assesses": [
+      "HI-LEX-C533-KUSHTI533-03",
+      "HI-LEX-C533-KUSHTI533-04",
+      "HI-LEX-C533-KUSHTI533-05"
+    ]
+  }
+}

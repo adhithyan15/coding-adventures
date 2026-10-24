@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C535-phurti",
+    "language": "hindi",
+    "chapter": 535,
+    "sequence": 29490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:280345a2324ca8f3"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Objecting and Persuading",
+  "label": "ch:hi-objecting-and-persuading",
+  "canDo": "I can object, criticise, threaten or coax.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "HI-C360-phuslana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can object, criticise, threaten or coax.",
+    "assesses": [
+      "HI-LEX-C360-APATTI360-03",
+      "HI-LEX-C360-APATTI360-04",
+      "HI-LEX-C360-APATTI360-05"
+    ]
+  }
+}

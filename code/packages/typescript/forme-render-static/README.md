@@ -155,3 +155,12 @@ npx vitest run --coverage
 
 Coverage target 90%+ line. See `tests/` for the title fallback /
 theme / stage suites.
+
+## TE04 fenced-block compatibility
+
+Projects fenced fallback as pre/code for used-style collection. HTML rendering delegates to the shared escaped renderer; full fence info is inert metadata.
+
+See [TE04](../../../specs/TE04-gfm-extensions.md) for normalization,
+source retention, compatibility and validation boundaries. Run package-local
+`npm run build` when supplied and `npm test -- --coverage` after installing
+local dependencies; BUILD fronts also install required sibling packages.

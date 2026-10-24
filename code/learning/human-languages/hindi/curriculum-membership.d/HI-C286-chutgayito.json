@@ -1,0 +1,11 @@
+{
+  "id": "HI-C286-chutgayito",
+  "pathSegment": "HI-PATH-286-IFOTHERWISE",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-286-IFOTHERWISE",
+      "order": 1
+    }
+  ]
+}

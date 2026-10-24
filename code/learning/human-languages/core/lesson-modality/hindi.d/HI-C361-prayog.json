@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C361-prayog",
+    "language": "hindi",
+    "chapter": 361,
+    "sequence": 19930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5076c4eeb753bf95"
+  },
+  "findings": []
+}

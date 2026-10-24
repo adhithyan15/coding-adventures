@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Hopes and Fears",
+  "label": "ch:hi-hopes-and-fears",
+  "canDo": "I can say what I hope for and what I fear might happen.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C375-rijhana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say what I hope for and what I fear might happen.",
+    "assesses": [
+      "HI-LEX-C375-ASHA375-03",
+      "HI-LEX-C375-ASHA375-04",
+      "HI-LEX-C375-ASHA375-05"
+    ]
+  }
+}

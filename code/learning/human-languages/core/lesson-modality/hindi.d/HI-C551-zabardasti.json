@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C551-zabardasti",
+    "language": "hindi",
+    "chapter": 551,
+    "sequence": 30340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6404b4daccd1e913"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C427-cukana",
+  "pathSegment": "HI-PATH-427-UDHAR427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "HI-EXT-427-UDHAR427",
+      "order": 4
+    }
+  ]
+}

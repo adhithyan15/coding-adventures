@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 460,
+  "title": "Missing Someone",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2a1d0d9806596a87",
+  "lessons": [
+    {
+      "id": "HI-C460-virah",
+      "sequence": 25410,
+      "title": "विरह (virah) — the pain of separation",
+      "headword": "विरह",
+      "romanization": "virah",
+      "gloss": "the pain of separation",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:413ba3dacf4144fb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to kiss, then the Hindi for to soothe with soft words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: विरह",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरह — virah — \"the pain of separation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पति के विरह में पत्नी बहुत उदास थी। pati ke virah meṁ patnī bahut udās thī. Parted from her husband, the wife was very sad."
+            },
+            {
+              "kind": "speech",
+              "text": "Masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "विरह (virah) is a tatsama, borrowed from Sanskrit viraha, \"parting, separation, esp. of lovers\" (Monier-Williams). Songs and poems are full of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virah*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "virah, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *virah*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pati ke virah meṁ patnī bahut udās thī. — Parted from her husband, the wife was very sad.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pati ke virah meṁ patnī bahut udās thī.* — Parted from her husband, the wife was very sad.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to kiss, then the Hindi for to soothe with soft words, then say virah again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to kiss, then the Hindi for to soothe with soft words, then say *virah* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does विरह (virah) mean? (\"The pain of separation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C460-cimatna",
+      "sequence": 25420,
+      "title": "चिमटना (cimaṭnā) — to cling tightly",
+      "headword": "चिमटना",
+      "romanization": "cimaṭnā",
+      "gloss": "to cling tightly",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8821cee699f39bca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to soothe with soft words, then the Hindi for the pain of separation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: चिमटना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिमटना — cimaṭnā — \"to cling tightly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "स्टेशन पर बेटी माँ से चिमट गई। sṭeśan par beṭī māṁ se cimaṭ gaī. At the station the daughter clung tightly to her mother."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह माँ से चिमट गई, vah māṁ se cimaṭ gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "चिमटना (cimaṭnā) is a tadbhava: CDIAL lists Hindi cimaṭnā, \"to embrace closely\", under cimb, a form it reconstructs (CDIAL 4822)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimaṭnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimaṭnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cimaṭnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cimaṭnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sṭeśan par beṭī māṁ se cimaṭ gaī. — At the station the daughter clung tightly to her mother.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sṭeśan par beṭī māṁ se cimaṭ gaī.* — At the station the daughter clung tightly to her mother.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to soothe with soft words, then the Hindi for the pain of separation, then say cimaṭnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to soothe with soft words, then the Hindi for the pain of separation, then say *cimaṭnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does चिमटना (cimaṭnā) mean? (\"To cling tightly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C460-akulana",
+      "sequence": 25430,
+      "title": "अकुलाना (akulānā) — to grow restless; to pine",
+      "headword": "अकुलाना",
+      "romanization": "akulānā",
+      "gloss": "to grow restless; to pine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62eda420445e8ac4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for the pain of separation, then the Hindi for to cling tightly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अकुलाना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अकुलाना — akulānā — \"to grow restless; to pine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बेटे की चिट्ठी नहीं आई, तो माँ अकुला गई। beṭe kī ciṭṭhī nahīṃ āī, to māṁ akulā gaī. When no letter came from her son, the mother grew restless with worry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (she …): वह अकुला गई, vah akulā gaī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अकुलाना (akulānā) is a tadbhava: CDIAL lists Hindi akulānā, \"to be confused, be restless\", under Sanskrit ākula (CDIAL 1012)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akulānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akulānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "akulānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *akulānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beṭe kī ciṭṭhī nahīṃ āī, to māṁ akulā gaī. — When no letter came from her son, the mother grew restless with worry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beṭe kī ciṭṭhī nahīṃ āī, to māṁ akulā gaī.* — When no letter came from her son, the mother grew restless with worry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for the pain of separation, then the Hindi for to cling tightly, then say akulānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for the pain of separation, then the Hindi for to cling tightly, then say *akulānā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अकुलाना (akulānā) mean? (\"To grow restless; to pine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C460-suna",
+      "sequence": 25440,
+      "title": "सूना (sūnā) — desolate; empty",
+      "headword": "सूना",
+      "romanization": "sūnā",
+      "gloss": "desolate; empty",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2770c823ddc93142",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to cling tightly, then the Hindi for to grow restless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सूना",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूना — sūnā — \"desolate; empty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "बच्चों के बिना घर सूना लगता है। baccoṁ ke binā ghar sūnā lagtā hai. The house feels empty without the children."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सूना (sūnā) is a tadbhava: CDIAL lists Hindi sūnā, \"empty, hollow\", under Sanskrit śūnyá, \"empty\" (CDIAL 12567). It is said of places that feel empty because someone is missing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baccoṁ ke binā ghar sūnā lagtā hai. — The house feels empty without the children.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baccoṁ ke binā ghar sūnā lagtā hai.* — The house feels empty without the children.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to cling tightly, then the Hindi for to grow restless, then say sūnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to cling tightly, then the Hindi for to grow restless, then say *sūnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सूना (sūnā) mean? (\"Desolate; empty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C460-lalsa",
+      "sequence": 25450,
+      "title": "लालसा (lālsā) — a longing; a craving",
+      "headword": "लालसा",
+      "romanization": "lālsā",
+      "gloss": "a longing; a craving",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:98f7857a9e6f8551",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Hindi for to grow restless, then the Hindi for desolate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लालसा",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लालसा — lālsā — \"a longing; a craving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मीरा को अच्छी नौकरी की लालसा है। Mīrā ko acchī naukrī kī lālsā hai. Mira longs for a good job."
+            },
+            {
+              "kind": "speech",
+              "text": "Feminine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लालसा (lālsā) is a tatsama, borrowed from Sanskrit lālasā, \"longing or ardent desire\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lālsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lālsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lālsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lālsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mīrā ko acchī naukrī kī lālsā hai. — Mira longs for a good job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Mīrā ko acchī naukrī kī lālsā hai.* — Mira longs for a good job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Hindi for to grow restless, then the Hindi for desolate, then say lālsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Hindi for to grow restless, then the Hindi for desolate, then say *lālsā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लालसा (lālsā) mean? (\"A longing; a craving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

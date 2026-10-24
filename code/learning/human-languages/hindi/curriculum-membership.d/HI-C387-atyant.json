@@ -1,0 +1,11 @@
+{
+  "id": "HI-C387-atyant",
+  "pathSegment": "HI-PATH-387-BEHAD387",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-387-BEHAD387",
+      "order": 1
+    }
+  ]
+}

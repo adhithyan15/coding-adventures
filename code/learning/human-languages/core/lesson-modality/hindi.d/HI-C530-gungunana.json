@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C530-gungunana",
+    "language": "hindi",
+    "chapter": 530,
+    "sequence": 29270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2658f66ee7cd8685"
+  },
+  "findings": []
+}

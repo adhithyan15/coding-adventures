@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Arms and Legs",
+  "label": "ch:hi-arms-and-legs",
+  "canDo": "I can name parts of the arms and legs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "HI-C477-eri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can name parts of the arms and legs.",
+    "assesses": [
+      "HI-LEX-C477-HATHELI477-03",
+      "HI-LEX-C477-HATHELI477-04",
+      "HI-LEX-C477-HATHELI477-05"
+    ]
+  }
+}

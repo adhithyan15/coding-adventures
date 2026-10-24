@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 281,
+  "title": "Should, Must, and So",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:39875e1792a34eb6",
+  "lessons": [
+    {
+      "id": "HI-C281-janachahiye",
+      "sequence": 15490,
+      "title": "तुम्हें जाना चाहिए (tumhẽ jānā cāhiye) — should, and have to",
+      "headword": "तुम्हें जाना चाहिए",
+      "romanization": "tumhẽ jānā cāhiye",
+      "gloss": "you should go — चाहिए with a verb, and पड़ना for what you have to do",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:129eb34691760e76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I need tea\". (मुझे चाय चाहिए.) Then \"I have to go\", the way you take leave. (जाना है.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: should",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तुम्हें आराम करना चाहिए। tumhẽ ārām karnā cāhiye. — \"You should rest.\""
+            },
+            {
+              "kind": "speech",
+              "text": "चाहिए after a thing is \"is needed\". After a verb in -ना it is \"should\". The one who should takes को (आपको), or a pronoun's short form of it (मुझे, तुम्हें, उसे), and चाहिए does not change."
+            },
+            {
+              "kind": "speech",
+              "text": "आपको डाक्टर के पास जाना चाहिए। (āpko ḍākṭar ke pās jānā cāhiye.) — You should go to the doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "हमें पानी पीना चाहिए। (hamẽ pānī pīnā cāhiye.) — We should drink water."
+            },
+            {
+              "kind": "speech",
+              "text": "\"Should not\" puts नहीं before the verb: तुम्हें ऐसा नहीं करना चाहिए (tumhẽ aisā nahīṃ karnā cāhiye), \"you shouldn't do that\"."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: have to",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "कल मुझे दफ़्तर जाना पड़ेगा। kal mujhe daftar jānā paṛegā. — \"Tomorrow I will have to go to the office.\""
+            },
+            {
+              "kind": "speech",
+              "text": "पड़ना (paṛnā) after a verb in -ना says there is no choice: something outside you makes it so. The one it falls on takes मुझे again."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे रोज़ जाना पड़ता है। (mujhe roz jānā paṛtā hai.) — I have to go every day."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे जाना पड़ा। (mujhe jānā paṛā.) — I had to go."
+            },
+            {
+              "kind": "speech",
+              "text": "मुझे जाना पड़ेगा। (mujhe jānā paṛegā.) — I will have to go."
+            },
+            {
+              "kind": "speech",
+              "text": "Three shades, then: जाना है, which you say as you leave, is a plan; जाना चाहिए is advice; जाना पड़ेगा is a necessity."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You should go to the doctor\" — āpko ḍākṭar ke pās jānā cāhiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You should go to the doctor\" — *āpko ḍākṭar ke pās jānā cāhiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You shouldn't do that\" — tumhẽ aisā nahīṃ karnā cāhiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You shouldn't do that\" — *tumhẽ aisā nahīṃ karnā cāhiye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tomorrow I will have to work\" — kal mujhe kām karnā paṛegā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Tomorrow I will have to work\" — *kal mujhe kām karnā paṛegā*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C281-janachahiye-r1",
+              "prompt": "Tell a friend that he should rest, then say that you had to go to the office.",
+              "assesses": [
+                "HI-GRAMMAR-C281-CHAHIYE-SHOULD-01",
+                "HI-GRAMMAR-C281-PADNA-MUST-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "tumhẽ ārām karnā cāhiye; mujhe daftar jānā paṛā",
+                "तुम्हें आराम करना चाहिए। मुझे दफ़्तर जाना पड़ा।"
+              ],
+              "feedback": {
+                "correct": "cāhiye for advice; paṛā because there was no choice, and it is past.",
+                "incorrect": "Both take the -nā verb and mujhe or tumhẽ: ārām karnā cāhiye, jānā paṛā."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"You should rest\"? (तुम्हें आराम करना चाहिए.) Does चाहिए change? (No.) \"I had to go\"? (मुझे जाना पड़ा.) \"I will have to go\"? (मुझे जाना पड़ेगा.) Which one says there is no choice? (पड़ना.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C281-atah",
+      "sequence": 15500,
+      "title": "अतः (ataḥ) — therefore, in formal writing",
+      "headword": "अतः",
+      "romanization": "ataḥ",
+      "gloss": "therefore (formal)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a91c587db283841",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"so, therefore\" the everyday way. (इसलिए, isliye.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अतः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतः — ataḥ — \"therefore\". It is formal. You will read it in notices, letters and the news; in speech, Hindi says इसलिए."
+            },
+            {
+              "kind": "speech",
+              "text": "कल छुट्टी है, अतः दफ़्तर बंद रहेगा। kal chuṭṭī hai, ataḥ daftar band rahegā. — \"Tomorrow is a holiday; the office will therefore stay closed.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Its last sign, the two dots ः (ḥ), is new, and it has the next lesson to itself. It is said as a light breath of h after the vowel: ataḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अतः (ataḥ) is a tatsama, a Sanskrit word Hindi uses unchanged. Monier-Williams gives its sense as \"from this\", and so \"hence, for this reason\": the result comes from what was said before. CDIAL has no row for it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ataḥ, with the light breath at the end",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ataḥ*, with the light breath at the end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कल छुट्टी है, अतः (ataḥ) दफ़्तर बंद रहेगा।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कल छुट्टी है, अतः दफ़्तर बंद रहेगा।**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same sentence the everyday way — kal chuṭṭī hai, isliye daftar band rahegā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same sentence the everyday way — *kal chuṭṭī hai, isliye daftar band rahegā*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अतः (ataḥ) mean? (\"Therefore\".) Where would you meet it? (In notices, letters and the news.) What does speech say instead? (इसलिए.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-W281-sign-visarga",
+      "sequence": 15510,
+      "title": "◌ः (ḥ) — two dots and a breath",
+      "headword": "ः",
+      "romanization": "ḥ",
+      "gloss": "the single sign ः — two dots and a light breath, at the end of अतः",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:37213d18348f1d52",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script you'll notice: ◌ः",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Script you'll notice: ◌ः, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say अतः (ataḥ), \"therefore\". Then find the dot of ◌ं in मैं: one dot, above the head-line."
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Today's sign has two dots, and they stand beside the line, not above it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ◌ः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "◌ः — the visarga, ḥ: a light breath of h after the vowel before it."
+            },
+            {
+              "kind": "speech",
+              "text": "Where it sits: to the right of its syllable, two dots one above the other. In print they hang under a short piece of head-line."
+            },
+            {
+              "kind": "speech",
+              "text": "What it is made of:"
+            },
+            {
+              "kind": "speech",
+              "text": "an upper dot."
+            },
+            {
+              "kind": "speech",
+              "text": "a lower dot."
+            },
+            {
+              "kind": "speech",
+              "text": "a short piece of headline above them."
+            },
+            {
+              "kind": "speech",
+              "text": "Worked through: त + ◌ः (ḥ) = तः, the end of अतः (ataḥ)."
+            },
+            {
+              "kind": "speech",
+              "text": "It is rare in everyday Hindi. You will meet it in formal words taken straight from Sanskrit, such as अतः (ataḥ)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ◌ः — follow the numbered strip",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "1. start at the top of the upper dot and curve down its left side."
+            },
+            {
+              "kind": "speech",
+              "text": "2. without lifting, round the bottom and up the right side to close the loop."
+            },
+            {
+              "kind": "speech",
+              "text": "3. lift, then start at the top of the lower dot and curve down its left side."
+            },
+            {
+              "kind": "speech",
+              "text": "4. without lifting, round the bottom and up the right side to close the loop — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1. The upper dot first, then the lower."
+            },
+            {
+              "kind": "speech",
+              "text": "The short piece of head-line stays grey in the strip: in a word it is part of the head-line, which you draw last, once, across the whole word."
+            },
+            {
+              "kind": "speech",
+              "text": "Two strokes — four movements, one pen lift; the upper dot, then the lower, each a small loop drawn anticlockwise from its top, as ं is; the short piece of headline the printed sign carries is left undrawn, because in a word it is part of the one headline drawn last across the whole word; cited to native writers' pen traces in HP Labs India's LipiTk Devanagari recognizer, class 60."
+            },
+            {
+              "kind": "speech",
+              "text": "This is one attested order, and handwriting varies by writer. Source: HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Devanagari recognizer, class 60 (ः (ḥ), visarga): stored online-handwriting prototypes from native writers (MIT licence, 2012)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "LOOK",
+              "instruction": "at these two signs, and say where each one sits",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU LOOK: at these two signs, and say where each one sits]"
+            },
+            {
+              "kind": "speech",
+              "text": "◌ं, ◌ः (ḥ)."
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "◌ः (ḥ) three times, the upper dot first",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ◌ः three times, the upper dot first]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "अतः (ataḥ), then read it aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **अतः**, then read it aloud]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ◌ः (ḥ) sit? (To the right of its syllable.) Which dot comes first? (The upper.) What does it add? (A light breath of h.) Which word brought it? (अतः (ataḥ).)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "HI-W281-sign-visarga-r1",
+              "prompt": "With no model, write the formal word for therefore, then its last sign alone.",
+              "assesses": [
+                "HI-SCRIPT-C281-VISARGA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "अतः; ः"
+              ],
+              "feedback": {
+                "correct": "Two dots to the right of the syllable, the upper one first.",
+                "incorrect": "Reopen ◌ः: draw the upper dot, then the lower, each a small loop from its top; then write अतः again from memory."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C281-isliye",
+      "sequence": 15520,
+      "title": "बारिश हो रही थी, इसलिए … (bāriś ho rahī thī, isliye …) — the cause, then so",
+      "headword": "बारिश हो रही थी, इसलिए …",
+      "romanization": "bāriś ho rahī thī, isliye …",
+      "gloss": "it was raining, so … — the cause first, then इसलिए and the result; तो, so then",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7281a037ea7ee9de",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"because of the rain\". (बारिश की वजह से.) Then the two words for \"therefore\", the everyday one and the formal one. (इसलिए, अतः (ataḥ).)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cause, इसलिए, result",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारिश हो रही थी, इसलिए मैं नहीं गया। bāriś ho rahī thī, isliye maiṁ nahīṃ gayā. — \"It was raining, so I didn't go.\""
+            },
+            {
+              "kind": "speech",
+              "text": "इसलिए stands between two whole sentences: the cause first, then the result. क्योंकि turns the order round."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "order",
+                "sentence"
+              ],
+              "columns": 2,
+              "rowCount": 2,
+              "utterances": [
+                "order: cause, इसलिए, result. sentence: बारिश हो रही है, इसलिए मैं घर पर हूँ। (bāriś ho rahī hai, isliye maiṁ ghar par hūṁ.)",
+                "order: result, क्योंकि, cause. sentence: मैं घर पर हूँ, क्योंकि बारिश हो रही है। (maiṁ ghar par hūṁ, kyoṁki bāriś ho rahī hai.)"
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "In formal writing, अतः (ataḥ) takes the place of इसलिए."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: तो, so then",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बारिश हो रही है? तो छाता लीजिए। bāriś ho rahī hai? to chātā lījie. — \"It's raining? Then take an umbrella.\""
+            },
+            {
+              "kind": "speech",
+              "text": "तो (to), \"so, then\", takes up what was said and draws the next step from it. It opens a reply:"
+            },
+            {
+              "kind": "speech",
+              "text": "तो चलिए। (to calie.) — So let's go."
+            },
+            {
+              "kind": "speech",
+              "text": "ठीक है, तो कल मिलते हैं। (ṭhīk hai, to kal milte haiṁ.) — All right, so see you tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "तो has a bigger job still, after अगर, \"if\"; it comes when the book reaches conditions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It's raining, so I'm at home\" — bāriś ho rahī hai, isliye maiṁ ghar par hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It's raining, so I'm at home\" — *bāriś ho rahī hai, isliye maiṁ ghar par hūṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"All right, so see you tomorrow\" — ṭhīk hai, to kal milte haiṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"All right, so see you tomorrow\" — *ṭhīk hai, to kal milte haiṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You're ill? Then you should rest\" — tum bīmār ho? to tumhẽ ārām karnā cāhiye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You're ill? Then you should rest\" — *tum bīmār ho? to tumhẽ ārām karnā cāhiye*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "HI-C281-isliye-r1",
+              "prompt": "Say that it was raining, so you didn't go. Then answer a friend who says he is ill: then you should go to the doctor.",
+              "assesses": [
+                "HI-GRAMMAR-C281-ISLIYE-RESULT-01",
+                "HI-GRAMMAR-C281-TO-SO-01"
+              ],
+              "responseSeconds": 26,
+              "acceptedResponses": [
+                "bāriś ho rahī thī, isliye maiṁ nahīṃ gayā; to tumhẽ ḍākṭar ke pās jānā cāhiye",
+                "बारिश हो रही थी, इसलिए मैं नहीं गया। तो तुम्हें डाक्टर के पास जाना चाहिए।",
+                "बारिश हो रही थी, इसलिए मैं नहीं गई। तो तुम्हें डाक्टर के पास जाना चाहिए।"
+              ],
+              "feedback": {
+                "correct": "The cause, isliye, the result; to opens the reply.",
+                "incorrect": "Put the cause first and isliye before the result; start the reply with to."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does इसलिए go? (Between the cause and the result.) And क्योंकि? (After the result, before the cause.) \"So let's go\"? (तो चलिए.) What does formal writing put for इसलिए? (अतः (ataḥ).)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-R281-advice-and-reasons",
+      "sequence": 15530,
+      "title": "Review — advice, and so",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "advice, necessity, and the result",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:c6d0dbc206a3aca7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"you should rest\". (tumhẽ ārām karnā cāhiye.) Then read अतः (ataḥ) aloud, and write its last sign: the upper dot, then the lower."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You should drink water. I had to go to the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You should drink water. I had to go to the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It was raining, so we stayed at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It was raining, so we stayed at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You're ill? Then you should rest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You're ill? Then you should rest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "I think we will have to leave early.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: I think we will have to leave early.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कल छुट्टी है, अतः (ataḥ) दफ़्तर बंद रहेगा। Then say it the everyday way.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कल छुट्टी है, अतः दफ़्तर बंद रहेगा।** Then say it the everyday way.]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Should\"? (चाहिए, after a verb in -ना.) \"Had to\"? (पड़ा.) \"So\", between two sentences? (इसलिए, or in writing अतः (ataḥ).) \"So then\", opening a reply? (तो.) Where does ◌ः (ḥ) sit? (To the right of its syllable.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

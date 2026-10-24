@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "HI-C362-vislesan",
+    "language": "hindi",
+    "chapter": 362,
+    "sequence": 20000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b0a27e8b9e6bef5"
+  },
+  "findings": []
+}

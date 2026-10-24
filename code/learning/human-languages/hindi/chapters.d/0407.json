@@ -1,0 +1,19 @@
+{
+  "chapter": 407,
+  "title": "On the Highway",
+  "label": "ch:hi-on-the-highway",
+  "canDo": "I can talk about a highway, its tolls and checkpoints, a convoy of lorries and a road washed away.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C407-bahana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can talk about a highway, its tolls and checkpoints, a convoy of lorries and a road washed away.",
+    "assesses": [
+      "HI-LEX-C407-NAKA407-03",
+      "HI-LEX-C407-NAKA407-04",
+      "HI-LEX-C407-NAKA407-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "HI-C373-cukna",
+  "pathSegment": "HI-PATH-373-MUMKIN373",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-373-MUMKIN373",
+      "order": 3
+    }
+  ]
+}

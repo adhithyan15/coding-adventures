@@ -1,0 +1,11 @@
+{
+  "id": "HI-C472-sust",
+  "pathSegment": "HI-PATH-472-PHURTI472",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-472-PHURTI472",
+      "order": 1
+    }
+  ]
+}

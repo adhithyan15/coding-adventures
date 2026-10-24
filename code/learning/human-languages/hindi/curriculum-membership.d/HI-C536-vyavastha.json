@@ -1,0 +1,11 @@
+{
+  "id": "HI-C536-vyavastha",
+  "pathSegment": "HI-PATH-536-YOJNA536",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-536-YOJNA536",
+      "order": 2
+    }
+  ]
+}

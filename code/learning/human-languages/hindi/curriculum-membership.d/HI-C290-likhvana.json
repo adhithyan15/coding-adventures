@@ -1,0 +1,11 @@
+{
+  "id": "HI-C290-likhvana",
+  "pathSegment": "HI-PATH-290-THANA290",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "HI-EXT-290-THANA290",
+      "order": 2
+    }
+  ]
+}

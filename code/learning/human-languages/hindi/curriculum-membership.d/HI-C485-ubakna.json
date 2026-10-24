@@ -1,0 +1,11 @@
+{
+  "id": "HI-C485-ubakna",
+  "pathSegment": "HI-PATH-485-CHAKKAR485",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-485-CHAKKAR485",
+      "order": 3
+    }
+  ]
+}

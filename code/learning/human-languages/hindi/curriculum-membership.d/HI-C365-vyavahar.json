@@ -1,0 +1,11 @@
+{
+  "id": "HI-C365-vyavahar",
+  "pathSegment": "HI-PATH-365-SIDDHANT365",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-365-SIDDHANT365",
+      "order": 1
+    }
+  ]
+}

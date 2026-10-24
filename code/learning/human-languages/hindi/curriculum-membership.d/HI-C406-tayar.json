@@ -1,0 +1,11 @@
+{
+  "id": "HI-C406-tayar",
+  "pathSegment": "HI-PATH-406-TAIKSI406",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-406-TAIKSI406",
+      "order": 1
+    }
+  ]
+}

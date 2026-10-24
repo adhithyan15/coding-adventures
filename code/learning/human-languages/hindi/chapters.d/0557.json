@@ -1,0 +1,19 @@
+{
+  "chapter": 557,
+  "title": "Fears and Reassurance",
+  "label": "ch:hi-fears-and-reassurance",
+  "canDo": "I can say what I fear might happen and what puts my mind at rest.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C557-khauf",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 557: I can say what I fear might happen and what puts my mind at rest.",
+    "assesses": [
+      "HI-LEX-C557-ANDESHA557-03",
+      "HI-LEX-C557-ANDESHA557-04",
+      "HI-LEX-C557-ANDESHA557-05"
+    ]
+  }
+}

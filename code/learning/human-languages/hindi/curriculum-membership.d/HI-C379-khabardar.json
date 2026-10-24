@@ -1,0 +1,11 @@
+{
+  "id": "HI-C379-khabardar",
+  "pathSegment": "HI-PATH-379-YADI379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "HI-EXT-379-YADI379",
+      "order": 3
+    }
+  ]
+}

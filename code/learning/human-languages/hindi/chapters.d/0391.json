@@ -1,0 +1,19 @@
+{
+  "chapter": 391,
+  "title": "Effort",
+  "label": "ch:hi-effort",
+  "canDo": "I can say what effort it will take to succeed.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-C391-dohrana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 391: I can say what effort it will take to succeed.",
+    "assesses": [
+      "HI-LEX-C391-PRAYAS391-03",
+      "HI-LEX-C391-PRAYAS391-04",
+      "HI-LEX-C391-PRAYAS391-05"
+    ]
+  }
+}

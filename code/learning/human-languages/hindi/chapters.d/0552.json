@@ -1,0 +1,21 @@
+{
+  "chapter": 552,
+  "title": "Even So",
+  "label": "ch:hi-even-so",
+  "canDo": "I can link ideas with whereas, even though, anyway, well and but.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "HI-R552-review-546-552",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 552: I can link ideas with whereas, even though, anyway, well and but.",
+    "assesses": [
+      "HI-LEX-C552-BAHARHAAL552-01",
+      "HI-LEX-C552-BAHARHAAL552-02",
+      "HI-LEX-C552-BAHARHAAL552-03",
+      "HI-LEX-C552-BAHARHAAL552-04",
+      "HI-LEX-C552-BAHARHAAL552-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "HI-PATH-544-KISMAT544",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "HI-EXT-544-KISMAT544"
+  ],
+  "after": []
+}

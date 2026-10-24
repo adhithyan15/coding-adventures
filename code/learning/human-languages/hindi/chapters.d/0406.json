@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "Taxis and Tyres",
+  "label": "ch:hi-taxis-and-tyres",
+  "canDo": "I can take a taxi, deal with a flat tyre and carry a licence and a helmet.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "HI-C406-laisens",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can take a taxi, deal with a flat tyre and carry a licence and a helmet.",
+    "assesses": [
+      "HI-LEX-C406-TAIKSI406-03",
+      "HI-LEX-C406-TAIKSI406-04",
+      "HI-LEX-C406-TAIKSI406-05"
+    ]
+  }
+}

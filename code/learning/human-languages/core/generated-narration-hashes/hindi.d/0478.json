@@ -1,0 +1,19 @@
+{
+  "language": "hindi",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:7a8d1615b48d476e",
+  "lessonIds": [
+    "HI-C478-phephra",
+    "HI-C478-dimag",
+    "HI-C478-nas",
+    "HI-C478-pasli",
+    "HI-C478-gurda"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "hindi/narration/ch478.txt",
+  "json": "hindi/narration/ch478.json",
+  "textHash": "fnv1a64:7e70094fd9cf7772",
+  "jsonHash": "fnv1a64:8f2434b1e47a8a41",
+  "findings": []
+}

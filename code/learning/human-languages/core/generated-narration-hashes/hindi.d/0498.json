@@ -1,0 +1,20 @@
+{
+  "language": "hindi",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:59739e31465dee1c",
+  "lessonIds": [
+    "HI-C498-parvaris",
+    "HI-C498-lori",
+    "HI-C498-pilana",
+    "HI-C498-khilana",
+    "HI-C498-palnaintr",
+    "HI-R498-review-492-498"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "hindi/narration/ch498.txt",
+  "json": "hindi/narration/ch498.json",
+  "textHash": "fnv1a64:e296fe33f35c8a3f",
+  "jsonHash": "fnv1a64:2fa614dcaab2ddb4",
+  "findings": []
+}
