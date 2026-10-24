@@ -1701,6 +1701,17 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_leading_asterisk_attribute_names() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK {\n  string *title\n  id *the_Primary_Key PK\n}\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(values.contains(&"*title"));
+        assert!(values.contains(&"*the_Primary_Key"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
