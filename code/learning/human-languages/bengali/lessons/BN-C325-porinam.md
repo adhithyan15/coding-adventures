@@ -48,7 +48,7 @@ reviews_of: [BN-C325-upodesh]
 >
 > *lobher pôrinām bhālo hôy nā.*
 >
-> Greed never ends well.
+> Greed does not end well.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -66,7 +66,7 @@ One more word for telling what happened.
 [PAUSE 1s]
 - [YOU SAY: *pôrinām*]
 - [YOU SAY: *pôrinām*, once more]
-- [YOU SAY: *lobher pôrinām bhālo hôy nā.* — Greed never ends well.]
+- [YOU SAY: *lobher pôrinām bhālo hôy nā.* — Greed does not end well.]
 - [YOU RECALL: say the Bengali for to get away with it, then the Bengali for a moral lesson, then say *pôrinām* again]
 
 ## Wrap-up Recall

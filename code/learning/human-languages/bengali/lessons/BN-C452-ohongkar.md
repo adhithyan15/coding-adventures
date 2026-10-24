@@ -50,7 +50,7 @@ reviews_of: [BN-C451-nak-sitkano]
 >
 > Once he had money, the man's arrogance grew.
 
-অহংকারী, arrogant. গর্ব (taught) is a pride that can be good; অহংকার never is.
+অহংকারী, arrogant. গর্ব (taught) is a pride that can be good; অহংকার is not.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

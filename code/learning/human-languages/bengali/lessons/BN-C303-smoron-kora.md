@@ -37,7 +37,7 @@ reviews_of: [BN-C303-kalokrome]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C303-SEDIN303-03, BN-LEX-C303-SEDIN303-04] -->
 
-[PAUSE 2s] Before the new one: say the Bengali for to go past, then the Bengali for in the course of time.
+[PAUSE 2s] Before the new one: say the Bengali for to go past, then the Bengali for over time.
 
 ## You'll want to know: স্মরণ করা
 <!-- hl-knowledge: introduces=[BN-LEX-C303-SEDIN303-05]; assesses=[] -->
@@ -69,7 +69,7 @@ One more word for telling what happened.
 - [YOU SAY: *smôrôn kôrā*]
 - [YOU SAY: *smôrôn kôrā*, once more]
 - [YOU SAY: *āj shôhôr sei bhūmikômper dinṭā smôrôn kôrlô.* — Today the city commemorated the day of that earthquake.]
-- [YOU RECALL: say the Bengali for to go past, then the Bengali for in the course of time, then say *smôrôn kôrā* again]
+- [YOU RECALL: say the Bengali for to go past, then the Bengali for over time, then say *smôrôn kôrā* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C303-SEDIN303-05, BN-LEX-C303-SEDIN303-03, BN-LEX-C303-SEDIN303-04] -->

@@ -4,7 +4,7 @@
   "chapter": 303,
   "title": "Long Ago",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:89f64e36e0f608a4",
+  "sourceHash": "fnv1a64:40a2f0b4d79ca6e1",
   "lessons": [
     {
       "id": "BN-C303-sedin",
@@ -427,17 +427,17 @@
     {
       "id": "BN-C303-kalokrome",
       "sequence": 19410,
-      "title": "কালক্রমে (kālôkrôme) — in the course of time",
+      "title": "কালক্রমে (kālôkrôme) — over time; as time went by",
       "headword": "কালক্রমে",
       "romanization": "kālôkrôme",
-      "gloss": "in the course of time",
+      "gloss": "over time; as time went by",
       "script": "bengali",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00f312700a88d2e3",
+      "sourceHash": "fnv1a64:ccc228ff126d1cf4",
       "notice": null,
       "blocks": [
         {
@@ -464,11 +464,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "কালক্রমে — kālôkrôme — \"in the course of time\"."
+              "text": "কালক্রমে — kālôkrôme — \"over time; as time went by\"."
             },
             {
               "kind": "speech",
-              "text": "কালক্রমে গ্রামটা একটা বড় শহর হল। kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô. In the course of time the village became a big town."
+              "text": "কালক্রমে গ্রামটা একটা বড় শহর হল। kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô. Over time the village became a big town."
             }
           ]
         },
@@ -526,11 +526,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô. — In the course of time the village became a big town.",
+              "instruction": "kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô. — Over time the village became a big town.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô.* — In the course of time the village became a big town.]"
+              "source": "[YOU SAY: *kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô.* — Over time the village became a big town.]"
             },
             {
               "kind": "prompt",
@@ -556,7 +556,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does কালক্রমে (kālôkrôme) mean? (\"In the course of time\".) Say it once more."
+              "text": "What does কালক্রমে (kālôkrôme) mean? (\"Over time; as time went by\".) Say it once more."
             }
           ]
         }
@@ -575,7 +575,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50311ed0036888a0",
+      "sourceHash": "fnv1a64:79c1d6418207a0a0",
       "notice": null,
       "blocks": [
         {
@@ -591,7 +591,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Bengali for to go past, then the Bengali for in the course of time."
+              "text": "Before the new one: say the Bengali for to go past, then the Bengali for over time."
             }
           ]
         },
@@ -677,11 +677,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Bengali for to go past, then the Bengali for in the course of time, then say smôrôn kôrā again",
+              "instruction": "say the Bengali for to go past, then the Bengali for over time, then say smôrôn kôrā again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Bengali for to go past, then the Bengali for in the course of time, then say *smôrôn kôrā* again]"
+              "source": "[YOU RECALL: say the Bengali for to go past, then the Bengali for over time, then say *smôrôn kôrā* again]"
             }
           ]
         },

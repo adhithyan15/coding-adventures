@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 281,
-  "sourceHash": "fnv1a64:66788374e776d19b",
+  "sourceHash": "fnv1a64:9b4112579f0f361c",
   "lessonIds": [
     "BN-C281-bhagyokrome",
     "BN-C281-nikhoj",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch281.txt",
   "json": "bengali/narration/ch281.json",
-  "textHash": "fnv1a64:7af3c351557db702",
-  "jsonHash": "fnv1a64:b2ed5276e47ec208",
+  "textHash": "fnv1a64:e6d6e819d540448b",
+  "jsonHash": "fnv1a64:d442f7525b3c339d",
   "findings": []
 }

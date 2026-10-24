@@ -37,7 +37,7 @@ reviews_of: [BN-C303-smoron-kora]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C303-SEDIN303-04, BN-LEX-C303-SEDIN303-05] -->
 
-[PAUSE 2s] Before the new one: say the Bengali for in the course of time, then the Bengali for to commemorate.
+[PAUSE 2s] Before the new one: say the Bengali for over time, then the Bengali for to commemorate.
 
 ## You'll want to know: উৎসব
 <!-- hl-knowledge: introduces=[BN-LEX-C304-UTSOB304-01]; assesses=[] -->
@@ -67,7 +67,7 @@ One more word for telling what happened.
 - [YOU SAY: *utsôb*]
 - [YOU SAY: *utsôb*, once more]
 - [YOU SAY: *ei grāme bôsônte ekṭā bôṛo utsôb hôy.* — There is a big festival in this village in spring.]
-- [YOU RECALL: say the Bengali for in the course of time, then the Bengali for to commemorate, then say *utsôb* again]
+- [YOU RECALL: say the Bengali for over time, then the Bengali for to commemorate, then say *utsôb* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C304-UTSOB304-01, BN-LEX-C303-SEDIN303-04, BN-LEX-C303-SEDIN303-05] -->

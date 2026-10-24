@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 345,
-  "sourceHash": "fnv1a64:f23d9d15cfcbbf2d",
+  "sourceHash": "fnv1a64:2652bcdfd551aa97",
   "lessonIds": [
     "BN-C345-songsod",
     "BN-C345-songbidhan",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "bengali/narration/ch345.txt",
   "json": "bengali/narration/ch345.json",
-  "textHash": "fnv1a64:37565bba7fcb63de",
-  "jsonHash": "fnv1a64:18d08892a2884bf4",
+  "textHash": "fnv1a64:0a03cd3160bdccde",
+  "jsonHash": "fnv1a64:f08803437a964627",
   "findings": []
 }

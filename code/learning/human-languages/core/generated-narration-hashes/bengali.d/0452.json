@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 452,
-  "sourceHash": "fnv1a64:efa92a529f3b3aa5",
+  "sourceHash": "fnv1a64:adf41901b2d1c91a",
   "lessonIds": [
     "BN-C452-ohongkar",
     "BN-C452-demak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "bengali/narration/ch452.txt",
   "json": "bengali/narration/ch452.json",
-  "textHash": "fnv1a64:cd1b24b77455d56e",
-  "jsonHash": "fnv1a64:938d155d34f0523b",
+  "textHash": "fnv1a64:c3116dbc8d3d5f2b",
+  "jsonHash": "fnv1a64:fd57b7feafddf9fd",
   "findings": []
 }

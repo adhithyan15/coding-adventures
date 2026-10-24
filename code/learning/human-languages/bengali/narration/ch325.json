@@ -4,7 +4,7 @@
   "chapter": 325,
   "title": "A Story's Lesson",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1a5168b44016cf71",
+  "sourceHash": "fnv1a64:3d846bfe7d03e2b5",
   "lessons": [
     {
       "id": "BN-C325-upodesh",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:490d2f0047221b16",
+      "sourceHash": "fnv1a64:9ebd9d7ddfa81b5c",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "লোভের পরিণাম ভালো হয় না। lobher pôrinām bhālo hôy nā. Greed never ends well."
+              "text": "লোভের পরিণাম ভালো হয় না। lobher pôrinām bhālo hôy nā. Greed does not end well."
             }
           ]
         },
@@ -246,11 +246,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "lobher pôrinām bhālo hôy nā. — Greed never ends well.",
+              "instruction": "lobher pôrinām bhālo hôy nā. — Greed does not end well.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *lobher pôrinām bhālo hôy nā.* — Greed never ends well.]"
+              "source": "[YOU SAY: *lobher pôrinām bhālo hôy nā.* — Greed does not end well.]"
             },
             {
               "kind": "prompt",

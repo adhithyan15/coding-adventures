@@ -3,6 +3,6 @@
   "stage": "B1",
   "kind": "required",
   "category": "vocabulary",
-  "canDo": "I can check a record against the facts.",
+  "canDo": "I can check a document against the facts.",
   "prerequisites": []
 }

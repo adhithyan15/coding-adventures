@@ -53,7 +53,7 @@ reviews_of: [BN-C280-ashroy]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-**ভাগ্যক্রমে** (*bhāgyôkrôme*) joins **ভাগ্য**, luck, to Sanskrit *krama*, 'a step, a course' (Monier-Williams), in the -e form: 'in the course of luck', luckily.
+**ভাগ্যক্রমে** (*bhāgyôkrôme*) joins **ভাগ্য**, luck, to Sanskrit *krama*, 'a step, an order' (Monier-Williams), in the -e form: 'by the steps of luck', luckily.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

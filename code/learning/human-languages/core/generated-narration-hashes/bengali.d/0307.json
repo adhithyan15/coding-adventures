@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 307,
-  "sourceHash": "fnv1a64:d909f0aed174459e",
+  "sourceHash": "fnv1a64:1006e61d8725b099",
   "lessonIds": [
     "BN-C307-dhak",
     "BN-C307-kasor",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "bengali/narration/ch307.txt",
   "json": "bengali/narration/ch307.json",
-  "textHash": "fnv1a64:e105610aeb0b6759",
-  "jsonHash": "fnv1a64:02359104d9b1a451",
+  "textHash": "fnv1a64:91ca74fd7c6c0161",
+  "jsonHash": "fnv1a64:9212ee9a29e1377e",
   "findings": []
 }

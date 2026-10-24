@@ -4,7 +4,7 @@
   "chapter": 304,
   "title": "Festival Time",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a1934da2187b1440",
+  "sourceHash": "fnv1a64:8d4b43f5204cbc8a",
   "lessons": [
     {
       "id": "BN-C304-utsob",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:869021e9007f9512",
+      "sourceHash": "fnv1a64:0378e6159b521cfa",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Bengali for in the course of time, then the Bengali for to commemorate."
+              "text": "Before the new one: say the Bengali for over time, then the Bengali for to commemorate."
             }
           ]
         },
@@ -117,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say the Bengali for in the course of time, then the Bengali for to commemorate, then say utsôb again",
+              "instruction": "say the Bengali for over time, then the Bengali for to commemorate, then say utsôb again",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say the Bengali for in the course of time, then the Bengali for to commemorate, then say *utsôb* again]"
+              "source": "[YOU RECALL: say the Bengali for over time, then the Bengali for to commemorate, then say *utsôb* again]"
             }
           ]
         },

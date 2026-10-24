@@ -4,7 +4,7 @@
   "chapter": 307,
   "title": "Drums and Incense",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:d909f0aed174459e",
+  "sourceHash": "fnv1a64:1006e61d8725b099",
   "lessons": [
     {
       "id": "BN-C307-dhak",
@@ -713,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c9be5adaddc4a8c",
+      "sourceHash": "fnv1a64:cb0a121bdcbd23ac",
       "notice": null,
       "blocks": [
         {
@@ -774,11 +774,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "that day, the past, to go past, in the course of time, to commemorate",
+              "instruction": "that day, the past, to go past, over time, to commemorate",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: that day, the past, to go past, in the course of time, to commemorate]"
+              "source": "[YOU SAY: that day, the past, to go past, over time, to commemorate]"
             },
             {
               "kind": "prompt",
@@ -831,7 +831,7 @@
             },
             {
               "kind": "speech",
-              "text": "A reader? (পাঠক, pāṭhôk.) A listener? (শ্রোতা, shrotā.) An official notice? (বিজ্ঞপ্তি, bigyôpti.) To publicize? (প্রচার করা, prôchār kôrā.) An issue? (সংখ্যা, sôngkhyā.) An eyewitness? (প্রত্যক্ষদর্শী, prôtyôkkhôdôrshī.) An account? (বিবরণ, bibôrôn.) A video? (ভিডিও, bhiḍio.) Detailed? (বিস্তারিত, bistārit.) To verify? (যাচাই করা, jāchāi kôrā.) A tale? (কাহিনি, kāhini.) To tell a story? (শোনানো, shonāno.) To describe? (বর্ণনা করা, bôrnônā kôrā.) To bring about? (ঘটানো, ghôṭāno.) Gradually? (ক্রমশ, krômôsh.) That day? (সেদিন, sedin.) The past? (অতীত, ôtīt.) To go past? (পেরোনো, perono.) In the course of time? (কালক্রমে, kālôkrôme.) To commemorate? (স্মরণ করা, smôrôn kôrā.) A festival? (উৎসব, utsôb.) A puja? (পুজো, pujo.) An idol? (প্রতিমা, prôtimā.) A pandal? (প্যান্ডেল, pænḍel.) To celebrate? (উদযাপন করা, udjāpôn kôrā.) An oil lamp? (প্রদীপ, prôdīp.) Fireworks? (আতশবাজি, ātôshbāji.) A floor painting? (আলপনা, ālpônā.) To glitter? (ঝলমল করা, jhôlmôl kôrā.) A sky lantern? (ফানুস, phānus.) A guest? (অতিথি, ôtithi.) To invite? (নিমন্ত্রণ করা, nimôntrôn kôrā.) A feast? (ভোজ, bhoj.) A gift? (উপহার, upôhār.) To entertain guests? (আপ্যায়ন করা, āpyāyôn kôrā.) A big festival drum? (ঢাক, ḍhāk.) A bell-metal gong? (কাঁসর, kā̃sôr.) An incense burner? (ধুনুচি, dhunuchi.) An evening worship with lamps? (আরতি, ārôti.) To swing? (দোলানো, dolāno.)"
+              "text": "A reader? (পাঠক, pāṭhôk.) A listener? (শ্রোতা, shrotā.) An official notice? (বিজ্ঞপ্তি, bigyôpti.) To publicize? (প্রচার করা, prôchār kôrā.) An issue? (সংখ্যা, sôngkhyā.) An eyewitness? (প্রত্যক্ষদর্শী, prôtyôkkhôdôrshī.) An account? (বিবরণ, bibôrôn.) A video? (ভিডিও, bhiḍio.) Detailed? (বিস্তারিত, bistārit.) To verify? (যাচাই করা, jāchāi kôrā.) A tale? (কাহিনি, kāhini.) To tell a story? (শোনানো, shonāno.) To describe? (বর্ণনা করা, bôrnônā kôrā.) To bring about? (ঘটানো, ghôṭāno.) Gradually? (ক্রমশ, krômôsh.) That day? (সেদিন, sedin.) The past? (অতীত, ôtīt.) To go past? (পেরোনো, perono.) Over time? (কালক্রমে, kālôkrôme.) To commemorate? (স্মরণ করা, smôrôn kôrā.) A festival? (উৎসব, utsôb.) A puja? (পুজো, pujo.) An idol? (প্রতিমা, prôtimā.) A pandal? (প্যান্ডেল, pænḍel.) To celebrate? (উদযাপন করা, udjāpôn kôrā.) An oil lamp? (প্রদীপ, prôdīp.) Fireworks? (আতশবাজি, ātôshbāji.) A floor painting? (আলপনা, ālpônā.) To glitter? (ঝলমল করা, jhôlmôl kôrā.) A sky lantern? (ফানুস, phānus.) A guest? (অতিথি, ôtithi.) To invite? (নিমন্ত্রণ করা, nimôntrôn kôrā.) A feast? (ভোজ, bhoj.) A gift? (উপহার, upôhār.) To entertain guests? (আপ্যায়ন করা, āpyāyôn kôrā.) A big festival drum? (ঢাক, ḍhāk.) A bell-metal gong? (কাঁসর, kā̃sôr.) An incense burner? (ধুনুচি, dhunuchi.) An evening worship with lamps? (আরতি, ārôti.) To swing? (দোলানো, dolāno.)"
             }
           ]
         }

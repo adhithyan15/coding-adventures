@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "A Lucky Escape",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66788374e776d19b",
+  "sourceHash": "fnv1a64:9b4112579f0f361c",
   "lessons": [
     {
       "id": "BN-C281-bhagyokrome",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bafc41ca88b46b7f",
+      "sourceHash": "fnv1a64:8701de443ff55b63",
       "notice": null,
       "blocks": [
         {
@@ -61,7 +61,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ভাগ্যক্রমে (bhāgyôkrôme) joins ভাগ্য, luck, to Sanskrit krama, 'a step, a course' (Monier-Williams), in the -e form: 'in the course of luck', luckily."
+              "text": "ভাগ্যক্রমে (bhāgyôkrôme) joins ভাগ্য, luck, to Sanskrit krama, 'a step, an order' (Monier-Williams), in the -e form: 'by the steps of luck', luckily."
             }
           ]
         },

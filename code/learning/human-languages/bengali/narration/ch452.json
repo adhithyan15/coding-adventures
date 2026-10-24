@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "Pride and Humiliation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:efa92a529f3b3aa5",
+  "sourceHash": "fnv1a64:adf41901b2d1c91a",
   "lessons": [
     {
       "id": "BN-C452-ohongkar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67f350e05e20799c",
+      "sourceHash": "fnv1a64:76860ee373415230",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "অহংকারী, arrogant. গর্ব (taught) is a pride that can be good; অহংকার (ôhôngkār) never is."
+              "text": "অহংকারী, arrogant. গর্ব (taught) is a pride that can be good; অহংকার (ôhôngkār) is not."
             }
           ]
         },

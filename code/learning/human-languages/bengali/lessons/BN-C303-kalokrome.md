@@ -9,7 +9,7 @@ sequence: 19410
 chapter: 303
 type: word
 headword: "কালক্রমে"
-gloss: "in the course of time"
+gloss: "over time; as time went by"
 romanization: "kālôkrôme"
 concept_tag: BN-SEDIN303-KALOKROME
 prerequisites: [BN-C303-otit, BN-C303-perono]
@@ -32,7 +32,7 @@ variety: standard-colloquial
 reviews_of: [BN-C303-perono]
 ---
 
-# কালক্রমে (kālôkrôme) — in the course of time
+# কালক্রমে (kālôkrôme) — over time; as time went by
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C303-SEDIN303-02, BN-LEX-C303-SEDIN303-03] -->
@@ -42,13 +42,13 @@ reviews_of: [BN-C303-perono]
 ## You'll want to know: কালক্রমে
 <!-- hl-knowledge: introduces=[BN-LEX-C303-SEDIN303-04]; assesses=[] -->
 
-**কালক্রমে** — *kālôkrôme* — "in the course of time".
+**কালক্রমে** — *kālôkrôme* — "over time; as time went by".
 
 > কালক্রমে গ্রামটা একটা বড় শহর হল।
 >
 > *kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô.*
 >
-> In the course of time the village became a big town.
+> Over time the village became a big town.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -66,10 +66,10 @@ One more word for telling what happened.
 [PAUSE 1s]
 - [YOU SAY: *kālôkrôme*]
 - [YOU SAY: *kālôkrôme*, once more]
-- [YOU SAY: *kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô.* — In the course of time the village became a big town.]
+- [YOU SAY: *kālôkrôme grāmṭā ekṭā bôṛo shôhôr hôlô.* — Over time the village became a big town.]
 - [YOU RECALL: say the Bengali for the past, then the Bengali for to go past, then say *kālôkrôme* again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C303-SEDIN303-04, BN-LEX-C303-SEDIN303-02, BN-LEX-C303-SEDIN303-03] -->
 
-[PAUSE 3s] What does কালক্রমে mean? ("In the course of time".) Say it once more.
+[PAUSE 3s] What does কালক্রমে mean? ("Over time; as time went by".) Say it once more.
