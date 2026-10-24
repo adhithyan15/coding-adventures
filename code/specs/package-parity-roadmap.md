@@ -17698,3 +17698,21 @@ defines the closed source/AST/HTML corpus, finite fixture bounds, inert fence
 policy, independent validator, and adoption order.  The neutral foundation
 earns no native-lane credit; TypeScript adoption and missing-language ports stay
 separate delivery items.
+
+## TypeScript GFM neutral-conformance adoption
+
+Register and select `gfm-typescript-neutral-conformance-adoption`, depending
+only on the completed `gfm-language-neutral-conformance-fixture`.  Its bounded
+scope is the public TypeScript `gfm-parser` `parse()` API followed by the public
+`document-ast-to-html` `toHtml()` API over all sixteen committed vectors.  The
+reader must enumerate the corpus dynamically, compare the complete AST and
+HTML, retain independent source/AST/HTML corruption witnesses, preserve package
+coverage, and route an exact `gfm-extension-v1/cases.json` change to the native
+package and its ordinary dependent closure on all three platform plans.
+
+This owner qualifies no missing language and introduces no production input
+authority.  Keep the successor order intact after it lands: reconcile the
+existing C#, F#, and Haskell packages first; add Swift after its CommonMark
+prerequisites; then add Java, Kotlin, and Dart after their parser and renderer
+prerequisites.  Those successors remain separate work items even if the same
+fixture exposes implementation differences.
