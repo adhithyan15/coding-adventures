@@ -734,6 +734,29 @@ names across plugins, missing parents, cycles, and any subtype edge whose
 resolved parent descriptor changes identity or version while the registry is
 being built; discovery order must never choose a kind's meaning.
 
+The registry crosses the FM02/FM03 boundary through this read-only kernel
+surface:
+
+```typescript
+export interface RegisteredKind {
+  /** The one frozen descriptor selected for this global name. */
+  readonly descriptor: KindDescriptor;
+  /** The exact frozen parent descriptor bound at registration, if any. */
+  readonly parent: KindDescriptor | null;
+}
+
+export interface KindRegistry {
+  /** Return the immutable registration for a kind name, if registered. */
+  lookup(name: KindName): RegisteredKind | undefined;
+}
+```
+
+FM02 owns construction and validation; FM03 receives only this lookup surface.
+Neither stages nor callers receive the mutable map used while the registry is
+built. Extension descriptors and registrations are defensive frozen snapshots,
+so later manifest mutation cannot change the meaning of an already-resolved
+edge.
+
 Kernel-level kinds cannot be extended — plugins cannot change
 `ContentSource` — but they can declare kinds that are **subtypes** of
 kernel kinds. A stage producing `ext:youtube-embed` may feed a stage consuming
@@ -757,7 +780,9 @@ edge, it checks:
 1. **Name match or safe covariance.** `B.consumes.name === A.produces.name`,
    OR `A.produces.name` is a subtype of `B.consumes.name` (via the
    `subtype-of` chain in the immutable kind registry). A base-kind producer
-   never satisfies a specialized consumer.
+   never satisfies a specialized consumer. Every `ext:` descriptor, including
+   an exact-name producer/consumer pair, must match its canonical registry
+   descriptor; an unregistered or drifted extension fails closed.
 2. **Version compatibility.** `A.produces.version >= B.consumes.version`,
    subject to major-version match. A `1.2` producer can feed a `1.1`
    consumer; a `2.0` producer cannot feed a `1.x` consumer without an
@@ -777,6 +802,11 @@ edge, it checks:
 
 If compatibility fails, the orchestrator refuses to start the pipeline
 with an error pointing at the exact edge.
+
+`Stream<K>` is a versioned built-in wrapper rather than a syntax-only marker.
+Both wrappers must match the canonical Stream version and discriminant rules
+before compatibility recurses into `K`; stream-to-item promotion validates the
+producer wrapper before checking its inner kind.
 
 ### 2.7 Utility types
 

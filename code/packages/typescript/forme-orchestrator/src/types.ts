@@ -21,7 +21,7 @@
  *     what happened during this run.
  */
 
-import type { JsonValue, RevisionId } from "@coding-adventures/forme-types";
+import type { JsonValue, KindRegistry, RevisionId } from "@coding-adventures/forme-types";
 import type { CancellationToken, Logger } from "@coding-adventures/forme-stage";
 import type { CacheBackend } from "@coding-adventures/forme-cache";
 import type { PipelineConfig, StageRef } from "@coding-adventures/forme-pipeline-config";
@@ -121,6 +121,8 @@ export interface OrchestratorOptions {
 
 /** Narrow FM02 surface consumed by the orchestrator without a package cycle. */
 export interface PluginStageLoader {
+  /** Immutable extension-kind meanings used while typechecking resolved stages. */
+  readonly kindRegistry?: KindRegistry;
   loadStage(
     ref: StageRef,
     instanceId?: string,
