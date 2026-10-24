@@ -84,6 +84,7 @@ impl X509OcspResponseStatus {
 pub struct X509OcspResponseBytes<'a> {
     encoded: &'a [u8],
     response_type: ObjectIdentifier<'a>,
+    response_element: Asn1Element<'a>,
     response: &'a [u8],
 }
 
@@ -113,7 +114,7 @@ impl fmt::Debug for X509OcspResponseBytes<'_> {
         formatter
             .debug_struct("X509OcspResponseBytes")
             .field("response_type_arc_count", &self.response_type.arc_count())
-            .field("response_octet_count", &self.response.len())
+            .field("response_octet_count", &self.response().len())
             .finish()
     }
 }
@@ -157,7 +158,9 @@ impl fmt::Debug for X509OcspResponse<'_> {
             )
             .field(
                 "response_octet_count",
-                &self.response_bytes.map(|response| response.response.len()),
+                &self
+                    .response_bytes
+                    .map(|response| response.response().len()),
             )
             .finish()
     }
@@ -367,7 +370,7 @@ pub fn decode_x509_ocsp_basic_response_bytes<'a>(
     }
 
     let root = decoder
-        .decode_exact(response_bytes.response())
+        .decode_exact_embedded(response_bytes.response_element, response_bytes.response())
         .map_err(X509OcspBasicResponseDispatchError::framing)?;
     decode_x509_ocsp_basic_response(decoder, root)
         .map_err(X509OcspBasicResponseDispatchError::basic)
@@ -526,6 +529,7 @@ fn decode_response_bytes<'a>(
     Ok(X509OcspResponseBytes {
         encoded,
         response_type,
+        response_element,
         response,
     })
 }
