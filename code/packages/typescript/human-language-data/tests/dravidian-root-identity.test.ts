@@ -8,7 +8,7 @@ import { describe, expect, it } from "vitest";
 // A combined lesson needs both slugs, never one slug standing for both entries.
 const HEAD = "dravidian-talai-head";
 const HAND = "dravidian-kai-hand";
-const LEGACY = ["dravidian-tala-kai", "dravidian-talai-kai", "dravidian-tale-kai"];
+const LEGACY = ["dravidian-tala-kai", "dravidian-talai-kai", "dravidian-tale-kai", "dravidian-tala-kay"];
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../../../learning/human-languages");
 
 /** Read only the authored roots line; generated books cannot change identity. */
@@ -58,6 +58,9 @@ const CASES: Record<string, Record<string, readonly string[]>> = {
   },
   kannada: {
     "KA-C13-dehada-bhagagalu": [HEAD, HAND],
+  },
+  telugu: {
+    "TE-C13-sharira-bhagalu": [HEAD, HAND],
   },
 };
 
