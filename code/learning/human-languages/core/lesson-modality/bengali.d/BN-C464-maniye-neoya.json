@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C464-maniye-neoya",
+    "language": "bengali",
+    "chapter": 464,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3f7f4f1441326be7"
+  },
+  "findings": []
+}

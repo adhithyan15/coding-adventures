@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:384fa2e00c16c470",
+  "lessonIds": [
+    "BN-C487-somporko",
+    "BN-C487-kol",
+    "BN-C487-chhoya",
+    "BN-C487-aglano",
+    "BN-C487-bolano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch487.txt",
+  "json": "bengali/narration/ch487.json",
+  "textHash": "fnv1a64:7968318843d9ff5d",
+  "jsonHash": "fnv1a64:6452bee448c0def9",
+  "findings": []
+}

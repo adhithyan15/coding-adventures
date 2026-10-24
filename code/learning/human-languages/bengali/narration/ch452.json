@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 452,
+  "title": "Pride and Humiliation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:adf41901b2d1c91a",
+  "lessons": [
+    {
+      "id": "BN-C452-ohongkar",
+      "sequence": 27710,
+      "title": "অহংকার (ôhôngkār) — arrogance; vanity",
+      "headword": "অহংকার",
+      "romanization": "ôhôngkār",
+      "gloss": "arrogance; vanity",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76860ee373415230",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to hate, then the Bengali for to turn up one's nose."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অহংকার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অহংকার — ôhôngkār — \"arrogance; vanity\"."
+            },
+            {
+              "kind": "speech",
+              "text": "টাকা হওয়ার পরে লোকটার অহংকার বাড়ল। ṭākā hôoyār pôre lokṭār ôhôngkār bāṛlô. Once he had money, the man's arrogance grew."
+            },
+            {
+              "kind": "speech",
+              "text": "অহংকারী, arrogant. গর্ব (taught) is a pride that can be good; অহংকার (ôhôngkār) is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অহংকার (ôhôngkār) is a tatsama, Sanskrit ahaṃkāra, \"I-making\": the sense of self, and so egotism (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôhôngkār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôhôngkār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôhôngkār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôhôngkār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭākā hôoyār pôre lokṭār ôhôngkār bāṛlô. — Once he had money, the man's arrogance grew.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭākā hôoyār pôre lokṭār ôhôngkār bāṛlô.* — Once he had money, the man's arrogance grew.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to hate, then the Bengali for to turn up one's nose, then say ôhôngkār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to hate, then the Bengali for to turn up one's nose, then say *ôhôngkār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অহংকার (ôhôngkār) mean? (\"Arrogance; vanity\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C452-demak",
+      "sequence": 27720,
+      "title": "দেমাক (demāk) — conceit; airs",
+      "headword": "দেমাক",
+      "romanization": "demāk",
+      "gloss": "conceit; airs",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de2bf95be7ee3cae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to turn up one's nose, then the Bengali for arrogance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দেমাক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেমাক — demāk — \"conceit; airs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন গাড়ি কিনে প্রতিবেশীর দেমাক বাড়ল। nôtun gāṛi kine prôtibeshīr demāk bāṛlô. Having bought a new car, the neighbour began to put on airs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেমাক (demāk) is usually traced to Arabic dimāgh, \"brain\", which took on the sense of pride and conceit in Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "demāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *demāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun gāṛi kine prôtibeshīr demāk bāṛlô. — Having bought a new car, the neighbour began to put on airs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun gāṛi kine prôtibeshīr demāk bāṛlô.* — Having bought a new car, the neighbour began to put on airs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to turn up one's nose, then the Bengali for arrogance, then say demāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to turn up one's nose, then the Bengali for arrogance, then say *demāk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দেমাক (demāk) mean? (\"Conceit; airs\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C452-atmosomman",
+      "sequence": 27730,
+      "title": "আত্মসম্মান (ātmôsômmān) — self-respect",
+      "headword": "আত্মসম্মান",
+      "romanization": "ātmôsômmān",
+      "gloss": "self-respect",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a9a91b5948cd057",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for arrogance, then the Bengali for conceit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আত্মসম্মান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মসম্মান — ātmôsômmān — \"self-respect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আত্মসম্মানের জন্য অরুণ সাহায্য নিল না। ātmôsômmāner jônyô ôrun sāhājjô nilô nā. Out of self-respect Arun would not take help."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আত্মসম্মান (ātmôsômmān) puts Sanskrit ātman, \"self\" (Monier-Williams), in front of সম্মান (taught), respect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôsômmān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôsômmān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôsômmān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôsômmān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ātmôsômmāner jônyô ôrun sāhājjô nilô nā. — Out of self-respect Arun would not take help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ātmôsômmāner jônyô ôrun sāhājjô nilô nā.* — Out of self-respect Arun would not take help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for arrogance, then the Bengali for conceit, then say ātmôsômmān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for arrogance, then the Bengali for conceit, then say *ātmôsômmān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আত্মসম্মান (ātmôsômmān) mean? (\"Self-respect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C452-jahir-kora",
+      "sequence": 27740,
+      "title": "জাহির করা (jāhir kôrā) — to show off; to flaunt",
+      "headword": "জাহির করা",
+      "romanization": "jāhir kôrā",
+      "gloss": "to show off; to flaunt",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a34f3f67fadccf6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for conceit, then the Bengali for self-respect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জাহির করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাহির করা — jāhir kôrā — \"to show off; to flaunt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "অরুণ বন্ধুদের সামনে নতুন ফোনটা জাহির করছিল। ôrun bôndhuder sāmne nôtun phonṭā jāhir kôrchhilô. Arun was showing off his new phone in front of his friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ছেলের সাফল্য জাহির করলেন, tini chheler sāphôlyô jāhir kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "What is shown off is the object: জ্ঞান জাহির করা (jāhir kôrā), to show off what you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জাহির করা (jāhir kôrā) is jāhir, \"made plain, on show\", usually traced to Arabic ẓāhir, \"manifest\", through Persian, with kôrā, \"to do\" (CDIAL 2814): to put something where everyone must see it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāhir kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāhir kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāhir kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāhir kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôrun bôndhuder sāmne nôtun phonṭā jāhir kôrchhilô. — Arun was showing off his new phone in front of his friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôrun bôndhuder sāmne nôtun phonṭā jāhir kôrchhilô.* — Arun was showing off his new phone in front of his friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for conceit, then the Bengali for self-respect, then say jāhir kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for conceit, then the Bengali for self-respect, then say *jāhir kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জাহির করা (jāhir kôrā) mean? (\"To show off; to flaunt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C452-opodostho-hooya",
+      "sequence": 27750,
+      "title": "অপদস্থ হওয়া (ôpôdôsthô hôoyā) — to be humiliated; to lose face",
+      "headword": "অপদস্থ হওয়া",
+      "romanization": "ôpôdôsthô hôoyā",
+      "gloss": "to be humiliated; to lose face",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf2f7454072a0658",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for self-respect, then the Bengali for to show off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অপদস্থ হওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপদস্থ হওয়া — ôpôdôsthô hôoyā — \"to be humiliated; to lose face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বন্ধুদের সামনে বাবার বকা খেয়ে অরুণ অপদস্থ হল। bôndhuder sāmne bābār bôkā kheye ôrun ôpôdôsthô hôlô. Scolded by his father in front of his friends, Arun felt humiliated."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি সভায় অপদস্থ হলেন, tini sôbhāy ôpôdôsthô hôlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপদস্থ হওয়া (ôpôdôsthô hôoyā) is Sanskrit apadastha, \"not in its place, out of office\" (Monier-Williams), which Bengali uses for someone put down in public, a sense Monier-Williams does not give, with hôoyā, \"to be\" (CDIAL 9416)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpôdôsthô hôoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpôdôsthô hôoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpôdôsthô hôoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpôdôsthô hôoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bôndhuder sāmne bābār bôkā kheye ôrun ôpôdôsthô hôlô. — Scolded by his father in front of his friends, Arun felt humiliated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bôndhuder sāmne bābār bôkā kheye ôrun ôpôdôsthô hôlô.* — Scolded by his father in front of his friends, Arun felt humiliated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for self-respect, then the Bengali for to show off, then say ôpôdôsthô hôoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for self-respect, then the Bengali for to show off, then say *ôpôdôsthô hôoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অপদস্থ হওয়া (ôpôdôsthô hôoyā) mean? (\"To be humiliated; to lose face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

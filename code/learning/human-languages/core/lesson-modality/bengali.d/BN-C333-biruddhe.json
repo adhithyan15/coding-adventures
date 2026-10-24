@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C333-biruddhe",
+    "language": "bengali",
+    "chapter": 333,
+    "sequence": 21180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:43b18b0bd072fe02"
+  },
+  "findings": []
+}

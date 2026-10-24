@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 488,
+  "sourceHash": "fnv1a64:9587be207122f3c9",
+  "lessonIds": [
+    "BN-C488-shoishob",
+    "BN-C488-koishor",
+    "BN-C488-joubon",
+    "BN-C488-bardhokyo",
+    "BN-C488-bere-otha"
+  ],
+  "tex": "bengali/book/chapters/ch488-growing-up-and-growing-old.tex"
+}

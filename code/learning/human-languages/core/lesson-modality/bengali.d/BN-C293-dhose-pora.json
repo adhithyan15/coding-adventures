@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C293-dhose-pora",
+    "language": "bengali",
+    "chapter": 293,
+    "sequence": 18890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:edd27b3170847688"
+  },
+  "findings": []
+}

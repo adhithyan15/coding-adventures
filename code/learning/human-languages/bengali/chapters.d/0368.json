@@ -1,0 +1,19 @@
+{
+  "chapter": 368,
+  "title": "On One Condition",
+  "label": "ch:bn-on-one-condition",
+  "canDo": "I can set a condition and say how long it holds.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C368-othoba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can set a condition and say how long it holds.",
+    "assesses": [
+      "BN-LEX-C368-SHORTO368-03",
+      "BN-LEX-C368-SHORTO368-04",
+      "BN-LEX-C368-SHORTO368-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C495-bonas",
+  "pathSegment": "BN-PATH-495-BETON495",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-495-BETON495",
+      "order": 1
+    }
+  ]
+}

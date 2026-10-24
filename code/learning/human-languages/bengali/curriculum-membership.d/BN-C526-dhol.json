@@ -1,0 +1,11 @@
+{
+  "id": "BN-C526-dhol",
+  "pathSegment": "BN-PATH-526-BAJNA526",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-526-BAJNA526",
+      "order": 1
+    }
+  ]
+}

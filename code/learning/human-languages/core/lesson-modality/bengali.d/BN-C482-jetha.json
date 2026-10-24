@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C482-jetha",
+    "language": "bengali",
+    "chapter": 482,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aca2892ac3e5b333"
+  },
+  "findings": []
+}

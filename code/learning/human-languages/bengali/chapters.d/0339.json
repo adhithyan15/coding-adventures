@@ -1,0 +1,19 @@
+{
+  "chapter": 339,
+  "title": "Rights and Duties",
+  "label": "ch:bn-rights-and-duties",
+  "canDo": "I can say what my rights and my duties are.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C339-bhog-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 339: I can say what my rights and my duties are.",
+    "assesses": [
+      "BN-LEX-C339-ODHIKAR339-03",
+      "BN-LEX-C339-ODHIKAR339-04",
+      "BN-LEX-C339-ODHIKAR339-05"
+    ]
+  }
+}

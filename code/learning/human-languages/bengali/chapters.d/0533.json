@@ -1,0 +1,19 @@
+{
+  "chapter": 533,
+  "title": "By Chance",
+  "label": "ch:bn-by-chance",
+  "canDo": "I can talk about chance meetings, coincidences and missed chances.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C533-lotari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 533: I can talk about chance meetings, coincidences and missed chances.",
+    "assesses": [
+      "BN-LEX-C533-DOIBAT533-03",
+      "BN-LEX-C533-DOIBAT533-04",
+      "BN-LEX-C533-DOIBAT533-05"
+    ]
+  }
+}

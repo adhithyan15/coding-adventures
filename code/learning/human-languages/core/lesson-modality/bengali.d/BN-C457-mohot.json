@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C457-mohot",
+    "language": "bengali",
+    "chapter": 457,
+    "sequence": 28010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:090e47a346a591a7"
+  },
+  "findings": []
+}

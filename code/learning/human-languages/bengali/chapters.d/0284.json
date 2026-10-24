@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "At the Police Station",
+  "label": "ch:bn-at-the-police-station",
+  "canDo": "I can say what the police found, guarded and decided.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C284-jamin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say what the police found, guarded and decided.",
+    "assesses": [
+      "BN-LEX-C284-THANA284-03",
+      "BN-LEX-C284-THANA284-04",
+      "BN-LEX-C284-THANA284-05"
+    ]
+  }
+}

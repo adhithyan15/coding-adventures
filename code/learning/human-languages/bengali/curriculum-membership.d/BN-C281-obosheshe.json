@@ -1,0 +1,11 @@
+{
+  "id": "BN-C281-obosheshe",
+  "pathSegment": "BN-PATH-281-BHAGYO281",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-281-BHAGYO281",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:7503a43e0a93e195",
+  "lessonIds": [
+    "BN-C397-ghat",
+    "BN-C397-lonch",
+    "BN-C397-kheya",
+    "BN-C397-par",
+    "BN-C397-bherano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch397.txt",
+  "json": "bengali/narration/ch397.json",
+  "textHash": "fnv1a64:f322aa67d38fe566",
+  "jsonHash": "fnv1a64:f48ae8dfc2664f3b",
+  "findings": []
+}

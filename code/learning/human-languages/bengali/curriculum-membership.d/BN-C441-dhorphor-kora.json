@@ -1,0 +1,11 @@
+{
+  "id": "BN-C441-dhorphor-kora",
+  "pathSegment": "BN-PATH-441-ATONKO441",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-441-ATONKO441",
+      "order": 4
+    }
+  ]
+}

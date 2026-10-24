@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C298-uttejona",
+    "language": "bengali",
+    "chapter": 298,
+    "sequence": 19120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1387b983dfe2d4d9"
+  },
+  "findings": []
+}

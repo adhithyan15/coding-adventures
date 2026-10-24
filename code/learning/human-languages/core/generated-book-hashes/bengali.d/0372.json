@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:1b2105a68036b638",
+  "lessonIds": [
+    "BN-C372-bara",
+    "BN-C372-koma",
+    "BN-C372-dvigun",
+    "BN-C372-stor",
+    "BN-C372-poriman"
+  ],
+  "tex": "bengali/book/chapters/ch372-going-up-and-down.tex"
+}

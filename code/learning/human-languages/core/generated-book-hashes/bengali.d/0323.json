@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:6a6469a9abe29ccd",
+  "lessonIds": [
+    "BN-C323-nayok",
+    "BN-C323-kholnayok",
+    "BN-C323-bhumika",
+    "BN-C323-sonnyasi",
+    "BN-C323-chhodmobesh"
+  ],
+  "tex": "bengali/book/chapters/ch323-heroes-and-villains.tex"
+}

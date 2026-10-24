@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C459-nomro",
+    "language": "bengali",
+    "chapter": 459,
+    "sequence": 28080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:00c5fbafbe1fd982"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C525-gomgom-kora",
+    "language": "bengali",
+    "chapter": 525,
+    "sequence": 31720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad6c3061a885ddc9"
+  },
+  "findings": []
+}

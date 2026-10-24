@@ -1,0 +1,11 @@
+{
+  "id": "BN-C464-maniye-neoya",
+  "pathSegment": "BN-PATH-464-GOMBHIR464",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-464-GOMBHIR464",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Harsh Natures",
+  "label": "ch:bn-harsh-natures",
+  "canDo": "I can say that someone is cruel, stern or selfish.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C460-otyachar-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say that someone is cruel, stern or selfish.",
+    "assesses": [
+      "BN-LEX-C460-NISHTHUR460-03",
+      "BN-LEX-C460-NISHTHUR460-04",
+      "BN-LEX-C460-NISHTHUR460-05"
+    ]
+  }
+}

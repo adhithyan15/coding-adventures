@@ -1,0 +1,21 @@
+{
+  "chapter": 507,
+  "title": "Cracks and Repairs",
+  "label": "ch:bn-cracks-and-repairs",
+  "canDo": "I can talk about cracks, holes, glue and simple repairs.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R507-review-500-507",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about cracks, holes, glue and simple repairs.",
+    "assesses": [
+      "BN-LEX-C507-PHATOL507-01",
+      "BN-LEX-C507-PHATOL507-02",
+      "BN-LEX-C507-PHATOL507-03",
+      "BN-LEX-C507-PHATOL507-04",
+      "BN-LEX-C507-PHATOL507-05"
+    ]
+  }
+}

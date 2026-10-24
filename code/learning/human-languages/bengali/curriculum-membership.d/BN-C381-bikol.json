@@ -1,0 +1,11 @@
+{
+  "id": "BN-C381-bikol",
+  "pathSegment": "BN-PATH-381-BYOBOSTHA381",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-381-BYOBOSTHA381",
+      "order": 2
+    }
+  ]
+}

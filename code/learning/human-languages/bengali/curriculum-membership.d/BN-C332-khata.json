@@ -1,0 +1,11 @@
+{
+  "id": "BN-C332-khata",
+  "pathSegment": "BN-PATH-332-SUTORANG332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-332-SUTORANG332",
+      "order": 4
+    }
+  ]
+}

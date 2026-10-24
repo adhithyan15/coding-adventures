@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:82e6653cf71a780e",
+  "lessonIds": [
+    "BN-C519-gelari",
+    "BN-C519-mech",
+    "BN-C519-odhinayok",
+    "BN-C519-rephari",
+    "BN-C519-hara"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch519.txt",
+  "json": "bengali/narration/ch519.json",
+  "textHash": "fnv1a64:417cd2dd1c8795c9",
+  "jsonHash": "fnv1a64:5beb7e1dcb803851",
+  "findings": []
+}

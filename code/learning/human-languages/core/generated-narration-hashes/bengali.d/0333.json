@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:1fd72f493194f30b",
+  "lessonIds": [
+    "BN-C333-jukti",
+    "BN-C333-boktobyo",
+    "BN-C333-pokkho",
+    "BN-C333-biruddhe",
+    "BN-C333-somorthon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch333.txt",
+  "json": "bengali/narration/ch333.json",
+  "textHash": "fnv1a64:903953c713f504b1",
+  "jsonHash": "fnv1a64:302f779599732fe8",
+  "findings": []
+}

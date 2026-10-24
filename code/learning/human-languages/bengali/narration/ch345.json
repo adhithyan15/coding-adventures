@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 345,
+  "title": "Making Laws",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:2652bcdfd551aa97",
+  "lessons": [
+    {
+      "id": "BN-C345-songsod",
+      "sequence": 21760,
+      "title": "সংসদ (sôngsôd) — a parliament",
+      "headword": "সংসদ",
+      "romanization": "sôngsôd",
+      "gloss": "a parliament",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:11b085d57d3d8247",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for power, then the Bengali for the people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংসদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংসদ — sôngsôd — \"a parliament\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সংসদে আজ নতুন আইন নিয়ে আলোচনা হল। sôngsôde āj nôtun āin niye ālochônā hôlô. Parliament discussed the new law today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংসদ (sôngsôd) is Sanskrit saṃsad, 'sitting together', an assembly (Monier-Williams). Modern Bengali uses it for a national parliament."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngsôd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngsôd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngsôd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngsôd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngsôde āj nôtun āin niye ālochônā hôlô. — Parliament discussed the new law today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngsôde āj nôtun āin niye ālochônā hôlô.* — Parliament discussed the new law today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for power, then the Bengali for the people, then say sôngsôd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for power, then the Bengali for the people, then say *sôngsôd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংসদ (sôngsôd) mean? (\"A parliament\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C345-songbidhan",
+      "sequence": 21770,
+      "title": "সংবিধান (sôngbidhān) — a constitution",
+      "headword": "সংবিধান",
+      "romanization": "sôngbidhān",
+      "gloss": "a constitution",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:541cde461fa9d8ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the people, then the Bengali for a parliament."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংবিধান",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংবিধান — sôngbidhān — \"a constitution\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সংবিধান সব নাগরিককে সমান অধিকার দেয়। sôngbidhān sôb nāgôrikke sômān ôdhikār dey. The constitution gives every citizen equal rights."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংবিধান (sôngbidhān) is Sanskrit saṃvidhāna, an arrangement (Monier-Williams). The sense 'a constitution', the arrangement a state is built on, is a modern coinage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngbidhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngbidhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngbidhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngbidhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngbidhān sôb nāgôrikke sômān ôdhikār dey. — The constitution gives every citizen equal rights.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngbidhān sôb nāgôrikke sômān ôdhikār dey.* — The constitution gives every citizen equal rights.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the people, then the Bengali for a parliament, then say sôngbidhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the people, then the Bengali for a parliament, then say *sôngbidhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংবিধান (sôngbidhān) mean? (\"A constitution\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C345-prostab",
+      "sequence": 21780,
+      "title": "প্রস্তাব (prôstāb) — a proposal; a motion",
+      "headword": "প্রস্তাব",
+      "romanization": "prôstāb",
+      "gloss": "a proposal; a motion",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ee75549078010aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a parliament, then the Bengali for a constitution."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রস্তাব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রস্তাব — prôstāb — \"a proposal; a motion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার একটা প্রস্তাব আছে। āmār ekṭā prôstāb āchhe. I have a proposal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রস্তাব (prôstāb) is Sanskrit prastāva, an introduction or prelude (Monier-Williams). Bengali uses it for what is put forward first in a meeting, a proposal or a motion; that use is a later one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôstāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôstāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôstāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôstāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār ekṭā prôstāb āchhe. — I have a proposal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār ekṭā prôstāb āchhe.* — I have a proposal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a parliament, then the Bengali for a constitution, then say prôstāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a parliament, then the Bengali for a constitution, then say *prôstāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রস্তাব (prôstāb) mean? (\"A proposal; a motion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C345-onumodon-kora",
+      "sequence": 21790,
+      "title": "অনুমোদন করা (ônumodôn kôrā) — to approve; to pass (a bill)",
+      "headword": "অনুমোদন করা",
+      "romanization": "ônumodôn kôrā",
+      "gloss": "to approve; to pass (a bill)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69e27b4d1bc8f3d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a constitution, then the Bengali for a proposal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুমোদন করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুমোদন করা — ônumodôn kôrā — \"to approve; to pass (a bill)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সংসদ প্রস্তাবটা অনুমোদন করল। sôngsôd prôstābṭā ônumodôn kôrlô. Parliament approved the proposal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পরিকল্পনাটা অনুমোদন করলেন, tini pôrikôlpônāṭā ônumodôn kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুমোদন করা (ônumodôn kôrā) is Sanskrit anumodana, assent or applause (Monier-Williams), with করা: to give formal approval."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônumodôn kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônumodôn kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônumodôn kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônumodôn kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngsôd prôstābṭā ônumodôn kôrlô. — Parliament approved the proposal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngsôd prôstābṭā ônumodôn kôrlô.* — Parliament approved the proposal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a constitution, then the Bengali for a proposal, then say ônumodôn kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a constitution, then the Bengali for a proposal, then say *ônumodôn kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুমোদন করা (ônumodôn kôrā) mean? (\"To approve; to pass (a bill)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C345-batil-kora",
+      "sequence": 21800,
+      "title": "বাতিল করা (bātil kôrā) — to cancel; to repeal",
+      "headword": "বাতিল করা",
+      "romanization": "bātil kôrā",
+      "gloss": "to cancel; to repeal",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0481f60aca6d4652",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a proposal, then the Bengali for to approve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বাতিল করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাতিল করা — bātil kôrā — \"to cancel; to repeal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সরকার পুরনো আইনটা বাতিল করল। sôrkār purôno āinṭā bātil kôrlô. The government repealed the old law."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি মিটিংটা বাতিল করলেন, tini miṭingṭā bātil kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাতিল করা (bātil kôrā) is usually traced to Arabic bāṭil, void, through Persian, with করা: to make a law, a ticket or a meeting void."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bātil kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bātil kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bātil kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bātil kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôrkār purôno āinṭā bātil kôrlô. — The government repealed the old law.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôrkār purôno āinṭā bātil kôrlô.* — The government repealed the old law.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a proposal, then the Bengali for to approve, then say bātil kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a proposal, then the Bengali for to approve, then say *bātil kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বাতিল করা (bātil kôrā) mean? (\"To cancel; to repeal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R345-review-338-345",
+      "sequence": 21810,
+      "title": "Looking back: from Documents and Facts to Making Laws",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Documents and Facts to Making Laws",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:949c2b5cb77b972d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for a certificate and information."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a certificate, information, testimony, to check against, to refute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a certificate, information, testimony, to check against, to refute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a right, a responsibility, self-interest, to defend, to enjoy a right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a right, a responsibility, self-interest, to defend, to enjoy a right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lawful, banned, a clause, to carry out, to enforce",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: lawful, banned, a clause, to carry out, to enforce]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to violate, to disobey, forgery, corruption, an injustice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to violate, to disobey, forgery, corruption, an injustice]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lawyer, to try a case, a verdict, a formal complaint, to settle a dispute",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lawyer, to try a case, a verdict, a formal complaint, to settle a dispute]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "blame, responsible for a fault, compensation, to answer for, to let off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: blame, responsible for a fault, compensation, to answer for, to let off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a nation-state, to run an organisation, an administration, power, the people",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a nation-state, to run an organisation, an administration, power, the people]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a parliament, a constitution, a proposal, to approve, to repeal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a parliament, a constitution, a proposal, to approve, to repeal]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A certificate? (সনদ, sônôd.) Information? (তথ্য, tôthyô.) Testimony? (সাক্ষ্য, sākkhyô.) To check against? (মেলানো, melāno.) To refute? (খণ্ডন করা, khônḍôn kôrā.) A right? (অধিকার, ôdhikār.) A responsibility? (দায়িত্ব, dāyitvô.) Self-interest? (স্বার্থ, svārthô.) To defend? (রক্ষা করা, rôkkhā kôrā.) To enjoy a right? (ভোগ করা, bhog kôrā.) Lawful? (বৈধ, boidhô.) Banned? (নিষিদ্ধ, nishiddhô.) A clause? (ধারা, dhārā.) To carry out? (পালন করা, pālôn kôrā.) To enforce? (প্রয়োগ করা, prôyog kôrā.) To violate? (লঙ্ঘন করা, lôngghôn kôrā.) To disobey? (অমান্য করা, ômānyô kôrā.) Forgery? (জালিয়াতি, jāliyāti.) Corruption? (দুর্নীতি, durnīti.) An injustice? (অন্যায়, ônyāy.) A lawyer? (উকিল, ukil.) To try a case? (বিচার করা, bichār kôrā.) A verdict? (রায়, rāy.) A formal complaint? (নালিশ, nālish.) To settle a dispute? (মীমাংসা করা, mīmāngsā kôrā.) Blame? (দোষ, dosh.) Responsible for a fault? (দায়ী, dāyī.) Compensation? (ক্ষতিপূরণ, khôtipūrôn.) To answer for? (জবাবদিহি করা, jôbābdihi kôrā.) To let off? (রেহাই দেওয়া, rehāi deoyā.) A nation-state? (রাষ্ট্র, rāshṭrô.) To run an organisation? (পরিচালনা করা, pôrichālônā kôrā.) An administration? (প্রশাসন, prôshāsôn.) Power? (ক্ষমতা, khômôtā.) The people? (জনগণ, jônôgôn.) A parliament? (সংসদ, sôngsôd.) A constitution? (সংবিধান, sôngbidhān.) A proposal? (প্রস্তাব, prôstāb.) To approve? (অনুমোদন করা, ônumodôn kôrā.) To repeal? (বাতিল করা, bātil kôrā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

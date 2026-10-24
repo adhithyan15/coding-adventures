@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:779deb4d0e1477c8",
+  "lessonIds": [
+    "BN-C537-monosthir-kora",
+    "BN-C537-ogotya",
+    "BN-C537-nimraji",
+    "BN-C537-onggikar",
+    "BN-C537-pichhpa-hooya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch537.txt",
+  "json": "bengali/narration/ch537.json",
+  "textHash": "fnv1a64:4aec90e635e9e334",
+  "jsonHash": "fnv1a64:a03657f1c29cd50f",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "Modest and Rude",
+  "label": "ch:bn-modest-and-rude",
+  "canDo": "I can say whether someone is modest, gentle or rude.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C459-toshamod-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say whether someone is modest, gentle or rude.",
+    "assesses": [
+      "BN-LEX-C459-BINOYI459-03",
+      "BN-LEX-C459-BINOYI459-04",
+      "BN-LEX-C459-BINOYI459-05"
+    ]
+  }
+}

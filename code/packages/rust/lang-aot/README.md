@@ -50,6 +50,13 @@ oversized inputs remain conservative. Built-in `sqrt` may consume a
 nonnegative perfect-square checked reduction, including radicands using
 integer `div`/`mod`, powers, and supported exact normalizers; negative,
 non-square, dynamic, oversized, and overridden forms remain conservative.
+Exact built-in real identities `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and
+`ln(1)` may also become checked integer leaves, including when their arguments
+are checked reductions. Non-identity, dynamic, and overridden calls remain
+conservative.
+Exact built-in normalizers may also consume a pure runtime conditional when
+all branches map to the same checked integer. Unequal mapped results,
+procedure-calling selectors, and dynamic branches remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers

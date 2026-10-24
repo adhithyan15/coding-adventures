@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Books to Remember",
+  "label": "ch:bn-books-to-remember",
+  "canDo": "I can talk about novels, biographies and the people who publish them.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C327-prokashok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about novels, biographies and the people who publish them.",
+    "assesses": [
+      "BN-LEX-C327-UPONNAS327-03",
+      "BN-LEX-C327-UPONNAS327-04",
+      "BN-LEX-C327-UPONNAS327-05"
+    ]
+  }
+}

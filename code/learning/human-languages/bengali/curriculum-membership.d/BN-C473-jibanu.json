@@ -1,0 +1,11 @@
+{
+  "id": "BN-C473-jibanu",
+  "pathSegment": "BN-PATH-473-SONGKROMON473",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-473-SONGKROMON473",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C497-dhormoghot",
+    "language": "bengali",
+    "chapter": 497,
+    "sequence": 30270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc2d2d2a9bbd739f"
+  },
+  "findings": []
+}

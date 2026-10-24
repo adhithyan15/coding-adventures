@@ -284,6 +284,14 @@ an exact perfect square. Non-square, negative, dynamic, and user-overridden
 roots remain conservative. The radicand may itself contain checked integer
 `div`/`mod`, powers, and supported exact built-in normalizers, so long as the
 complete reduction remains bounded by `2^53` before the exact-root check.
+Built-in `sin(0)`, `arctan(0)`, `cos(0)`, `exp(0)`, and `ln(1)` may likewise
+supply their exact integer identity values inside a checked reduction. Their
+arguments may be checked integer reductions themselves; non-identity,
+dynamic, and user-overridden calls remain conservative.
+Built-in exact normalizers may consume a pure runtime conditional when every
+branch independently maps to the same checked integer result. Unequal mapped
+results, procedure-calling selectors, and dynamic branches remain
+conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted
 integer transform within the existing exponent-unroll cap while checked
 exponentiation remains within `2^53`; zero, negative, dynamic, deeper, and

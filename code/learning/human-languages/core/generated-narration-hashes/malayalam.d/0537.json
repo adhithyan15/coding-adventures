@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 537,
-  "sourceHash": "fnv1a64:a9ae6f18f670b407",
+  "sourceHash": "fnv1a64:af5aa71797060623",
   "lessonIds": [
     "ML-C537-talaccoru",
     "ML-C537-kutal",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch537.txt",
   "json": "malayalam/narration/ch537.json",
   "textHash": "fnv1a64:82105d9b1205d202",
-  "jsonHash": "fnv1a64:99aa3b73e838c5bb",
+  "jsonHash": "fnv1a64:751443f7e8c2ca2a",
   "findings": []
 }

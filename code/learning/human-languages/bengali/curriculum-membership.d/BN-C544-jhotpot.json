@@ -1,0 +1,11 @@
+{
+  "id": "BN-C544-jhotpot",
+  "pathSegment": "BN-PATH-544-SOMOY544",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-544-SOMOY544",
+      "order": 4
+    }
+  ]
+}

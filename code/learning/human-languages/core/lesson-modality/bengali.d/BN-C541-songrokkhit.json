@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C541-songrokkhit",
+    "language": "bengali",
+    "chapter": 541,
+    "sequence": 32530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6c5f6b063c155a26"
+  },
+  "findings": []
+}

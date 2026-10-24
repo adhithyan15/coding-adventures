@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "Post and Offices",
+  "label": "ch:bn-post-and-offices",
+  "canDo": "I can send a letter or a parcel from the post office.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C411-pathano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can send a letter or a parcel from the post office.",
+    "assesses": [
+      "BN-LEX-C411-DAKGHOR411-03",
+      "BN-LEX-C411-DAKGHOR411-04",
+      "BN-LEX-C411-DAKGHOR411-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C314-soinyo",
+  "pathSegment": "BN-PATH-314-SHOTRU314",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-314-SHOTRU314",
+      "order": 1
+    }
+  ]
+}

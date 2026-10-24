@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C281-rokkha-paoya",
+    "language": "bengali",
+    "chapter": 281,
+    "sequence": 18270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6d8fc7937c30ccd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C517-bedminton",
+  "pathSegment": "BN-PATH-517-KHELA517",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-517-KHELA517",
+      "order": 2
+    }
+  ]
+}

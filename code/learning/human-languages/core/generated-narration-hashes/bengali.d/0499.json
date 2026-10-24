@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:3aebba34ab14ebee",
+  "lessonIds": [
+    "BN-C499-utpadon",
+    "BN-C499-kachamal",
+    "BN-C499-roptani-kora",
+    "BN-C499-sorborah",
+    "BN-C499-amdani",
+    "BN-R499-review-492-499"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch499.txt",
+  "json": "bengali/narration/ch499.json",
+  "textHash": "fnv1a64:cd4bd7957de9b231",
+  "jsonHash": "fnv1a64:322e3dc0bda4f8dd",
+  "findings": []
+}

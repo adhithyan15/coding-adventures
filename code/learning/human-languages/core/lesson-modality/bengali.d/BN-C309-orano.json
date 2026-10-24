@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C309-orano",
+    "language": "bengali",
+    "chapter": 309,
+    "sequence": 19700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2aaea33702a6c1b2"
+  },
+  "findings": []
+}

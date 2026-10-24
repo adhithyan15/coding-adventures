@@ -4,7 +4,7 @@
   "chapter": 261,
   "title": "Diabetes, Exercise, Yoga, Itch, Dizziness",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bb025644a0014a9b",
+  "sourceHash": "fnv1a64:fc7d09a0a14218d2",
   "lessons": [
     {
       "id": "TA-C261-carkkarai-noy",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33d5802a99a60b83",
+      "sourceHash": "fnv1a64:3547b4aeaedfb81a",
       "notice": null,
       "blocks": [
         {

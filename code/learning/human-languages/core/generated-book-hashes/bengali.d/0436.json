@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:6537e1fa9c711eab",
+  "lessonIds": [
+    "BN-C436-ongkur",
+    "BN-C436-mukul",
+    "BN-C436-phota",
+    "BN-C436-gojano",
+    "BN-C436-pota"
+  ],
+  "tex": "bengali/book/chapters/ch436-buds-and-sprouts.tex"
+}

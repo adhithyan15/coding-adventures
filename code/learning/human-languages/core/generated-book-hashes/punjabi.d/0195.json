@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:9de86ae13ca666cb",
+  "lessonIds": [
+    "PA-C195-window-room-return",
+    "PA-C195-vala",
+    "PA-C195-vala-review",
+    "PA-C195-vale",
+    "PA-C195-vale-review",
+    "PA-C195-direct-oblique-contrast",
+    "PA-C195-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch195-a-room-with-a-window.tex"
+}

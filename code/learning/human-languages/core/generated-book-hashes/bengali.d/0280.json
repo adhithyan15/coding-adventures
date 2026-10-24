@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:1ab89230d686f38d",
+  "lessonIds": [
+    "BN-C280-pouchhano",
+    "BN-C280-uddhar-kora",
+    "BN-C280-moi",
+    "BN-C280-sairen",
+    "BN-C280-ashroy"
+  ],
+  "tex": "bengali/book/chapters/ch280-the-rescue.tex"
+}

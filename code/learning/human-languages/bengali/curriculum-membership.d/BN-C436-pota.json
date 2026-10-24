@@ -1,0 +1,11 @@
+{
+  "id": "BN-C436-pota",
+  "pathSegment": "BN-PATH-436-PHOTA436",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-436-PHOTA436",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C473-jibanu",
+    "language": "bengali",
+    "chapter": 473,
+    "sequence": 28800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7f46771f7a5b103b"
+  },
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-388-TRAM388",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can choose between a tram, the metro and an auto, and run for the bus.",
+  "prerequisites": []
+}

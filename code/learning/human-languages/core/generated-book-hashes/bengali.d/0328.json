@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:6b2ebea1a1a28d8c",
+  "lessonIds": [
+    "BN-C328-prishtha",
+    "BN-C328-onubad-kora",
+    "BN-C328-pandulipi",
+    "BN-C328-sarangsho",
+    "BN-C328-rochona-kora"
+  ],
+  "tex": "bengali/book/chapters/ch328-inside-a-book.tex"
+}

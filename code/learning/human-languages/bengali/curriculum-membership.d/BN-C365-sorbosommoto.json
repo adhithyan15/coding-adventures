@@ -1,0 +1,11 @@
+{
+  "id": "BN-C365-sorbosommoto",
+  "pathSegment": "BN-PATH-365-SOMJHOTA365",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-365-SOMJHOTA365",
+      "order": 4
+    }
+  ]
+}

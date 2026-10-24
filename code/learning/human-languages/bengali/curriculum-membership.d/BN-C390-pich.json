@@ -1,0 +1,11 @@
+{
+  "id": "BN-C390-pich",
+  "pathSegment": "BN-PATH-390-SOROK390",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-390-SOROK390",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C304-protima",
+    "language": "bengali",
+    "chapter": 304,
+    "sequence": 19450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da41b3902ae29a74"
+  },
+  "findings": []
+}

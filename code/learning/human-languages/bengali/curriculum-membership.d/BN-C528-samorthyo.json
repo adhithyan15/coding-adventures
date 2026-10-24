@@ -1,0 +1,11 @@
+{
+  "id": "BN-C528-samorthyo",
+  "pathSegment": "BN-PATH-528-UPAY528",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-528-UPAY528",
+      "order": 2
+    }
+  ]
+}

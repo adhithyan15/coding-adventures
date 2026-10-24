@@ -13659,7 +13659,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 routing: StructuralRouting::Direct,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
-                label: (!label.is_empty()).then_some(label),
+                label: Some(label),
             });
         } else {
             let mut fields = Vec::new();
@@ -13909,7 +13909,7 @@ fn parse_er_line_text(cursor: &mut TokenCursor) -> String {
     while !cursor.at_eof() && token_name(cursor.current()) != "NEWLINE" {
         words.push(cursor.advance().value.clone());
     }
-    words.join(" ")
+    normalize_mermaid_line_breaks(&words.join(" "))
 }
 
 fn upsert_er_node(

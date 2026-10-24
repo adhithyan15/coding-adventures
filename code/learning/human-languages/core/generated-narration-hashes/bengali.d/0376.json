@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:7bcf16e6bb41cf20",
+  "lessonIds": [
+    "BN-C376-lokkhyo",
+    "BN-C376-cheshta",
+    "BN-C376-porishrom",
+    "BN-C376-sophol",
+    "BN-C376-orjon-kora",
+    "BN-R376-review-370-376"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch376.txt",
+  "json": "bengali/narration/ch376.json",
+  "textHash": "fnv1a64:82be6b2060dc78ca",
+  "jsonHash": "fnv1a64:70543774f066dcd9",
+  "findings": []
+}

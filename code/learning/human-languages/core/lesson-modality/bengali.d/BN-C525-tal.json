@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C525-tal",
+    "language": "bengali",
+    "chapter": 525,
+    "sequence": 31700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3533fcd32f3f8f3d"
+  },
+  "findings": []
+}

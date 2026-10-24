@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "Long Ago",
+  "label": "ch:bn-long-ago",
+  "canDo": "I can place events in the past: that day, long ago, as the years went by.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C303-smoron-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can place events in the past: that day, long ago, as the years went by.",
+    "assesses": [
+      "BN-LEX-C303-SEDIN303-03",
+      "BN-LEX-C303-SEDIN303-04",
+      "BN-LEX-C303-SEDIN303-05"
+    ]
+  }
+}

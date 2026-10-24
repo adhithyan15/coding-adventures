@@ -217,6 +217,62 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-attribute-forms-11.16.1-visual-corpus.json"
     ));
+    const ER_ALIAS_ORDER_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-alias-order-11.16.1-corpus.json"
+    ));
+    const ER_ALIAS_ORDER_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-alias-order-11.16.1-visual-corpus.json"
+    ));
+    const ER_PARENT_CARDINALITY_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-corpus.json"
+    ));
+    const ER_PARENT_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
+    ));
+    const ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-corpus.json"
+    ));
+    const ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-visual-corpus.json"
+    ));
+    const ER_ROLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-corpus.json"
+    ));
+    const ER_ROLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-visual-corpus.json"
+    ));
+    const ER_PROTOTYPE_IDENTIFIERS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-corpus.json"
+    ));
+    const ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-visual-corpus.json"
+    ));
+    const ER_EMPTY_RELATIONSHIP_ROLE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-corpus.json"
+    ));
+    const ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-visual-corpus.json"
+    ));
+    const ER_NUMERIC_ENTITIES_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-numeric-entities-11.16.1-corpus.json"
+    ));
+    const ER_NUMERIC_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-numeric-entities-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -2724,6 +2780,315 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_er_attribute_forms_e2e.png")
             .expect("ER attribute forms PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_alias_order_to_png() {
+        let syntax: Value =
+            serde_json::from_str(ER_ALIAS_ORDER_CORPUS).expect("ER alias order corpus JSON");
+        let visual: Value = serde_json::from_str(ER_ALIAS_ORDER_VISUAL_CORPUS)
+            .expect("ER alias order visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER alias fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER alias visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (fixture, visual_name) in fixtures.iter().zip(visual_names) {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER alias source"))
+                .expect("ER alias fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            assert!(layout.nodes.iter().any(|node| {
+                matches!(node.header.as_str(), "Customer Account" | "SUPPLIER")
+            }));
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+            let pixels = render(&scene);
+            let output = format!("/tmp/mermaid_er_alias_order_{}.png", fixture["name"].as_str().expect("fixture name"));
+            write_png(&pixels, &output).expect("ER alias order PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_parent_cardinality_to_png() {
+        let syntax: Value = serde_json::from_str(ER_PARENT_CARDINALITY_CORPUS)
+            .expect("ER parent cardinality corpus JSON");
+        let visual: Value = serde_json::from_str(ER_PARENT_CARDINALITY_VISUAL_CORPUS)
+            .expect("ER parent cardinality visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER parent fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER parent visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (fixture, visual_name) in fixtures.iter().zip(visual_names) {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER parent source"))
+                .expect("ER parent fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            assert_eq!(layout.relationships.len(), 1);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+            let pixels = render(&scene);
+            let output = format!(
+                "/tmp/mermaid_er_parent_cardinality_{}.png",
+                fixture["name"].as_str().expect("fixture name")
+            );
+            write_png(&pixels, &output).expect("ER parent cardinality PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_compact_attribute_blocks_to_png() {
+        let syntax: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS)
+            .expect("ER compact attribute block corpus JSON");
+        let visual: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS)
+            .expect("ER compact attribute block visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER compact fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER compact visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (fixture, visual_name) in fixtures.iter().zip(visual_names) {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER compact source"))
+                .expect("ER compact fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            assert_eq!(layout.relationships.len(), 1);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+            let pixels = render(&scene);
+            let output = format!(
+                "/tmp/mermaid_er_compact_attribute_blocks_{}.png",
+                fixture["name"].as_str().expect("fixture name")
+            );
+            write_png(&pixels, &output).expect("ER compact attribute block PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_role_line_breaks_to_png() {
+        let syntax: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_CORPUS)
+            .expect("ER role line-break corpus JSON");
+        let visual: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_VISUAL_CORPUS)
+            .expect("ER role line-break visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER role line-break source"),
+        )
+        .expect("ER role line-break fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.relationships.len(), 1);
+        assert!(layout.relationships.iter().all(|relationship| {
+            relationship.label.as_ref().is_some_and(|(_, label)| label.contains('\n'))
+        }));
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_role_line_breaks_e2e.png")
+            .expect("ER role line-break PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_prototype_identifiers_to_png() {
+        let syntax: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_CORPUS)
+            .expect("ER prototype identifier corpus JSON");
+        let visual: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS)
+            .expect("ER prototype identifier visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER prototype identifier source"),
+        )
+        .expect("ER prototype identifier fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes.len(), 3);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#dcfce7")
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_prototype_identifiers_e2e.png")
+            .expect("ER prototype identifier PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_empty_relationship_role_to_png() {
+        let syntax: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_CORPUS)
+            .expect("ER empty relationship role corpus JSON");
+        let visual: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS)
+            .expect("ER empty relationship role visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER empty relationship role source"),
+        )
+        .expect("ER empty relationship role fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.relationships.len(), 1);
+        assert_eq!(
+            layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
+            Some("")
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_empty_relationship_role_e2e.png")
+            .expect("ER empty relationship role PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_numeric_entities_to_png() {
+        let syntax: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_CORPUS)
+            .expect("ER numeric entity corpus JSON");
+        let visual: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_VISUAL_CORPUS)
+            .expect("ER numeric entity visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_er_diagram(
+            syntax["fixtures"][0]["source"]
+                .as_str()
+                .expect("ER numeric entity source"),
+        )
+        .expect("ER numeric entity fixture must parse");
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes.len(), 3);
+        assert_eq!(layout.relationships.len(), 1);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_er_numeric_entities_e2e.png")
+            .expect("ER numeric entity PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 

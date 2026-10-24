@@ -1,0 +1,874 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 266,
+  "title": "What Was Going On",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:cfa76c05fc77fc38",
+  "lessons": [
+    {
+      "id": "BN-C266-porchhilam",
+      "sequence": 16590,
+      "title": "আমি পড়ছিলাম (āmi pôṛchhilām) — going on now, going on then",
+      "headword": "আমি পড়ছিলাম",
+      "romanization": "āmi pôṛchhilām",
+      "gloss": "I was reading — what is going on now (-ছি) and what was going on then (-ছিলাম)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0eb6e1dec7b683df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was at home\" and \"I will go\". (chhilām, jābô.) Both are whole facts. This lesson is about things in the middle of happening."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: going on now",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমি এখন একটা বই পড়ছি। āmi ekhôn ekṭā bôi pôṛchhi. — \"I'm reading a book now.\""
+            },
+            {
+              "kind": "speech",
+              "text": "What is going on at this moment takes -ছ- after the stem: আমি পড়ছি (āmi pôṛchhi), তুমি পড়ছ (tumi pôṛchhô), সে পড়ছে (she pôṛchhe), আপনি পড়ছেন (āpni pôṛchhen). After a stem that ends in a vowel it is -চ্ছ-: যাচ্ছি (jāchchhi), \"I'm going\"; সে খাচ্ছে (she khāchchhe); কী হচ্ছে? (kī hôchchhe?), \"what's happening?\". An এ said e rises, as it does in the past: শেখা becomes শিখছি (shikhchhi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: going on then",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put -ছিল- where -ছ- was, and the same scene is in the past:"
+            },
+            {
+              "kind": "speech",
+              "text": "কাল সন্ধ্যায় আমি বই পড়ছিলাম। kāl sôndhyāy āmi bôi pôṛchhilām. — \"Yesterday evening I was reading.\""
+            },
+            {
+              "kind": "speech",
+              "text": "আমি পড়ছিলাম (āmi pôṛchhilām) — I was reading."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি পড়ছিলে (tumi pôṛchhile) — you were reading."
+            },
+            {
+              "kind": "speech",
+              "text": "সে পড়ছিল (she pôṛchhilô) — he or she was reading."
+            },
+            {
+              "kind": "speech",
+              "text": "আপনি / তিনি পড়ছিলেন (pôṛchhilen) — with respect."
+            },
+            {
+              "kind": "speech",
+              "text": "and যাচ্ছিলাম (jāchchhilām), \"I was going\". The plain past, পড়লাম, is an event; পড়ছিলাম is the scene around one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She is eating\" — she khāchchhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She is eating\" — *she khāchchhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We were going to the market\" — āmrā bājāre jāchchhilām",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We were going to the market\" — *āmrā bājāre jāchchhilām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What is happening?\" — kī hôchchhe?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What is happening?\" — *kī hôchchhe?*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C266-porchhilam-r1",
+              "prompt": "Say that you are reading a book now, then that yesterday evening you were reading.",
+              "assesses": [
+                "BN-GRAMMAR-C266-ONGOING-NOW-01",
+                "BN-GRAMMAR-C266-ONGOING-PAST-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "āmi ekhôn ekṭā bôi pôṛchhi; kāl sôndhyāy āmi bôi pôṛchhilām",
+                "আমি এখন একটা বই পড়ছি। কাল সন্ধ্যায় আমি বই পড়ছিলাম।"
+              ],
+              "feedback": {
+                "correct": "-chh- for now, -chhil- for then.",
+                "incorrect": "Stem, then -chh- (now) or -chhil- (then), then the person."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I'm going\"? (যাচ্ছি.) \"He was eating\"? (খাচ্ছিল.) Which is the scene and which the event: পড়লাম or পড়ছিলাম? (পড়ছিলাম is the scene.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C266-jokhon-tokhon",
+      "sequence": 16600,
+      "title": "যখন … তখন … (jôkhon … tôkhon …) — the scene and the event",
+      "headword": "যখন … তখন …",
+      "romanization": "jôkhon … tôkhon …",
+      "gloss": "when … then … — a scene and the event that broke into it",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:519fb25fd167aae5",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I was reading\". (āmi pôṛchhilām.) You know যখন, \"when\", and its partner তখন, \"then\": যখন আমি আসি, তখন চা খাই. Read it aloud."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: the scene and the event",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যখন আমি বই পড়ছিলাম, তখন মীরা এল। jôkhon āmi bôi pôṛchhilām, tôkhon mīrā elô. — \"I was reading when Mira came.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The যখন half is the scene, in the going-on past. The তখন half is the event that broke into it, in the plain past. English puts \"when\" on the event; Bengali puts যখন on the scene, and তখন opens the event."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: তখন on its own",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তখন also stands alone in a story: \"then, at that time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তখন রাত ছিল। বাইরে ঝড় হচ্ছিল। tôkhon rāt chhilô. bāire jhôṛ hôchchhilô. — \"It was night then. A storm was going on outside.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I was reading when Mira came\" — jôkhon āmi bôi pôṛchhilām, tôkhon mīrā elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I was reading when Mira came\" — *jôkhon āmi bôi pôṛchhilām, tôkhon mīrā elô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It was night then\" — tôkhon rāt chhilô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It was night then\" — *tôkhon rāt chhilô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We were going to the market when the storm came\" — jôkhon āmrā bājāre jāchchhilām, tôkhon jhôṛ elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We were going to the market when the storm came\" — *jôkhon āmrā bājāre jāchchhilām, tôkhon jhôṛ elô*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "BN-C266-jokhon-tokhon-r1",
+              "prompt": "Say that you were eating when Mira phoned.",
+              "assesses": [
+                "BN-GRAMMAR-C266-SCENE-EVENT-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "jôkhon āmi khāchchhilām, tôkhon mīrā phon kôrlô",
+                "যখন আমি খাচ্ছিলাম, তখন মীরা ফোন করল।"
+              ],
+              "feedback": {
+                "correct": "The scene in -chhil-, the event in the plain past.",
+                "incorrect": "jôkhon goes with the scene (khāchchhilām); tôkhon opens the event (phon kôrlô)."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which half takes -ছিল-? (The যখন half, the scene.) What does তখন mean on its own? (\"Then, at that time\".)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C266-thik",
+      "sequence": 16610,
+      "title": "ঠিক (ṭhik) — correct; exactly",
+      "headword": "ঠিক",
+      "romanization": "ṭhik",
+      "gloss": "correct; exactly",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b57a431615495df0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say \"It was night then\". (tôkhon rāt chhilô.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঠিক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠিক — ṭhik — \"correct; exactly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "তুমি ঠিক (tumi ṭhik) is \"you're right\", and ঠিক আছে (ṭhik āchhe), \"it's all right\", is the everyday \"fine, agreed\". Before a time or a place, ঠিক is \"exactly\":"
+            },
+            {
+              "kind": "speech",
+              "text": "ঠিক তখন ট্রেন এল। ṭhik tôkhon ṭren elô. — \"Right then the train came.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠিক (ṭhik) goes back to a form ṭhīkka, \"firm, right\" (CDIAL 5503), which no text records (hence the star), and which CDIAL derives, probably, from Sanskrit sthita, \"standing\". CDIAL lists the Bengali ঠিক, \"correct\", under it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"You're right\" — tumi ṭhik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"You're right\" — *tumi ṭhik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Right then the train came\" — ṭhik tôkhon ṭren elô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Right then the train came\" — *ṭhik tôkhon ṭren elô*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঠিক (ṭhik) mean? (\"Correct\", and before a time, \"exactly\".) \"Fine, agreed\"? (ঠিক (ṭhik) আছে.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-W266-letter-ttha",
+      "sequence": 16620,
+      "title": "ঠ (ṭhô) — the letter at the start of ঠিক (ṭhik)",
+      "headword": "ঠ",
+      "romanization": "ṭhô",
+      "gloss": "the letter ঠ — ṭhô, the letter at the start of ঠিক",
+      "script": "bengali",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:a87a950fd003a749",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script you'll notice: ঠ",
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script you'll notice: ঠ, Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say ঠিক (ṭhik), \"correct\". Then read ট aloud (ṭô), the letter of টাকা."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script you'll notice: ঠ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঠ — ṭhô: the ট sound with a breath after it, as খ is ক with a breath. It opens ঠিক (ṭhik)."
+            },
+            {
+              "kind": "speech",
+              "text": "In the print of this book, ঠ (ṭhô) has a headline crossed by one curved line. Above the headline, the line rises in a curve that bows out to the left, its tip at the top. Below the headline it makes a large closed loop, shaped like a drop hanging from the headline, that fills the lower part of the letter; at its left side the loop has a sharp corner. ঠ (ṭhô) has no stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Set it beside ট: ট has a raised hook above its headline too, but below it a stem, and a bowl that ends in a solid knob. ঠ (ṭhô) has no knob."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing: ঠ — copy the printed shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put your pen beside ঠ (ṭhô) and copy the shape you can see, slowly and large. Check the copy against the print: the curve above the headline, the line crossing it, the closed loop and its corner."
+            },
+            {
+              "kind": "speech",
+              "text": "This book does not yet tell you where to start ঠ (ṭhô) or which way the pen goes. That is not written down here until it can be written down with a source. Copying the printed shape needs no such source, and it is how the shape becomes yours in the meantime."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ঠ (ṭhô) at the front of ঠিক (ṭhik)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: ঠ at the front of **ঠিক**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ট, then ঠ (ṭhô), from the print, naming each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ট, then ঠ, from the print, naming each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঠিক (ṭhik), then ঠিক (ṭhik) আছে",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ঠিক**, then **ঠিক আছে**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ষ, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ষ, from memory]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter opens ঠিক (ṭhik)? (ঠ (ṭhô).) What does ট have that ঠ (ṭhô) does not? (A stem and a solid knob.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "BN-W266-letter-ttha-r1",
+              "prompt": "With no model, write the letter at the start of ṭhik, then the word.",
+              "assesses": [
+                "BN-SCRIPT-C266-TTHA-01"
+              ],
+              "responseSeconds": 25,
+              "acceptedResponses": [
+                "ঠ; ঠিক"
+              ],
+              "feedback": {
+                "correct": "One line crossing the headline, and a closed loop with no knob.",
+                "incorrect": "Reopen ঠ, compare it with ট, then write it again from memory."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C266-otha",
+      "sequence": 16630,
+      "title": "ওঠা (oṭhā) — to rise; to get up",
+      "headword": "ওঠা",
+      "romanization": "oṭhā",
+      "gloss": "to rise; to get up",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:1311fdf8b9a13a16",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Warm-up"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Warm-up."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: write ঠ (ṭhô), the letter of the last lesson, and say ঠিক (ṭhik). The next word carries ঠ (ṭhô) too."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ওঠা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওঠা — oṭhā — \"to rise; to get up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সে রোজ সকালে তাড়াতাড়ি ওঠে। she roj sôkāle tāṛātāṛi oṭhe. — \"She gets up early every morning.\""
+            },
+            {
+              "kind": "speech",
+              "text": "ওঠে is the present for he or she, and the moon and the sun \"rise\" with it too: রাতে চাঁদ ওঠে (rāte chā̃d oṭhe), \"the moon rises at night\". In most other forms the o rises to u, as in খোলা becomes খুললাম: the past uṭhlô, \"got up\", and the -e form uṭhe. At the start of a word that u needs a letter of its own, which comes three chapters on; until then, say those forms, and write ওঠে."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ওঠা (oṭhā) goes back to a reconstructed ut-sthāti, \"stands up\" (CDIAL 1900): ut-, \"up\", on the root sthā, \"to stand\". CDIAL lists the Bengali verb under it, as oṭhā and uṭhā, \"to get up, stand\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oṭhā, then she oṭhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oṭhā*, then *she oṭhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"She gets up early every morning\" — she roj sôkāle tāṛātāṛi oṭhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"She gets up early every morning\" — *she roj sôkāle tāṛātāṛi oṭhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The moon rises at night\" — rāte chā̃d oṭhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The moon rises at night\" — *rāte chā̃d oṭhe*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ওঠা (oṭhā) mean? (\"To rise; to get up\".) \"She gets up\"? (সে ওঠে.) What does its o become in the past? (u: uṭhlô.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R266-the-scene",
+      "sequence": 16640,
+      "title": "Review — the scene and the event",
+      "headword": "(review)",
+      "romanization": "",
+      "gloss": "what was going on, and what broke into it",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f260a8d44608fa8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I'm reading\" and \"I was reading\". (pôṛchhi, pôṛchhilām.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "What are you doing now? I'm eating.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: What are you doing now? I'm eating.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "We were sitting at the station when the train came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: We were sitting at the station when the train came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "It was evening then. A storm was going on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: It was evening then. A storm was going on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "You're right. Fine, I'll come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: You're right. Fine, I'll come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Mira gets up early every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Mira gets up early every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Right then, Mira phoned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Right then, Mira phoned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ঠিক (ṭhik), then ঘ and ষ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ঠিক**, then ঘ and ষ]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which form says \"going on now\"? (-ছ-: পড়ছি.) Which half of যখন … তখন is the scene? (The যখন half.) \"Fine, agreed\"? (ঠিক (ṭhik) আছে.) \"She gets up\"? (সে ওঠে.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

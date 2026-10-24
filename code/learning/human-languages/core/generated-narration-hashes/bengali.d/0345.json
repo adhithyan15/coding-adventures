@@ -1,0 +1,20 @@
+{
+  "language": "bengali",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:2652bcdfd551aa97",
+  "lessonIds": [
+    "BN-C345-songsod",
+    "BN-C345-songbidhan",
+    "BN-C345-prostab",
+    "BN-C345-onumodon-kora",
+    "BN-C345-batil-kora",
+    "BN-R345-review-338-345"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "bengali/narration/ch345.txt",
+  "json": "bengali/narration/ch345.json",
+  "textHash": "fnv1a64:0a03cd3160bdccde",
+  "jsonHash": "fnv1a64:f08803437a964627",
+  "findings": []
+}

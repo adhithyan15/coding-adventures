@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C444-onujog",
+    "language": "bengali",
+    "chapter": 444,
+    "sequence": 27310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6428625e1347abd7"
+  },
+  "findings": []
+}

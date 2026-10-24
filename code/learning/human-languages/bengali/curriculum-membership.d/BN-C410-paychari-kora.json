@@ -1,0 +1,11 @@
+{
+  "id": "BN-C410-paychari-kora",
+  "pathSegment": "BN-PATH-410-MATH410",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-410-MATH410",
+      "order": 4
+    }
+  ]
+}

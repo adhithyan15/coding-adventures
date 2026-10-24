@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C495-beton",
+    "language": "bengali",
+    "chapter": 495,
+    "sequence": 30150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48a31e6cb26500b4"
+  },
+  "findings": []
+}

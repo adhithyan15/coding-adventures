@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 473,
-  "sourceHash": "fnv1a64:b6ad7db5927d7e11",
+  "sourceHash": "fnv1a64:db22365b47bfdce4",
   "lessonIds": [
     "ML-C473-srroppu",
     "ML-C473-kaikanikkuka",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch473.txt",
   "json": "malayalam/narration/ch473.json",
   "textHash": "fnv1a64:748411f99d7ec311",
-  "jsonHash": "fnv1a64:60bc990b949207af",
+  "jsonHash": "fnv1a64:559b62fa11ee18de",
   "findings": []
 }

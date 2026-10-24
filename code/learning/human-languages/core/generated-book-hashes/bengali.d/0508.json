@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:d14155c238c83090",
+  "lessonIds": [
+    "BN-C508-boithokkhana",
+    "BN-C508-chilekotha",
+    "BN-C508-rannaghor",
+    "BN-C508-choukath",
+    "BN-C508-tangano"
+  ],
+  "tex": "bengali/book/chapters/ch508-rooms-of-a-house.tex"
+}

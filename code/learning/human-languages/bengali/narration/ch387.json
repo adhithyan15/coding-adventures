@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 387,
+  "title": "Ways and Destinations",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ed5ed5aab2fc5070",
+  "lessons": [
+    {
+      "id": "BN-C387-poth",
+      "sequence": 24150,
+      "title": "পথ (pôth) — a way; a path",
+      "headword": "পথ",
+      "romanization": "pôth",
+      "gloss": "a way; a path",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:146661a239d1b142",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to unload, then the Bengali for to carry (a load)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পথ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পথ — pôth — \"a way; a path\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গ্রামের পথে আমরা একটা পুকুর দেখলাম। grāmer pôthe āmrā ekṭā pukur dekhlām. On the village path we saw a pond."
+            },
+            {
+              "kind": "speech",
+              "text": "পথে, on the way: পথে দেখা হল, we met on the way. রাস্তা is the road itself; পথ (pôth) is also the way you take."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পথ (pôth) is Sanskrit patha, \"a way, a path, a road\" (Monier-Williams), the stem Sanskrit uses at the end of compounds, taken over whole."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôth*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôth, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôth*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grāmer pôthe āmrā ekṭā pukur dekhlām. — On the village path we saw a pond.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *grāmer pôthe āmrā ekṭā pukur dekhlām.* — On the village path we saw a pond.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to unload, then the Bengali for to carry (a load), then say pôth again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to unload, then the Bengali for to carry (a load), then say *pôth* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পথ (pôth) mean? (\"A way; a path\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C387-gontobyo",
+      "sequence": 24160,
+      "title": "গন্তব্য (gôntôbyô) — a destination",
+      "headword": "গন্তব্য",
+      "romanization": "gôntôbyô",
+      "gloss": "a destination",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c98b512da0e10cae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to carry (a load), then the Bengali for a path."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গন্তব্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গন্তব্য — gôntôbyô — \"a destination\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের গন্তব্য একটা ছোট গ্রাম। āmāder gôntôbyô ekṭā chhoṭo grām. Our destination is a small village."
+            },
+            {
+              "kind": "speech",
+              "text": "A word of signs and tickets as much as of talk: গন্তব্য (gôntôbyô) স্টেশন, the destination station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গন্তব্য (gôntôbyô) is Sanskrit gantavya, \"to be gone to, to be reached\" (Monier-Williams), a form of gam, to go: the place you must go to."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôntôbyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôntôbyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôntôbyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôntôbyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder gôntôbyô ekṭā chhoṭo grām. — Our destination is a small village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder gôntôbyô ekṭā chhoṭo grām.* — Our destination is a small village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to carry (a load), then the Bengali for a path, then say gôntôbyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to carry (a load), then the Bengali for a path, then say *gôntôbyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গন্তব্য (gôntôbyô) mean? (\"A destination\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C387-sophor",
+      "sequence": 24170,
+      "title": "সফর (sôphôr) — a trip; a tour",
+      "headword": "সফর",
+      "romanization": "sôphôr",
+      "gloss": "a trip; a tour",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1685461ae1972fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a path, then the Bengali for a destination."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সফর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সফর — sôphôr — \"a trip; a tour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমাদের সফর সাত দিনের ছিল। āmāder sôphôr sāt diner chhilô. Our trip lasted seven days."
+            },
+            {
+              "kind": "speech",
+              "text": "Often a trip with a purpose: an official tour, a team's tour abroad."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সফর (sôphôr) is usually traced to Arabic safar, \"a journey\", which reached Bengali through Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôphôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôphôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôphôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôphôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmāder sôphôr sāt diner chhilô. — Our trip lasted seven days.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmāder sôphôr sāt diner chhilô.* — Our trip lasted seven days.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a path, then the Bengali for a destination, then say sôphôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a path, then the Bengali for a destination, then say *sôphôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সফর (sôphôr) mean? (\"A trip; a tour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C387-jatayat-kora",
+      "sequence": 24180,
+      "title": "যাতায়াত করা (jātāyāt kôrā) — to commute; to go back and forth",
+      "headword": "যাতায়াত করা",
+      "romanization": "jātāyāt kôrā",
+      "gloss": "to commute; to go back and forth",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d21b09677dc5b624",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a destination, then the Bengali for a trip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যাতায়াত করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যাতায়াত করা — jātāyāt kôrā — \"to commute; to go back and forth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা রোজ বাসে যাতায়াত করে। mīrā roj bāse jātāyāt kôre. Mira commutes by bus every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ট্রেনে যাতায়াত করতেন, tini ṭrene jātāyāt kôrten."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun alone is যাতায়াত, the coming and going: এই রাস্তায় যাতায়াত, the traffic on this road."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যাতায়াত করা (jātāyāt kôrā) joins Sanskrit yātāyāta, \"going and coming\" (Monier-Williams), a pairing of yāta, gone, and āyāta, come, to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātāyāt kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātāyāt kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jātāyāt kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jātāyāt kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā roj bāse jātāyāt kôre. — Mira commutes by bus every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā roj bāse jātāyāt kôre.* — Mira commutes by bus every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a destination, then the Bengali for a trip, then say jātāyāt kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a destination, then the Bengali for a trip, then say *jātāyāt kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যাতায়াত করা (jātāyāt kôrā) mean? (\"To commute; to go back and forth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C387-phirti",
+      "sequence": 24190,
+      "title": "ফিরতি (phirti) — return (of a journey); on the way back",
+      "headword": "ফিরতি",
+      "romanization": "phirti",
+      "gloss": "return (of a journey); on the way back",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:49e4b995838b0fd2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a trip, then the Bengali for to commute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফিরতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিরতি — phirti — \"return (of a journey); on the way back\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ফিরতি পথে আমরা মামার বাড়িতে থামলাম। phirti pôthe āmrā māmār bāṛite thāmlām. On the way back we stopped at my uncle's house."
+            },
+            {
+              "kind": "speech",
+              "text": "It stands before its noun: ফিরতি (phirti) টিকিট, a return ticket; ফিরতি (phirti) ট্রেন, the train back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিরতি (phirti) is built on the stem ফির- of ফেরা, \"to return\", which CDIAL lists as Bengali phirā, \"to turn\", under the reconstructed phirati, \"moves, wanders, turns\" (CDIAL 9078)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phirti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phirti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phirti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phirti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phirti pôthe āmrā māmār bāṛite thāmlām. — On the way back we stopped at my uncle's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phirti pôthe āmrā māmār bāṛite thāmlām.* — On the way back we stopped at my uncle's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a trip, then the Bengali for to commute, then say phirti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a trip, then the Bengali for to commute, then say *phirti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফিরতি (phirti) mean? (\"Return (of a journey); on the way back\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

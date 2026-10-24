@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Readers and Listeners",
+  "label": "ch:bn-readers-and-listeners",
+  "canDo": "I can talk about readers, listeners and public notices.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C300-songkhya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can talk about readers, listeners and public notices.",
+    "assesses": [
+      "BN-LEX-C300-PATHOK300-03",
+      "BN-LEX-C300-PATHOK300-04",
+      "BN-LEX-C300-PATHOK300-05"
+    ]
+  }
+}

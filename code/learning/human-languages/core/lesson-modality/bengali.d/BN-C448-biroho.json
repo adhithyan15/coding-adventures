@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C448-biroho",
+    "language": "bengali",
+    "chapter": 448,
+    "sequence": 27510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69b8035a7e80ce3d"
+  },
+  "findings": []
+}

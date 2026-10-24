@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C291-shibir",
+    "language": "bengali",
+    "chapter": 291,
+    "sequence": 18780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:471f28bd294e155e"
+  },
+  "findings": []
+}

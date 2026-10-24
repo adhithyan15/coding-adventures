@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C516-shoukhin",
+    "language": "bengali",
+    "chapter": 516,
+    "sequence": 31270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28ac0b4e80daef32"
+  },
+  "findings": []
+}

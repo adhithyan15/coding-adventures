@@ -1,0 +1,11 @@
+{
+  "id": "BN-C500-kormosthol",
+  "pathSegment": "BN-PATH-500-BIBHAG500",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-500-BIBHAG500",
+      "order": 2
+    }
+  ]
+}

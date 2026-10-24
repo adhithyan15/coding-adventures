@@ -1,0 +1,11 @@
+{
+  "id": "BN-C297-bibriti",
+  "pathSegment": "BN-PATH-297-KOTHA297",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-297-KOTHA297",
+      "order": 3
+    }
+  ]
+}

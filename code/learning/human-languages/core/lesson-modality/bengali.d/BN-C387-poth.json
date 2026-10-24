@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C387-poth",
+    "language": "bengali",
+    "chapter": 387,
+    "sequence": 24150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:146661a239d1b142"
+  },
+  "findings": []
+}

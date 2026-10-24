@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:18e8b74ee55e9ead",
+  "lessonIds": [
+    "BN-C271-nouka",
+    "BN-W271-letter-au-kar",
+    "BN-C271-tikit-deben",
+    "BN-C271-hariye-gechhe",
+    "BN-R271-at-the-station"
+  ],
+  "tex": "bengali/book/chapters/ch271-tickets-and-when-things-go-wrong.tex"
+}

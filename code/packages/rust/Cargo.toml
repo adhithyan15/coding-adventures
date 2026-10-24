@@ -781,6 +781,8 @@ members = [
     "der-asn1",
     "x509-time",
     "x509-validity",
+    "x509-revocation-policy",
+    "x509-ocsp-cert-id",
     "x509-algorithm-identifier",
     "x509-subject-public-key-info",
     "x509-extension",

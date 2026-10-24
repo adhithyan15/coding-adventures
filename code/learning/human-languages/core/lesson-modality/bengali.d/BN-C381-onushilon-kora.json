@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C381-onushilon-kora",
+    "language": "bengali",
+    "chapter": 381,
+    "sequence": 23650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:651c7cb2291039aa"
+  },
+  "findings": []
+}

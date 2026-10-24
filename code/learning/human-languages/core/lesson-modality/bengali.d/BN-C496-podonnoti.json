@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C496-podonnoti",
+    "language": "bengali",
+    "chapter": 496,
+    "sequence": 30210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77fd448c99d2636c"
+  },
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "bengali",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:e6bba9dcc6ae5218",
+  "lessonIds": [
+    "BN-C437-bagh",
+    "BN-C437-horin",
+    "BN-C437-shikar-kora",
+    "BN-C437-chora",
+    "BN-C437-gungun-kora",
+    "BN-R437-review-431-437",
+    "BN-R437-review-final-437"
+  ],
+  "tex": "bengali/book/chapters/ch437-wild-creatures.tex"
+}

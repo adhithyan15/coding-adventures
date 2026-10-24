@@ -1,0 +1,21 @@
+{
+  "chapter": 453,
+  "title": "Courage and Nerve",
+  "label": "ch:bn-courage-and-nerve",
+  "canDo": "I can talk about confidence and about standing up to someone.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R453-review-446-453",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can talk about confidence and about standing up to someone.",
+    "assesses": [
+      "BN-LEX-C453-MONOBOL453-01",
+      "BN-LEX-C453-MONOBOL453-02",
+      "BN-LEX-C453-MONOBOL453-03",
+      "BN-LEX-C453-MONOBOL453-04",
+      "BN-LEX-C453-MONOBOL453-05"
+    ]
+  }
+}

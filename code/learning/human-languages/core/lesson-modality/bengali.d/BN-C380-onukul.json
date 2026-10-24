@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C380-onukul",
+    "language": "bengali",
+    "chapter": 380,
+    "sequence": 23560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:76c823e3bc70e18a"
+  },
+  "findings": []
+}

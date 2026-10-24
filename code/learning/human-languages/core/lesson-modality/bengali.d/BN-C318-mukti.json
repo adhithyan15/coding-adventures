@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C318-mukti",
+    "language": "bengali",
+    "chapter": 318,
+    "sequence": 20190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c4bf4accef8be01"
+  },
+  "findings": []
+}

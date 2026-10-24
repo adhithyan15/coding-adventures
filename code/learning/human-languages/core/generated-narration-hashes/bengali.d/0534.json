@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:3f9123808d6ef724",
+  "lessonIds": [
+    "BN-C534-baji-dhora",
+    "BN-C534-juya",
+    "BN-C534-tos",
+    "BN-C534-shubho",
+    "BN-C534-phola-bear-fruit"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch534.txt",
+  "json": "bengali/narration/ch534.json",
+  "textHash": "fnv1a64:90fd981a0b31f321",
+  "jsonHash": "fnv1a64:1d407ef9494b960a",
+  "findings": []
+}

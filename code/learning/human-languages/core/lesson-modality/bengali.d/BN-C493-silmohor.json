@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C493-silmohor",
+    "language": "bengali",
+    "chapter": 493,
+    "sequence": 30070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab98dd52bbf46214"
+  },
+  "findings": []
+}

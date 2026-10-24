@@ -1,0 +1,11 @@
+{
+  "id": "BN-C317-atmotyag",
+  "pathSegment": "BN-PATH-317-BIR317",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-317-BIR317",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C502-ghata",
+  "pathSegment": "BN-PATH-502-KOMPIUTAR502",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-502-KOMPIUTAR502",
+      "order": 3
+    }
+  ]
+}

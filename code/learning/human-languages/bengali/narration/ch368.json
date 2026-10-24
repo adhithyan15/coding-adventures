@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 368,
+  "title": "On One Condition",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e7efcfdf999199d6",
+  "lessons": [
+    {
+      "id": "BN-C368-shorto",
+      "sequence": 22940,
+      "title": "শর্ত (shôrtô) — a condition; a term (of an agreement)",
+      "headword": "শর্ত",
+      "romanization": "shôrtô",
+      "gloss": "a condition; a term (of an agreement)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d912f31b446f8d78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an expectation, then the Bengali for the future."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শর্ত",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শর্ত — shôrtô — \"a condition; a term (of an agreement)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার একটা শর্ত আছে: তুমি যদি আসো, তাহলে আমিও যাব। āmār ekṭā shôrtô āchhe: tumi jôdi āso, tāhôle āmio jābô. I have one condition: if you come, I'll go too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শর্ত (shôrtô) is usually traced to Arabic sharṭ, a condition, through Persian: the 'if' a deal depends on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôrtô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôrtô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôrtô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôrtô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār ekṭā shôrtô āchhe: tumi jôdi āso, tāhôle āmio jābô. — I have one condition: if you come, I'll go too.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār ekṭā shôrtô āchhe: tumi jôdi āso, tāhôle āmio jābô.* — I have one condition: if you come, I'll go too.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an expectation, then the Bengali for the future, then say shôrtô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an expectation, then the Bengali for the future, then say *shôrtô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শর্ত (shôrtô) mean? (\"A condition; a term (of an agreement)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C368-obostha",
+      "sequence": 22950,
+      "title": "অবস্থা (ôbôsthā) — a state; a condition (of something)",
+      "headword": "অবস্থা",
+      "romanization": "ôbôsthā",
+      "gloss": "a state; a condition (of something)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0b8926f98d589405",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for the future, then the Bengali for a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অবস্থা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবস্থা — ôbôsthā — \"a state; a condition (of something)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাস্তার অবস্থা খারাপ হলে আমরা বাসে যাব না। rāstār ôbôsthā khārāp hôle āmrā bāse jābô nā. If the roads are in a bad state, we won't go by bus."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অবস্থা (ôbôsthā) is Sanskrit avasthā, a state or condition (Monier-Williams): how a thing or a person is at present."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôsthā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôsthā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôbôsthā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôbôsthā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāstār ôbôsthā khārāp hôle āmrā bāse jābô nā. — If the roads are in a bad state, we won't go by bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāstār ôbôsthā khārāp hôle āmrā bāse jābô nā.* — If the roads are in a bad state, we won't go by bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for the future, then the Bengali for a condition, then say ôbôsthā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for the future, then the Bengali for a condition, then say *ôbôsthā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অবস্থা (ôbôsthā) mean? (\"A state; a condition (of something)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C368-poristhiti",
+      "sequence": 22960,
+      "title": "পরিস্থিতি (pôristhiti) — a situation; circumstances",
+      "headword": "পরিস্থিতি",
+      "romanization": "pôristhiti",
+      "gloss": "a situation; circumstances",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04992eea29916bbb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a condition, then the Bengali for a state of things."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পরিস্থিতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিস্থিতি — pôristhiti — \"a situation; circumstances\"."
+            },
+            {
+              "kind": "speech",
+              "text": "পরিস্থিতি বদলালে আমাকে ফোন করো। pôristhiti bôdlāle āmāke phon kôro. Call me if the situation changes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পরিস্থিতি (pôristhiti) is a modern learned compound of Sanskrit pari-, around, and sthiti, a standing or state (Monier-Williams): how things stand all around. The compound itself is not in the dictionary."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôristhiti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôristhiti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôristhiti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôristhiti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôristhiti bôdlāle āmāke phon kôro. — Call me if the situation changes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôristhiti bôdlāle āmāke phon kôro.* — Call me if the situation changes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a condition, then the Bengali for a state of things, then say pôristhiti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a condition, then the Bengali for a state of things, then say *pôristhiti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পরিস্থিতি (pôristhiti) mean? (\"A situation; circumstances\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C368-jotokkhon",
+      "sequence": 22970,
+      "title": "যতক্ষণ (jôtôkkhôn) — as long as",
+      "headword": "যতক্ষণ",
+      "romanization": "jôtôkkhôn",
+      "gloss": "as long as",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:512c00194743648b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a state of things, then the Bengali for a situation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: যতক্ষণ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যতক্ষণ — jôtôkkhôn — \"as long as\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঝড় না থামলে আমরা যতক্ষণ দরকার এখানে থাকব। jhôṛ nā thāmle āmrā jôtôkkhôn dôrkār ekhāne thākbô. If the storm doesn't stop, we'll stay here as long as we need to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "যতক্ষণ (jôtôkkhôn) is যত, 'as much as', with Sanskrit kṣaṇa, a moment (Monier-Williams): for as many moments as. It is often answered by ততক্ষণ, 'for that long'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôtôkkhôn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôtôkkhôn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôtôkkhôn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôtôkkhôn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhôṛ nā thāmle āmrā jôtôkkhôn dôrkār ekhāne thākbô. — If the storm doesn't stop, we'll stay here as long as we need to.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhôṛ nā thāmle āmrā jôtôkkhôn dôrkār ekhāne thākbô.* — If the storm doesn't stop, we'll stay here as long as we need to.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a state of things, then the Bengali for a situation, then say jôtôkkhôn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a state of things, then the Bengali for a situation, then say *jôtôkkhôn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does যতক্ষণ (jôtôkkhôn) mean? (\"As long as\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C368-othoba",
+      "sequence": 22980,
+      "title": "অথবা (ôthôbā) — or else; or otherwise",
+      "headword": "অথবা",
+      "romanization": "ôthôbā",
+      "gloss": "or else; or otherwise",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2bc85769a32a33c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a situation, then the Bengali for as long as."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অথবা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অথবা — ôthôbā — \"or else; or otherwise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কাল ছুটি হলে আমরা সিনেমায় যাব, অথবা বাড়িতে থাকব। kāl chhuṭi hôle āmrā sinemāy jābô, ôthôbā bāṛite thākbô. If tomorrow is a holiday, we'll go to the cinema or else stay at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অথবা (ôthôbā) is Sanskrit athavā, 'or' (Monier-Williams). It is more weighty than বা and often offers a second plan."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happens if."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôthôbā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôthôbā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôthôbā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôthôbā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāl chhuṭi hôle āmrā sinemāy jābô, ôthôbā bāṛite thākbô. — If tomorrow is a holiday, we'll go to the cinema or else stay at home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāl chhuṭi hôle āmrā sinemāy jābô, ôthôbā bāṛite thākbô.* — If tomorrow is a holiday, we'll go to the cinema or else stay at home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a situation, then the Bengali for as long as, then say ôthôbā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a situation, then the Bengali for as long as, then say *ôthôbā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অথবা (ôthôbā) mean? (\"Or else; or otherwise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

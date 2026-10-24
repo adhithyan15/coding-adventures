@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:ed36c659ea3b3e3e",
+  "lessonIds": [
+    "BN-C320-smritistombho",
+    "BN-C320-nirman-kora",
+    "BN-C320-somadhi",
+    "BN-C320-gombuj",
+    "BN-C320-sthapotyo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "bengali/narration/ch320.txt",
+  "json": "bengali/narration/ch320.json",
+  "textHash": "fnv1a64:16712b302f9ed7e1",
+  "jsonHash": "fnv1a64:db21263e02b6ec84",
+  "findings": []
+}

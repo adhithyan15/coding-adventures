@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C431-poli",
+    "language": "bengali",
+    "chapter": 431,
+    "sequence": 26440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:37b75d9620831c69"
+  },
+  "findings": []
+}

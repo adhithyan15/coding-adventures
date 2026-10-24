@@ -14,7 +14,7 @@ romanization: "kaikāṇikkuka"
 concept_tag: ML-VERB-KAIKANIKKUKA
 prerequisites: [ML-C472-kulunnuka, ML-C473-srroppu]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-kaan-see]
+roots: [dravidian-kai-hand, dravidian-kaan-see]
 etymology_hook: 'kaikāṇikkuka: native kai ''hand'' (DEDR 2023) + kāṇikkuka ''to show'' (DEDR 1443)'
 duration:
   max_seconds: 200

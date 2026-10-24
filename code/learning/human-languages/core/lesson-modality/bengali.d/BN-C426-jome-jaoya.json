@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C426-jome-jaoya",
+    "language": "bengali",
+    "chapter": 426,
+    "sequence": 26170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e34646e6dc66f92"
+  },
+  "findings": []
+}

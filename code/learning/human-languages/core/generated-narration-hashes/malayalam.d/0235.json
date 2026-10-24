@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 235,
-  "sourceHash": "fnv1a64:d41dfaa8ad3d51d8",
+  "sourceHash": "fnv1a64:c0476307315ceceb",
   "lessonIds": [
     "ML-C235-kanankai",
     "ML-C235-uppurri",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch235.txt",
   "json": "malayalam/narration/ch235.json",
   "textHash": "fnv1a64:a3d4657958ca64ba",
-  "jsonHash": "fnv1a64:3e2e01f46f65a917",
+  "jsonHash": "fnv1a64:e9eb07df3fbb6268",
   "findings": []
 }

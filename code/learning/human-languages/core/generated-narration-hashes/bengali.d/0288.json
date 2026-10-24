@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:0ecbba706812a21c",
+  "lessonIds": [
+    "BN-C288-ghurnijhor",
+    "BN-C288-upokul",
+    "BN-C288-egono",
+    "BN-C288-uprano",
+    "BN-C288-bidyut"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch288.txt",
+  "json": "bengali/narration/ch288.json",
+  "textHash": "fnv1a64:356dbeb59984e48d",
+  "jsonHash": "fnv1a64:a7553040749b9479",
+  "findings": []
+}

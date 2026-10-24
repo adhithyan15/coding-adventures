@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-409-ELAKA409",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-409-ELAKA409"
+  ],
+  "after": []
+}

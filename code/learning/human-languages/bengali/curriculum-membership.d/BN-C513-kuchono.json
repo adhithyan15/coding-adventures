@@ -1,0 +1,11 @@
+{
+  "id": "BN-C513-kuchono",
+  "pathSegment": "BN-PATH-513-KOTA513",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-513-KOTA513",
+      "order": 4
+    }
+  ]
+}

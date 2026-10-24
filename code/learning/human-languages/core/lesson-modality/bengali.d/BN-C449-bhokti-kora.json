@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C449-bhokti-kora",
+    "language": "bengali",
+    "chapter": 449,
+    "sequence": 27600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:790fd3b8fc0b2bc2"
+  },
+  "findings": []
+}

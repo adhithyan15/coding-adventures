@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:9aff6f6a581c4101",
+  "lessonIds": [
+    "BN-C466-shorir",
+    "BN-C466-bahu",
+    "BN-C466-angul",
+    "BN-C466-pith",
+    "BN-C466-ghar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch466.txt",
+  "json": "bengali/narration/ch466.json",
+  "textHash": "fnv1a64:8befe00855531c44",
+  "jsonHash": "fnv1a64:7118bfb6ed244931",
+  "findings": []
+}

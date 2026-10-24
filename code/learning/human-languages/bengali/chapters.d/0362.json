@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Making Sense of It",
+  "label": "ch:bn-making-sense-of-it",
+  "canDo": "I can say when something is clear to me and when I am lost.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C362-sposhto",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say when something is clear to me and when I am lost.",
+    "assesses": [
+      "BN-LEX-C362-MONOJOG362-03",
+      "BN-LEX-C362-MONOJOG362-04",
+      "BN-LEX-C362-MONOJOG362-05"
+    ]
+  }
+}

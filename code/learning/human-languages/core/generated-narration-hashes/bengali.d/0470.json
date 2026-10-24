@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:41cb094453093513",
+  "lessonIds": [
+    "BN-C470-tak",
+    "BN-C470-khushki",
+    "BN-C470-ukun",
+    "BN-C470-jhora",
+    "BN-C470-khopa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch470.txt",
+  "json": "bengali/narration/ch470.json",
+  "textHash": "fnv1a64:42d9bbcd51d97644",
+  "jsonHash": "fnv1a64:90642b41a341afb4",
+  "findings": []
+}

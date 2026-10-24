@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:9cbe782f3d8dbf76",
+  "lessonIds": [
+    "BN-C286-uki-deoya",
+    "BN-C286-prodorshon-kora",
+    "BN-C286-odbhut",
+    "BN-C286-chhaya",
+    "BN-C286-lokkho-kora"
+  ],
+  "tex": "bengali/book/chapters/ch286-strange-sights.tex"
+}

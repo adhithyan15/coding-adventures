@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 389,
+  "title": "Drivers and Conductors",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b725c6356fee50e",
+  "lessons": [
+    {
+      "id": "BN-C389-chalok",
+      "sequence": 24250,
+      "title": "চালক (chālôk) — a driver",
+      "headword": "চালক",
+      "romanization": "chālôk",
+      "gloss": "a driver",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1acda5e5adbd1927",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a van, then the Bengali for to race."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চালক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চালক — chālôk — \"a driver\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাসের চালক হঠাৎ বাস থামালেন। bāser chālôk hôṭhāt bās thāmālen. The bus driver suddenly stopped the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside চালানো, to drive: the চালক (chālôk) is the one who চালায়."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চালক (chālôk) is a Sanskrit-style formation built from cāl-, the causing stem of cal, \"to move, to stir\" (Monier-Williams), with the ending -ক for the one who does a thing: one who makes something go. Monier-Williams records cālaka only in an unrelated old sense, so the driver is a modern formation, the noun beside চালানো."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālôk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chālôk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chālôk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chālôk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāser chālôk hôṭhāt bās thāmālen. — The bus driver suddenly stopped the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāser chālôk hôṭhāt bās thāmālen.* — The bus driver suddenly stopped the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a van, then the Bengali for to race, then say chālôk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a van, then the Bengali for to race, then say *chālôk* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চালক (chālôk) mean? (\"A driver\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C389-kondaktor",
+      "sequence": 24260,
+      "title": "কন্ডাক্টর (kônḍākṭôr) — a bus conductor",
+      "headword": "কন্ডাক্টর",
+      "romanization": "kônḍākṭôr",
+      "gloss": "a bus conductor",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d393f4724e7e63d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to race, then the Bengali for a driver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কন্ডাক্টর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কন্ডাক্টর — kônḍākṭôr — \"a bus conductor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কন্ডাক্টর আমার কাছে ভাড়া চাইলেন। kônḍākṭôr āmār kāchhe bhāṛā chāilen. The conductor asked me for the fare."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কন্ডাক্টর (kônḍākṭôr) is borrowed from English conductor, with the English d and t said as the hard Bengali ড and ট."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kônḍākṭôr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kônḍākṭôr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kônḍākṭôr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kônḍākṭôr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kônḍākṭôr āmār kāchhe bhāṛā chāilen. — The conductor asked me for the fare.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kônḍākṭôr āmār kāchhe bhāṛā chāilen.* — The conductor asked me for the fare.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to race, then the Bengali for a driver, then say kônḍākṭôr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to race, then the Bengali for a driver, then say *kônḍākṭôr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কন্ডাক্টর (kônḍākṭôr) mean? (\"A bus conductor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C389-helmet",
+      "sequence": 24270,
+      "title": "হেলমেট (helmeṭ) — a helmet",
+      "headword": "হেলমেট",
+      "romanization": "helmeṭ",
+      "gloss": "a helmet",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a2888d699d88d01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a driver, then the Bengali for a bus conductor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হেলমেট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেলমেট — helmeṭ — \"a helmet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মোটরসাইকেলে হেলমেট পরতে হবে। moṭôrsāikele helmeṭ pôrte hôbe. On a motorbike you have to wear a helmet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেলমেট (helmeṭ) is borrowed from English helmet, with the final t said as ট."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helmeṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helmeṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "helmeṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *helmeṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moṭôrsāikele helmeṭ pôrte hôbe. — On a motorbike you have to wear a helmet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *moṭôrsāikele helmeṭ pôrte hôbe.* — On a motorbike you have to wear a helmet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a driver, then the Bengali for a bus conductor, then say helmeṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a driver, then the Bengali for a bus conductor, then say *helmeṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হেলমেট (helmeṭ) mean? (\"A helmet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C389-ishara-kora",
+      "sequence": 24280,
+      "title": "ইশারা করা (ishārā kôrā) — to signal; to make a sign",
+      "headword": "ইশারা করা",
+      "romanization": "ishārā kôrā",
+      "gloss": "to signal; to make a sign",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ed1e7e0f27f738a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a bus conductor, then the Bengali for a helmet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ইশারা করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইশারা করা — ishārā kôrā — \"to signal; to make a sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কন্ডাক্টর হাত তুলে চালককে থামার ইশারা করলেন। kônḍākṭôr hāt tule chālôkke thāmār ishārā kôrlen. The conductor raised his hand and signalled the driver to stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি চালককে ইশারা করলেন, tini chālôkke ishārā kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "The noun alone is ইশারা, a sign or a hint: চোখের ইশারা, a sign with the eyes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইশারা করা (ishārā kôrā) joins ইশারা, \"a sign, a gesture\", usually traced to Arabic ishāra, \"a pointing, a signal\", through Persian, to করা, to do."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishārā kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishārā kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ishārā kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ishārā kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kônḍākṭôr hāt tule chālôkke thāmār ishārā kôrlen. — The conductor raised his hand and signalled the driver to stop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kônḍākṭôr hāt tule chālôkke thāmār ishārā kôrlen.* — The conductor raised his hand and signalled the driver to stop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a bus conductor, then the Bengali for a helmet, then say ishārā kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a bus conductor, then the Bengali for a helmet, then say *ishārā kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ইশারা করা (ishārā kôrā) mean? (\"To signal; to make a sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C389-haka",
+      "sequence": 24290,
+      "title": "হাঁকা (hā̃kā) — to call out; to cry (stops or wares)",
+      "headword": "হাঁকা",
+      "romanization": "hā̃kā",
+      "gloss": "to call out; to cry (stops or wares)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0f9589ea70e740d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a helmet, then the Bengali for to signal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হাঁকা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাঁকা — hā̃kā — \"to call out; to cry (stops or wares)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কন্ডাক্টর পাড়ার নাম হাঁকলেন। kônḍākṭôr pāṛār nām hā̃klen. The conductor called out the name of the neighbourhood."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি নাম হাঁকলেন, tini nām hā̃klen."
+            },
+            {
+              "kind": "speech",
+              "text": "Conductors হাঁকে the stops from the door; hawkers হাঁকে their goods in the lane."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হাঁকা (hā̃kā) is inherited: CDIAL lists Bengali hā̃kā, \"to call, to drive off\", under Sanskrit hakkayati, \"calls to\" (CDIAL 13939)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃kā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃kā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hā̃kā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hā̃kā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kônḍākṭôr pāṛār nām hā̃klen. — The conductor called out the name of the neighbourhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kônḍākṭôr pāṛār nām hā̃klen.* — The conductor called out the name of the neighbourhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a helmet, then the Bengali for to signal, then say hā̃kā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a helmet, then the Bengali for to signal, then say *hā̃kā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হাঁকা (hā̃kā) mean? (\"To call out; to cry (stops or wares)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "Guests and a Feast",
+  "label": "ch:bn-guests-and-a-feast",
+  "canDo": "I can talk about invitations, guests, gifts and a feast.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C306-apyayon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about invitations, guests, gifts and a feast.",
+    "assesses": [
+      "BN-LEX-C306-OTITHI306-03",
+      "BN-LEX-C306-OTITHI306-04",
+      "BN-LEX-C306-OTITHI306-05"
+    ]
+  }
+}

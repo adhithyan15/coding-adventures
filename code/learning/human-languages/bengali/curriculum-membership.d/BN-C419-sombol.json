@@ -1,0 +1,11 @@
+{
+  "id": "BN-C419-sombol",
+  "pathSegment": "BN-PATH-419-ABHAB419",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-419-ABHAB419",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 196,
+  "sourceHash": "fnv1a64:c43665d7e3b2218e",
+  "lessonIds": [
+    "PA-C196-work-command-return",
+    "PA-C196-shuru",
+    "PA-C196-shuru-review",
+    "PA-C196-start-work-frame",
+    "PA-C196-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch196-start-the-work.tex"
+}

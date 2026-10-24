@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:d05d06415a44f3eb",
+  "lessonIds": [
+    "BN-C474-hapani",
+    "BN-C474-dayabetis",
+    "BN-C474-roktochap",
+    "BN-C474-kensar",
+    "BN-C474-jondis"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch474.txt",
+  "json": "bengali/narration/ch474.json",
+  "textHash": "fnv1a64:0af5968730a9e4c9",
+  "jsonHash": "fnv1a64:43f7f87d26f9a078",
+  "findings": []
+}

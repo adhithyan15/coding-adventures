@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:99b8c043d75b5f30",
+  "lessonIds": [
+    "BN-C426-thanda",
+    "BN-C426-tushar",
+    "BN-C426-jome-jaoya",
+    "BN-C426-konkone",
+    "BN-C426-gole-jaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch426.txt",
+  "json": "bengali/narration/ch426.json",
+  "textHash": "fnv1a64:4d0e396fc5f1fac6",
+  "jsonHash": "fnv1a64:e8a0b4987f650329",
+  "findings": []
+}

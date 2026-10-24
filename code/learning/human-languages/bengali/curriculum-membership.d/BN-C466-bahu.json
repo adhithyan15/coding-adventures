@@ -1,0 +1,11 @@
+{
+  "id": "BN-C466-bahu",
+  "pathSegment": "BN-PATH-466-SHORIR466",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-466-SHORIR466",
+      "order": 1
+    }
+  ]
+}

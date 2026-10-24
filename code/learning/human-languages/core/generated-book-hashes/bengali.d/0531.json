@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:6f17b6ad8768c6df",
+  "lessonIds": [
+    "BN-C531-khosra",
+    "BN-C531-talika",
+    "BN-C531-krom",
+    "BN-C531-ruprekha",
+    "BN-C531-bad-deoya",
+    "BN-R531-review-524-531"
+  ],
+  "tex": "bengali/book/chapters/ch531-drafts-and-lists.tex"
+}

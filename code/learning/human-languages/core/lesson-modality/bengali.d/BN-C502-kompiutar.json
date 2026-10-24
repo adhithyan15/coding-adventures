@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C502-kompiutar",
+    "language": "bengali",
+    "chapter": 502,
+    "sequence": 30510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:56f8f419ff2b1f3d"
+  },
+  "findings": []
+}

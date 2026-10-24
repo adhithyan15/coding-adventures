@@ -159,6 +159,13 @@ interface Realization {
 }
 ```
 
+Each `roots` slug identifies one etymon, not a lesson topic or a pair of
+words. A lesson that introduces two unrelated roots lists two slugs. Reuse a
+cross-track slug only when the cited source entry is the same; a single slug
+must not stand for both DEDR 3103 (*tala/talai/tale*, “head”) and DEDR 2023
+(*kai*, “hand”). Source-backed root identities are checked across lessons so
+that the index cannot join unrelated words as etymological cousins.
+
 ### New optional frontmatter fields (added to the `HL00` schema)
 
 To keep the data layer **derived from the lessons** (never a hand-maintained

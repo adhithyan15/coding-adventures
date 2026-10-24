@@ -1,0 +1,19 @@
+{
+  "chapter": 535,
+  "title": "Staying Safe",
+  "label": "ch:bn-staying-safe",
+  "canDo": "I can talk about insurance, guarantees and staying safe.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C535-ogninirbapok",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 535: I can talk about insurance, guarantees and staying safe.",
+    "assesses": [
+      "BN-LEX-C535-SURAKSHA535-03",
+      "BN-LEX-C535-SURAKSHA535-04",
+      "BN-LEX-C535-SURAKSHA535-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C421-ordar",
+  "pathSegment": "BN-PATH-421-GUDAM421",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-421-GUDAM421",
+      "order": 2
+    }
+  ]
+}

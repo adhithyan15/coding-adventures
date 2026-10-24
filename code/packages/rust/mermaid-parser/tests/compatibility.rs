@@ -141,6 +141,62 @@ const ER_ATTRIBUTE_FORMS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-attribute-forms-11.16.1-visual-corpus.json"
 ));
+const ER_ALIAS_ORDER_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-corpus.json"
+));
+const ER_ALIAS_ORDER_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-alias-order-11.16.1-visual-corpus.json"
+));
+const ER_PARENT_CARDINALITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-corpus.json"
+));
+const ER_PARENT_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
+));
+const ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-corpus.json"
+));
+const ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-visual-corpus.json"
+));
+const ER_ROLE_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-corpus.json"
+));
+const ER_ROLE_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-role-line-breaks-11.16.1-visual-corpus.json"
+));
+const ER_PROTOTYPE_IDENTIFIERS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-corpus.json"
+));
+const ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-visual-corpus.json"
+));
+const ER_EMPTY_RELATIONSHIP_ROLE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-corpus.json"
+));
+const ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-visual-corpus.json"
+));
+const ER_NUMERIC_ENTITIES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entities-11.16.1-corpus.json"
+));
+const ER_NUMERIC_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-numeric-entities-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2387,6 +2443,210 @@ fn pinned_er_attribute_forms_reach_semantic_ir() {
             "alias: string? [UK] - Optional display name"
         ]
     );
+}
+
+#[test]
+fn pinned_er_aliases_update_entities_across_declaration_order() {
+    let syntax: Value = serde_json::from_str(ER_ALIAS_ORDER_CORPUS)
+        .expect("ER alias order corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ALIAS_ORDER_VISUAL_CORPUS)
+        .expect("ER alias order visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER alias fixtures").len(), 2);
+    assert_eq!(visual["fixtures"].as_array().expect("ER alias visuals").len(), 2);
+
+    let relationship_first = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("relationship-first ER alias source"),
+    )
+    .expect("relationship-first ER alias fixture must parse");
+    let customer = relationship_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "customer")
+        .expect("customer");
+    assert_eq!(customer.label, "Customer Account");
+    assert_eq!(customer.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(
+        customer.style.as_ref().and_then(|style| style.fill.as_deref()),
+        Some("#dbeafe")
+    );
+
+    let declaration_first = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("declaration-first ER alias source"),
+    )
+    .expect("declaration-first ER alias fixture must parse");
+    let supplier = declaration_first
+        .nodes
+        .iter()
+        .find(|node| node.id == "supplier")
+        .expect("supplier");
+    assert_eq!(supplier.label, "SUPPLIER");
+    assert_eq!(supplier.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(declaration_first.relationships[0].from, "supplier");
+}
+
+#[test]
+fn pinned_er_parent_cardinality_disambiguates_u_entity_names() {
+    let syntax: Value = serde_json::from_str(ER_PARENT_CARDINALITY_CORPUS)
+        .expect("ER parent cardinality corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_PARENT_CARDINALITY_VISUAL_CORPUS)
+        .expect("ER parent cardinality visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER parent fixtures").len(), 2);
+
+    let parent = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER parent cardinality source"),
+    )
+    .expect("ER parent cardinality fixture must parse");
+    assert_eq!(parent.relationships[0].from, "PROJECT");
+    assert_eq!(parent.relationships[0].to, "TEAM_MEMBER");
+    assert_eq!(parent.relationships[0].from_mult.as_deref(), Some("parent"));
+    assert_eq!(parent.relationships[0].to_mult.as_deref(), Some("0..*"));
+
+    let entity = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("ER u entity source"),
+    )
+    .expect("ER u entity fixture must parse");
+    let u = entity.nodes.iter().find(|node| node.id == "u").expect("u entity");
+    assert_eq!(u.compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(entity.relationships[0].from, "u");
+    assert_eq!(entity.relationships[0].from_mult.as_deref(), Some("1"));
+}
+
+#[test]
+fn pinned_er_compact_attribute_blocks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS)
+        .expect("ER compact attribute block corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS)
+        .expect("ER compact attribute block visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["fixtures"].as_array().expect("ER compact fixtures").len(), 2);
+
+    let empty = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER empty block source"),
+    )
+    .expect("ER empty block fixture must parse");
+    assert_eq!(empty.nodes.len(), 2);
+    assert!(empty.nodes.iter().all(|node| node.compartments.is_empty()));
+
+    let compact = parse_er_diagram(
+        syntax["fixtures"][1]["source"]
+            .as_str()
+            .expect("ER compact block source"),
+    )
+    .expect("ER compact block fixture must parse");
+    let book = compact.nodes.iter().find(|node| node.id == "BOOK").expect("BOOK");
+    assert_eq!(
+        book.compartments[0].entries,
+        ["title: string [PK] - Display title"]
+    );
+}
+
+#[test]
+fn pinned_er_relationship_role_line_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_CORPUS)
+        .expect("ER role line-break corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_ROLE_LINE_BREAKS_VISUAL_CORPUS)
+        .expect("ER role line-break visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER role line-break source"),
+    )
+    .expect("ER role line-break fixture must parse");
+
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("has\none"));
+}
+
+#[test]
+fn pinned_er_prototype_safe_identifiers_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_CORPUS)
+        .expect("ER prototype identifier corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS)
+        .expect("ER prototype identifier visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER prototype identifier source"),
+    )
+    .expect("ER prototype identifier fixture must parse");
+
+    for id in ["__proto__", "constructor", "prototype"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == id));
+    }
+    let prototype = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "prototype")
+        .expect("prototype entity");
+    assert_eq!(
+        prototype.style.as_ref().and_then(|style| style.fill.as_deref()),
+        Some("#dcfce7")
+    );
+    assert_eq!(diagram.relationships.len(), 2);
+}
+
+#[test]
+fn pinned_er_empty_relationship_role_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_CORPUS)
+        .expect("ER empty relationship role corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS)
+        .expect("ER empty relationship role visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER empty relationship role source"),
+    )
+    .expect("ER empty relationship role fixture must parse");
+
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some(""));
+}
+
+#[test]
+fn pinned_er_numeric_entity_identifiers_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_CORPUS)
+        .expect("ER numeric entity corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_NUMERIC_ENTITIES_VISUAL_CORPUS)
+        .expect("ER numeric entity visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER numeric entity source"),
+    )
+    .expect("ER numeric entity fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 3);
+    for id in ["1", "2.5", "99.99"] {
+        assert!(diagram.nodes.iter().any(|node| node.id == id));
+    }
+    let decimal = diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "2.5")
+        .expect("2.5 entity");
+    assert_eq!(decimal.compartments[0].entries, ["value: string"]);
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].from, "2.5");
+    assert_eq!(diagram.relationships[0].to, "99.99");
 }
 
 #[test]

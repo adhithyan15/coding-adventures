@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C514-satlano",
+    "language": "bengali",
+    "chapter": 514,
+    "sequence": 31160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:839ecbdd604e7984"
+  },
+  "findings": []
+}

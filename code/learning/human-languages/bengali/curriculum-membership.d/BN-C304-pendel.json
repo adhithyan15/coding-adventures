@@ -1,0 +1,11 @@
+{
+  "id": "BN-C304-pendel",
+  "pathSegment": "BN-PATH-304-UTSOB304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-304-UTSOB304",
+      "order": 3
+    }
+  ]
+}

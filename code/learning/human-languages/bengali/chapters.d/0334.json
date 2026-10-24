@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Disagreeing Politely",
+  "label": "ch:bn-disagreeing-politely",
+  "canDo": "I can object politely and say why I disagree.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C334-upekkha-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can object politely and say why I disagree.",
+    "assesses": [
+      "BN-LEX-C334-APOTTI334-03",
+      "BN-LEX-C334-APOTTI334-04",
+      "BN-LEX-C334-APOTTI334-05"
+    ]
+  }
+}

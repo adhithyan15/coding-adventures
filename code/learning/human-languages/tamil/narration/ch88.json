@@ -4,7 +4,7 @@
   "chapter": 88,
   "title": "At the Hospital",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c94ceec667850b01",
+  "sourceHash": "fnv1a64:3f056d5e1a6d6aa3",
   "lessons": [
     {
       "id": "TA-C88-hospital",
@@ -295,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f32ab46544b5218c",
+      "sourceHash": "fnv1a64:c0f255b42c6ff857",
       "notice": null,
       "blocks": [
         {

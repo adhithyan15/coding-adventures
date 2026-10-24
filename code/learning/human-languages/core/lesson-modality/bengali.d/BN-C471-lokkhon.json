@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C471-lokkhon",
+    "language": "bengali",
+    "chapter": 471,
+    "sequence": 28700,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3be6ba9262f82f7"
+  },
+  "findings": []
+}

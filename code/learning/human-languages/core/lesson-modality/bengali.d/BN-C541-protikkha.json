@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C541-protikkha",
+    "language": "bengali",
+    "chapter": 541,
+    "sequence": 32510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62142b88ebe01c2e"
+  },
+  "findings": []
+}

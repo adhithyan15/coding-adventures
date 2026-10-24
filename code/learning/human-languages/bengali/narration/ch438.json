@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 438,
+  "title": "Mind and Feeling",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2455c95385ebca3a",
+  "lessons": [
+    {
+      "id": "BN-C438-monobhab",
+      "sequence": 27000,
+      "title": "মনোভাব (mônobhāb) — an attitude; a frame of mind",
+      "headword": "মনোভাব",
+      "romanization": "mônobhāb",
+      "gloss": "an attitude; a frame of mind",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c79e242c4bb552b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female singer, then the Bengali for a female dancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মনোভাব",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোভাব — mônobhāb — \"an attitude; a frame of mind\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন কাজ নিয়ে অরুণের মনোভাব ভালো। nôtun kāj niye ôruner mônobhāb bhālo. Arun has a good attitude to the new work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মনোভাব (mônobhāb) joins Sanskrit manas, \"mind\" (CDIAL 9822), in its compound form mano-, and bhāva, \"state, disposition\" (CDIAL 9475): the state of the mind. Manas is the মনে of মনে রাখা (taught), to remember."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônobhāb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônobhāb*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mônobhāb, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mônobhāb*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun kāj niye ôruner mônobhāb bhālo. — Arun has a good attitude to the new work.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun kāj niye ôruner mônobhāb bhālo.* — Arun has a good attitude to the new work.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female singer, then the Bengali for a female dancer, then say mônobhāb again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female singer, then the Bengali for a female dancer, then say *mônobhāb* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মনোভাব (mônobhāb) mean? (\"An attitude; a frame of mind\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C438-onubhuti",
+      "sequence": 27010,
+      "title": "অনুভূতি (ônubhūti) — a feeling; a sensation",
+      "headword": "অনুভূতি",
+      "romanization": "ônubhūti",
+      "gloss": "a feeling; a sensation",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7231cb3859d052f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female dancer, then the Bengali for an attitude."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুভূতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুভূতি — ônubhūti — \"a feeling; a sensation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই গানটা শুনে আমার একটা নতুন অনুভূতি হল। ei gānṭā shune āmār ekṭā nôtun ônubhūti hôlô. Listening to this song, I had a new feeling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুভূতি (ônubhūti) is a tatsama, Sanskrit anubhūti, \"perception\" (Monier-Williams); in Bengali it names a feeling or a sensation."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônubhūti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônubhūti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônubhūti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônubhūti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei gānṭā shune āmār ekṭā nôtun ônubhūti hôlô. — Listening to this song, I had a new feeling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei gānṭā shune āmār ekṭā nôtun ônubhūti hôlô.* — Listening to this song, I had a new feeling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female dancer, then the Bengali for an attitude, then say ônubhūti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female dancer, then the Bengali for an attitude, then say *ônubhūti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুভূতি (ônubhūti) mean? (\"A feeling; a sensation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C438-abeg",
+      "sequence": 27020,
+      "title": "আবেগ (ābeg) — emotion; strong feeling",
+      "headword": "আবেগ",
+      "romanization": "ābeg",
+      "gloss": "emotion; strong feeling",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd15cb1080c86e5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an attitude, then the Bengali for a feeling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আবেগ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আবেগ — ābeg — \"emotion; strong feeling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বাবা আবেগে কেঁদে ফেললেন। bābā ābege kẽde phellen. Father was so moved that he burst into tears."
+            },
+            {
+              "kind": "speech",
+              "text": "আবেগে, overcome with feeling."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আবেগ (ābeg) is a tatsama, Sanskrit āvega, \"haste born of excitement, agitation\" (Monier-Williams); Bengali uses it for a strong feeling that carries you along."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābeg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābeg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ābeg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ābeg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bābā ābege kẽde phellen. — Father was so moved that he burst into tears.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bābā ābege kẽde phellen.* — Father was so moved that he burst into tears.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an attitude, then the Bengali for a feeling, then say ābeg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an attitude, then the Bengali for a feeling, then say *ābeg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আবেগ (ābeg) mean? (\"Emotion; strong feeling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C438-onubhob-kora",
+      "sequence": 27030,
+      "title": "অনুভব করা (ônubhôb kôrā) — to feel; to sense",
+      "headword": "অনুভব করা",
+      "romanization": "ônubhôb kôrā",
+      "gloss": "to feel; to sense",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8a8f64196090e5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a feeling, then the Bengali for emotion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনুভব করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুভব করা — ônubhôb kôrā — \"to feel; to sense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা বন্ধুর ব্যথা অনুভব করল। mīrā bôndhur bæthā ônubhôb kôrlô. Mira felt her friend's pain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ভয় অনুভব করলেন, tini bhôy ônubhôb kôrlen."
+            },
+            {
+              "kind": "speech",
+              "text": "অনুভব alone is the noun: what you feel from the inside."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনুভব করা (ônubhôb kôrā) is Sanskrit anubhava, \"perception, understanding\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônubhôb kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônubhôb kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônubhôb kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônubhôb kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā bôndhur bæthā ônubhôb kôrlô. — Mira felt her friend's pain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā bôndhur bæthā ônubhôb kôrlô.* — Mira felt her friend's pain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a feeling, then the Bengali for emotion, then say ônubhôb kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a feeling, then the Bengali for emotion, then say *ônubhôb kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনুভব করা (ônubhôb kôrā) mean? (\"To feel; to sense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C438-ter-paoya",
+      "sequence": 27040,
+      "title": "টের পাওয়া (ṭer pāoyā) — to become aware of; to sense",
+      "headword": "টের পাওয়া",
+      "romanization": "ṭer pāoyā",
+      "gloss": "to become aware of; to sense",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e66faf770cff4e9b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for emotion, then the Bengali for to feel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: টের পাওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টের পাওয়া — ṭer pāoyā — \"to become aware of; to sense\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাতে আমি বাইরে একটা আওয়াজ টের পেলাম। rāte āmi bāire ekṭā āoyāj ṭer pelām. In the night I became aware of a noise outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বিপদ টের পেলেন, tini bipôd ṭer pelen."
+            },
+            {
+              "kind": "speech",
+              "text": "টের lives only inside টের পাওয়া (ṭer pāoyā), often for something you notice without seeing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "টের পাওয়া (ṭer pāoyā) is ṭer, \"notice\", which CDIAL lists for Bengali under a reconstructed form (CDIAL 5473), with pāoyā, \"to get\" (CDIAL 8943)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭer pāoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭer pāoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭer pāoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭer pāoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāte āmi bāire ekṭā āoyāj ṭer pelām. — In the night I became aware of a noise outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāte āmi bāire ekṭā āoyāj ṭer pelām.* — In the night I became aware of a noise outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for emotion, then the Bengali for to feel, then say ṭer pāoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for emotion, then the Bengali for to feel, then say *ṭer pāoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does টের পাওয়া (ṭer pāoyā) mean? (\"To become aware of; to sense\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

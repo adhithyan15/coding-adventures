@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C448-bekul",
+    "language": "bengali",
+    "chapter": 448,
+    "sequence": 27540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55d9b9f217f17625"
+  },
+  "findings": []
+}

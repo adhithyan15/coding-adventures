@@ -1,0 +1,19 @@
+{
+  "chapter": 442,
+  "title": "Worry and Unease",
+  "label": "ch:bn-worry-and-unease",
+  "canDo": "I can say that I am worried, restless or free of worry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C442-chhotphot-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 442: I can say that I am worried, restless or free of worry.",
+    "assesses": [
+      "BN-LEX-C442-UDBEG442-03",
+      "BN-LEX-C442-UDBEG442-04",
+      "BN-LEX-C442-UDBEG442-05"
+    ]
+  }
+}

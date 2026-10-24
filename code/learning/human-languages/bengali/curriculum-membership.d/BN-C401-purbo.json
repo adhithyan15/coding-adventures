@@ -1,0 +1,11 @@
+{
+  "id": "BN-C401-purbo",
+  "pathSegment": "BN-PATH-401-DIK401",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-401-DIK401",
+      "order": 1
+    }
+  ]
+}

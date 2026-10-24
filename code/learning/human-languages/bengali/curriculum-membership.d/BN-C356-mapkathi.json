@@ -1,0 +1,11 @@
+{
+  "id": "BN-C356-mapkathi",
+  "pathSegment": "BN-PATH-356-SHOTANGSHO356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-356-SHOTANGSHO356",
+      "order": 3
+    }
+  ]
+}

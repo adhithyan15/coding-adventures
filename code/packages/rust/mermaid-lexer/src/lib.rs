@@ -1575,6 +1575,106 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_aliases_and_class_shorthand_after_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nORDER ||--o{ customer : placed_by\ncustomer[\"Customer Account\"]:::primary {\n  string id PK\n}\n",
+        );
+        let names: Vec<&str> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert!(names.contains(&"ENTITY_STRING"));
+        assert!(names.contains(&"STYLE_SEPARATOR"));
+        for expected in ["[", "Customer Account", "]", ":::"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_parent_cardinality_and_u_entity_name() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPROJECT u--o{ TEAM_MEMBER : parent\nu ||--|| ORDER : places\n",
+        );
+        let parent_tokens: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("MD_PARENT"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(parent_tokens, ["u", "u"]);
+        assert!(tokens.iter().any(|token| token.value == "PROJECT"));
+        assert!(tokens.iter().any(|token| token.value == "TEAM_MEMBER"));
+    }
+
+    #[test]
+    fn tokenizes_er_empty_and_compact_attribute_blocks() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nBOOK{}\nAUTHOR         {}\nBOOK{string title PK \"Display title\"}\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        assert_eq!(values.iter().filter(|value| **value == "{").count(), 3);
+        assert_eq!(values.iter().filter(|value| **value == "}").count(), 3);
+        for expected in ["string", "title", "PK", "Display title"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_relationship_role_line_breaks_as_quoted_text() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nPERSON ||--o| ACCOUNT : \"has<br/>one\"\n",
+        );
+        let roles: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("ENTITY_STRING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(roles, ["has<br/>one"]);
+    }
+
+    #[test]
+    fn tokenizes_er_prototype_safe_identifiers() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n__proto__ ||--|| constructor : links\nconstructor ||--|| prototype : links\n",
+        );
+        let values: Vec<&str> = tokens.iter().map(|token| token.value.as_str()).collect();
+
+        for expected in ["__proto__", "constructor", "prototype"] {
+            assert!(values.contains(&expected));
+        }
+    }
+
+    #[test]
+    fn tokenizes_er_empty_quoted_relationship_role() {
+        let tokens = tokenize_mermaid_er("erDiagram\nCUSTOMER ||--|{ ORDER : \"\"\n");
+        let roles: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::String)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(roles, [""]);
+    }
+
+    #[test]
+    fn tokenizes_er_numeric_entity_identifiers() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\n1\n2.5 {\n  string value\n}\n99.99\n2.5 ||--|| 99.99 : \"\"\n",
+        );
+        let numbers: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_ == TokenType::Number)
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(numbers, ["1", "2.5", "99.99", "2.5", "99.99"]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",

@@ -1,0 +1,21 @@
+{
+  "chapter": 337,
+  "title": "Show Me the Proof",
+  "label": "ch:bn-show-me-the-proof",
+  "canDo": "I can ask for proof and say how sure I am.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-R337-review-330-337",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can ask for proof and say how sure I am.",
+    "assesses": [
+      "BN-LEX-C337-PROMAN337-01",
+      "BN-LEX-C337-PROMAN337-02",
+      "BN-LEX-C337-PROMAN337-03",
+      "BN-LEX-C337-PROMAN337-04",
+      "BN-LEX-C337-PROMAN337-05"
+    ]
+  }
+}

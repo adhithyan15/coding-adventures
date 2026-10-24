@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "Sulking and Making Up",
+  "label": "ch:bn-sulking-and-making-up",
+  "canDo": "I can talk about sulking, misunderstandings and making up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C444-monomalinyo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about sulking, misunderstandings and making up.",
+    "assesses": [
+      "BN-LEX-C444-OBHIMAN444-03",
+      "BN-LEX-C444-OBHIMAN444-04",
+      "BN-LEX-C444-OBHIMAN444-05"
+    ]
+  }
+}

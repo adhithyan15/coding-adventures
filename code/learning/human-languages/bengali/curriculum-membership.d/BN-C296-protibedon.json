@@ -1,0 +1,11 @@
+{
+  "id": "BN-C296-protibedon",
+  "pathSegment": "BN-PATH-296-SONGBAD296",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-296-SONGBAD296",
+      "order": 2
+    }
+  ]
+}

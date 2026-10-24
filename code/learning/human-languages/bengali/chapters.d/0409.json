@@ -1,0 +1,19 @@
+{
+  "chapter": 409,
+  "title": "Areas and Localities",
+  "label": "ch:bn-areas-and-localities",
+  "canDo": "I can describe an area, a colony and a slum, the people who live there and their evening talk.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C409-adda-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 409: I can describe an area, a colony and a slum, the people who live there and their evening talk.",
+    "assesses": [
+      "BN-LEX-C409-ELAKA409-03",
+      "BN-LEX-C409-ELAKA409-04",
+      "BN-LEX-C409-ELAKA409-05"
+    ]
+  }
+}

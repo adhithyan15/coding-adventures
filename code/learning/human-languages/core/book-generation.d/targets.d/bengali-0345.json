@@ -1,0 +1,7 @@
+{
+  "language": "bengali",
+  "chapter": 345,
+  "output": "bengali/book/chapters/ch345-making-laws.tex",
+  "unicodeScript": "Bengali",
+  "scriptCommand": "bn"
+}

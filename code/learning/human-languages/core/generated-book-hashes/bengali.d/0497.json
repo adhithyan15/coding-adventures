@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:0224206b31c928a2",
+  "lessonIds": [
+    "BN-C497-istopha",
+    "BN-C497-bodli",
+    "BN-C497-dhormoghot",
+    "BN-C497-borkhasto",
+    "BN-C497-chhatai-kora"
+  ],
+  "tex": "bengali/book/chapters/ch497-leaving-work.tex"
+}

@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 450,
+  "title": "Hurt Feelings",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b6f0a57465515d33",
+  "lessons": [
+    {
+      "id": "BN-C450-tuchchho",
+      "sequence": 27610,
+      "title": "তুচ্ছ (tuchchhô) — trifling; petty",
+      "headword": "তুচ্ছ",
+      "romanization": "tuchchhô",
+      "gloss": "trifling; petty",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae9c2b40b64763aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for romantic love, then the Bengali for to be devoted to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: তুচ্ছ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তুচ্ছ — tuchchhô — \"trifling; petty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "একটা তুচ্ছ ব্যাপার নিয়ে দুই ভাই ঝগড়া করল। ekṭā tuchchhô bæpār niye dui bhāi jhôgṛā kôrlô. The two brothers quarrelled over a trifling matter."
+            },
+            {
+              "kind": "speech",
+              "text": "তুচ্ছ (tuchchhô) করা, to brush aside, to treat as nothing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তুচ্ছ (tuchchhô) is a tatsama, Sanskrit tuccha, \"empty, vain, small, trifling\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuchchhô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuchchhô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuchchhô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuchchhô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekṭā tuchchhô bæpār niye dui bhāi jhôgṛā kôrlô. — The two brothers quarrelled over a trifling matter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekṭā tuchchhô bæpār niye dui bhāi jhôgṛā kôrlô.* — The two brothers quarrelled over a trifling matter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for romantic love, then the Bengali for to be devoted to, then say tuchchhô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for romantic love, then the Bengali for to be devoted to, then say *tuchchhô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does তুচ্ছ (tuchchhô) mean? (\"Trifling; petty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C450-upohas",
+      "sequence": 27620,
+      "title": "উপহাস (upôhās) — mockery; derision",
+      "headword": "উপহাস",
+      "romanization": "upôhās",
+      "gloss": "mockery; derision",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:42e76009002f92b1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to be devoted to, then the Bengali for trifling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উপহাস",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপহাস — upôhās — \"mockery; derision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরার হাসিতে উপহাস ছিল। mīrār hāsite upôhās chhilô. There was mockery in Mira's laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "উপহাস (upôhās) করা, to mock, to make fun of."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উপহাস (upôhās) is a tatsama, Sanskrit upahāsa, \"sport, laughter\" (CDIAL 2282), on the root has, to laugh, the হাসা (taught) of Bengali; Bengali uses it for laughter aimed at someone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôhās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôhās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "upôhās, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *upôhās*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrār hāsite upôhās chhilô. — There was mockery in Mira's laugh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrār hāsite upôhās chhilô.* — There was mockery in Mira's laugh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to be devoted to, then the Bengali for trifling, then say upôhās again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to be devoted to, then the Bengali for trifling, then say *upôhās* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উপহাস (upôhās) mean? (\"Mockery; derision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C450-opoman-kora",
+      "sequence": 27630,
+      "title": "অপমান করা (ôpômān kôrā) — to insult; to humiliate",
+      "headword": "অপমান করা",
+      "romanization": "ôpômān kôrā",
+      "gloss": "to insult; to humiliate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d9123df9fffdff2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for trifling, then the Bengali for mockery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অপমান করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপমান করা — ôpômān kôrā — \"to insult; to humiliate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দোকানদার খদ্দেরকে অপমান করল। dokāndār khôdderke ôpômān kôrlô. The shopkeeper insulted the customer."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি কর্মচারীকে অপমান করলেন, tini kôrmôchārīke ôpômān kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অপমান করা (ôpômān kôrā) is Sanskrit apamāna, \"disrespect, contempt, disgrace\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpômān kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpômān kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ôpômān kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ôpômān kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dokāndār khôdderke ôpômān kôrlô. — The shopkeeper insulted the customer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dokāndār khôdderke ôpômān kôrlô.* — The shopkeeper insulted the customer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for trifling, then the Bengali for mockery, then say ôpômān kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for trifling, then the Bengali for mockery, then say *ôpômān kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অপমান করা (ôpômān kôrā) mean? (\"To insult; to humiliate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C450-khota-deoya",
+      "sequence": 27640,
+      "title": "খোঁটা দেওয়া (khõṭā deoyā) — to taunt; to throw something in someone's face",
+      "headword": "খোঁটা দেওয়া",
+      "romanization": "khõṭā deoyā",
+      "gloss": "to taunt; to throw something in someone's face",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e563672b36ba05d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for mockery, then the Bengali for to insult."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খোঁটা দেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোঁটা দেওয়া — khõṭā deoyā — \"to taunt; to throw something in someone's face\"."
+            },
+            {
+              "kind": "speech",
+              "text": "প্রতিবেশী মহিলাটি রোজ মীরাকে খোঁটা দিতেন। prôtibeshī môhilāṭi roj mīrāke khõṭā diten. The neighbour woman used to taunt Mira every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি বোনকে খোঁটা দিলেন, tini bonke khõṭā dilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খোঁটা দেওয়া (khõṭā deoyā) is khõṭā, \"a jibe\", whose origin is not settled, with deoyā, \"to give\" (CDIAL 6141)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khõṭā deoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khõṭā deoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khõṭā deoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khõṭā deoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prôtibeshī môhilāṭi roj mīrāke khõṭā diten. — The neighbour woman used to taunt Mira every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prôtibeshī môhilāṭi roj mīrāke khõṭā diten.* — The neighbour woman used to taunt Mira every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for mockery, then the Bengali for to insult, then say khõṭā deoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for mockery, then the Bengali for to insult, then say *khõṭā deoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খোঁটা দেওয়া (khõṭā deoyā) mean? (\"To taunt; to throw something in someone's face\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C450-heyo-kora",
+      "sequence": 27650,
+      "title": "হেয় করা (heyô kôrā) — to belittle; to look down on",
+      "headword": "হেয় করা",
+      "romanization": "heyô kôrā",
+      "gloss": "to belittle; to look down on",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51bab4cccc2fbd22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to insult, then the Bengali for to taunt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হেয় করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেয় করা — heyô kôrā — \"to belittle; to look down on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ধনী লোকটা গরিবদের হেয় করত। dhônī lokṭā gôribder heyô kôrtô. The rich man used to look down on the poor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি ছাত্রটিকে হেয় করলেন, tini chhātrôṭike heyô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হেয় করা (heyô kôrā) is Sanskrit heya, \"to be left, to be rejected or avoided\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heyô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heyô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "heyô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *heyô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhônī lokṭā gôribder heyô kôrtô. — The rich man used to look down on the poor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhônī lokṭā gôribder heyô kôrtô.* — The rich man used to look down on the poor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to insult, then the Bengali for to taunt, then say heyô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to insult, then the Bengali for to taunt, then say *heyô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হেয় করা (heyô kôrā) mean? (\"To belittle; to look down on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

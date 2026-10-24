@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-468-HRITPINDO468",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-468-HRITPINDO468"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R369-review-362-369",
+    "language": "bengali",
+    "chapter": 369,
+    "sequence": 23040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8be1f3c2ec18ff3a"
+  },
+  "findings": []
+}

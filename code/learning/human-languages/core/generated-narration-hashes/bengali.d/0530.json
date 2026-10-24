@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:e2743baa55a151d9",
+  "lessonIds": [
+    "BN-C530-multubi",
+    "BN-C530-nirdishto",
+    "BN-C530-agam",
+    "BN-C530-talbahana-kora",
+    "BN-C530-sabyosto-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch530.txt",
+  "json": "bengali/narration/ch530.json",
+  "textHash": "fnv1a64:1321c58497435a1c",
+  "jsonHash": "fnv1a64:97a838ebaed12c9f",
+  "findings": []
+}

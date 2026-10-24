@@ -1,0 +1,11 @@
+{
+  "id": "PA-C196-shuru-review",
+  "pathSegment": "PA-PATH-196-A2-SHURU",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-196-A2-SHURU",
+      "order": 2
+    }
+  ]
+}

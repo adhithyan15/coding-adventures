@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:c2b6839edc41ec7c",
+  "lessonIds": [
+    "BN-C327-uponyas",
+    "BN-C327-jiboni",
+    "BN-C327-grontho",
+    "BN-C327-odhyay",
+    "BN-C327-prokashok"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch327.txt",
+  "json": "bengali/narration/ch327.json",
+  "textHash": "fnv1a64:4e6bb944b1fa56c7",
+  "jsonHash": "fnv1a64:e19e40f685f29572",
+  "findings": []
+}

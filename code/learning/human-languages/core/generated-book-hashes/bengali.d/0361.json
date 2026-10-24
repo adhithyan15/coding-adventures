@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:d788a402b1c0a64b",
+  "lessonIds": [
+    "BN-C361-shikkha",
+    "BN-C361-bidya",
+    "BN-C361-odhyapok",
+    "BN-C361-digri",
+    "BN-C361-porano-teach",
+    "BN-R361-review-354-361"
+  ],
+  "tex": "bengali/book/chapters/ch361-learning-and-teaching.tex"
+}

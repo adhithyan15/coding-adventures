@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:18e1c99499d9fd75",
+  "lessonIds": [
+    "BN-C314-shotru",
+    "BN-C314-soinyo",
+    "BN-C314-akromon-kora",
+    "BN-C314-hamla",
+    "BN-C314-dokhol-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch314.txt",
+  "json": "bengali/narration/ch314.json",
+  "textHash": "fnv1a64:c4f412c22a95dec8",
+  "jsonHash": "fnv1a64:4faa391b5f363b05",
+  "findings": []
+}

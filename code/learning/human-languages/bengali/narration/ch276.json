@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 276,
+  "title": "Something Happened",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:347d9d601df67ffc",
+  "lessons": [
+    {
+      "id": "BN-C276-ghotona",
+      "sequence": 18000,
+      "title": "ঘটনা (ghôṭônā) — an event; an incident",
+      "headword": "ঘটনা",
+      "romanization": "ghôṭônā",
+      "gloss": "an event; an incident",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac6d86159baa19b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female singer, then the Bengali for a female dancer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ঘটনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটনা — ghôṭônā — \"an event; an incident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমরা কী করব, সেটা ঘটনার ওপর নির্ভর করে। āmrā kī kôrbô, seṭā ghôṭônār opôr nirbhôr kôre. What we do will depend on the incident."
+            },
+            {
+              "kind": "speech",
+              "text": "ঘটনা (ghôṭônā) ঘটে, an event takes place: একটা ঘটনা (ghôṭônā) ঘটল, something happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ঘটনা (ghôṭônā) is Sanskrit ghaṭanā, taken over whole as a tatsama; Monier-Williams gives it senses from effort and motion to a taking effect. It sits beside the verb ঘটা, to happen."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmrā kī kôrbô, seṭā ghôṭônār opôr nirbhôr kôre. — What we do will depend on the incident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmrā kī kôrbô, seṭā ghôṭônār opôr nirbhôr kôre.* — What we do will depend on the incident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female singer, then the Bengali for a female dancer, then say ghôṭônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female singer, then the Bengali for a female dancer, then say *ghôṭônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ঘটনা (ghôṭônā) mean? (\"An event; an incident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C276-kichhu",
+      "sequence": 18010,
+      "title": "কিছু (kichhu) — something; some",
+      "headword": "কিছু",
+      "romanization": "kichhu",
+      "gloss": "something; some",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3b0935597a44adb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a female dancer, then the Bengali for an event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: কিছু",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিছু — kichhu — \"something; some\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গতকাল রাতে পাড়ায় কিছু একটা ঘটল। gôtôkāl rāte pāṛāy kichhu ekṭā ghôṭlô. Something happened in the neighbourhood last night."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun it means some: কিছু (kichhu) টাকা, some money."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "কিছু (kichhu) comes down from Sanskrit kiṁcid, 'anything' (CDIAL 3144, which lists Bengali kichu). কিছু একটা is 'some one thing', something you cannot yet name."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kichhu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kichhu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kichhu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kichhu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôtôkāl rāte pāṛāy kichhu ekṭā ghôṭlô. — Something happened in the neighbourhood last night.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôtôkāl rāte pāṛāy kichhu ekṭā ghôṭlô.* — Something happened in the neighbourhood last night.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a female dancer, then the Bengali for an event, then say kichhu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a female dancer, then the Bengali for an event, then say *kichhu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does কিছু (kichhu) mean? (\"Something; some\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C276-onek",
+      "sequence": 18020,
+      "title": "অনেক (ônek) — many; a lot",
+      "headword": "অনেক",
+      "romanization": "ônek",
+      "gloss": "many; a lot",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4f6680189b05b94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an event, then the Bengali for something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: অনেক",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনেক — ônek — \"many; a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঘটনাটা দেখতে অনেক লোক রাস্তায় এল। ghôṭônāṭā dekhte ônek lok rāstāy elô. A lot of people came out onto the road to see what had happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "অনেক (ônek) is Sanskrit aneka, an- 'not' and eka 'one' (Monier-Williams): 'not one' came to mean 'many'. এক, one, is the same eka."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônek",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônek*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ônek, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ônek*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭônāṭā dekhte ônek lok rāstāy elô. — A lot of people came out onto the road to see what had happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭônāṭā dekhte ônek lok rāstāy elô.* — A lot of people came out onto the road to see what had happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an event, then the Bengali for something, then say ônek again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an event, then the Bengali for something, then say *ônek* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does অনেক (ônek) mean? (\"Many; a lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C276-manush",
+      "sequence": 18030,
+      "title": "মানুষ (mānush) — a human being; people",
+      "headword": "মানুষ",
+      "romanization": "mānush",
+      "gloss": "a human being; people",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0eb10db31c35d775",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for something, then the Bengali for many."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: মানুষ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মানুষ — mānush — \"a human being; people\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ঘটনার সময় ওখানে কিছু মানুষ ছিল। ghôṭônār sômôy okhāne kichhu mānush chhilô. There were a few people there when it happened."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "মানুষ (mānush) comes down from Sanskrit mānuṣa, 'human; a man' (CDIAL 10049, which lists Bengali mānus). It names one person or people in general; লোক is the plainer everyday word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānush",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānush*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānush, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānush*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghôṭônār sômôy okhāne kichhu mānush chhilô. — There were a few people there when it happened.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghôṭônār sômôy okhāne kichhu mānush chhilô.* — There were a few people there when it happened.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for something, then the Bengali for many, then say mānush again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for something, then the Bengali for many, then say *mānush* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does মানুষ (mānush) mean? (\"A human being; people\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C276-durghotona",
+      "sequence": 18040,
+      "title": "দুর্ঘটনা (durghôṭônā) — an accident",
+      "headword": "দুর্ঘটনা",
+      "romanization": "durghôṭônā",
+      "gloss": "an accident",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e9ace23b648b960",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for many, then the Bengali for a human being."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দুর্ঘটনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুর্ঘটনা — durghôṭônā — \"an accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "গতকাল সকালে স্টেশনের কাছে একটা বড় দুর্ঘটনা ঘটল। gôtôkāl sôkāle sṭeshôner kāchhe ekṭā bôṛo durghôṭônā ghôṭlô. There was a bad accident near the station yesterday morning."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দুর্ঘটনা (durghôṭônā) joins Sanskrit dur-, 'bad, ill', to ঘটনা (ghôṭônā), an event; Monier-Williams has both parts. A bad happening is an accident."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghôṭônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghôṭônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghôṭônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghôṭônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gôtôkāl sôkāle sṭeshôner kāchhe ekṭā bôṛo durghôṭônā ghôṭlô. — There was a bad accident near the station yesterday morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gôtôkāl sôkāle sṭeshôner kāchhe ekṭā bôṛo durghôṭônā ghôṭlô.* — There was a bad accident near the station yesterday morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for many, then the Bengali for a human being, then say durghôṭônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for many, then the Bengali for a human being, then say *durghôṭônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দুর্ঘটনা (durghôṭônā) mean? (\"An accident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

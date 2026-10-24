@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C410-park",
+    "language": "bengali",
+    "chapter": 410,
+    "sequence": 25340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d9ebc6493b0222f"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:457b31557eaf8fcd",
+  "lessonIds": [
+    "BN-C273-doinik",
+    "BN-W273-letter-oi-kar",
+    "BN-C273-cheye",
+    "BN-C273-dhore",
+    "BN-R273-comparing-and-time"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "bengali/narration/ch273.txt",
+  "json": "bengali/narration/ch273.json",
+  "textHash": "fnv1a64:534e935c28930f9d",
+  "jsonHash": "fnv1a64:b9c158cfa28b0a01",
+  "findings": []
+}

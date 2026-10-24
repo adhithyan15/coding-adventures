@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Finding Out",
+  "label": "ch:bn-finding-out",
+  "canDo": "I can say what a study looked for and what it found.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "BN-C354-onusondhan-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say what a study looked for and what it found.",
+    "assesses": [
+      "BN-LEX-C354-GOBESHONA354-03",
+      "BN-LEX-C354-GOBESHONA354-04",
+      "BN-LEX-C354-GOBESHONA354-05"
+    ]
+  }
+}

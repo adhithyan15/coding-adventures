@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 483,
+  "title": "In-Laws",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bd6cc68a5be0cb2d",
+  "lessons": [
+    {
+      "id": "BN-C483-jamai",
+      "sequence": 29300,
+      "title": "জামাই (jāmāi) — a son-in-law",
+      "headword": "জামাই",
+      "romanization": "jāmāi",
+      "gloss": "a son-in-law",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:205a1e14f18e270c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a brother's daughter, then the Bengali for a child's father-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জামাই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামাই — jāmāi — \"a son-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "জামাই এলে শাশুড়ি মাছ রান্না করেন। jāmāi ele shāshuṛi māchh rānnā kôren. When the son-in-law visits, his mother-in-law cooks fish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জামাই (jāmāi) comes from Sanskrit jāmātṛ, \"a daughter's husband\" (CDIAL 5198), which CDIAL lists in this Bengali form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jāmāi ele shāshuṛi māchh rānnā kôren. — When the son-in-law visits, his mother-in-law cooks fish.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jāmāi ele shāshuṛi māchh rānnā kôren.* — When the son-in-law visits, his mother-in-law cooks fish.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a brother's daughter, then the Bengali for a child's father-in-law, then say jāmāi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a brother's daughter, then the Bengali for a child's father-in-law, then say *jāmāi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জামাই (jāmāi) mean? (\"A son-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C483-bouma",
+      "sequence": 29310,
+      "title": "বউমা (boumā) — a daughter-in-law",
+      "headword": "বউমা",
+      "romanization": "boumā",
+      "gloss": "a daughter-in-law",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ec2cb9e211a314f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a child's father-in-law, then the Bengali for a son-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: বউমা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বউমা — boumā — \"a daughter-in-law\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শাশুড়ি বউমাকে একটা শাড়ি দিলেন। shāshuṛi boumāke ekṭā shāṛi dilen. The mother-in-law gave her daughter-in-law a sari."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বউমা (boumā) puts bou, \"wife, bride\", from Sanskrit vadhū (CDIAL 11250), with মা, mother: the bride who becomes a daughter of the house."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boumā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boumā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "boumā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *boumā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāshuṛi boumāke ekṭā shāṛi dilen. — The mother-in-law gave her daughter-in-law a sari.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāshuṛi boumāke ekṭā shāṛi dilen.* — The mother-in-law gave her daughter-in-law a sari.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a child's father-in-law, then the Bengali for a son-in-law, then say boumā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a child's father-in-law, then the Bengali for a son-in-law, then say *boumā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does বউমা (boumā) mean? (\"A daughter-in-law\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C483-nonod",
+      "sequence": 29320,
+      "title": "ননদ (nônôd) — a husband's sister",
+      "headword": "ননদ",
+      "romanization": "nônôd",
+      "gloss": "a husband's sister",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59b0a6b5fcd5b961",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a son-in-law, then the Bengali for a daughter-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ননদ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ননদ — nônôd — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "মীরা ননদের সঙ্গে বাজারে গেল। mīrā nônôder sôngge bājāre gelô. Mira went to the market with her husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ননদ (nônôd) comes from Sanskrit nanāndṛ, \"a husband's sister\" (CDIAL 6946), which CDIAL lists in this Bengali form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nônôd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nônôd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nônôd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nônôd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīrā nônôder sôngge bājāre gelô. — Mira went to the market with her husband's sister.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīrā nônôder sôngge bājāre gelô.* — Mira went to the market with her husband's sister.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a son-in-law, then the Bengali for a daughter-in-law, then say nônôd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a son-in-law, then the Bengali for a daughter-in-law, then say *nônôd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ননদ (nônôd) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C483-deor",
+      "sequence": 29330,
+      "title": "দেওর (deor) — a husband's younger brother",
+      "headword": "দেওর",
+      "romanization": "deor",
+      "gloss": "a husband's younger brother",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:008e275ee14449b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a daughter-in-law, then the Bengali for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দেওর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেওর — deor — \"a husband's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দেওর বউদির সঙ্গে ঠাট্টা করে। deor boudir sôngge ṭhāṭṭā kôre. A husband's younger brother jokes with his elder brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দেওর (deor) comes from Sanskrit devṛ, \"a husband's brother\" (CDIAL 6546), which CDIAL lists in this Bengali form."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deor, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deor*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "deor boudir sôngge ṭhāṭṭā kôre. — A husband's younger brother jokes with his elder brother's wife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *deor boudir sôngge ṭhāṭṭā kôre.* — A husband's younger brother jokes with his elder brother's wife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a daughter-in-law, then the Bengali for a husband's sister, then say deor again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a daughter-in-law, then the Bengali for a husband's sister, then say *deor* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দেওর (deor) mean? (\"A husband's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C483-bhashur",
+      "sequence": 29340,
+      "title": "ভাশুর (bhāshur) — a husband's elder brother",
+      "headword": "ভাশুর",
+      "romanization": "bhāshur",
+      "gloss": "a husband's elder brother",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ef0d4853fe28dae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a husband's sister, then the Bengali for a husband's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভাশুর",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাশুর — bhāshur — \"a husband's elder brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "বিয়ের পরে মীরা ভাশুরকে প্রথম দেখল। biyer pôre mīrā bhāshurke prothom dekhlô. After the wedding Mira met her husband's elder brother for the first time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভাশুর (bhāshur) is listed by CDIAL for Bengali under Sanskrit bhrātṛśvaśura, \"brother-father-in-law\" (CDIAL 9669): an elder brother of the husband, treated with a father-in-law's respect."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāshur",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāshur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhāshur, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhāshur*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biyer pôre mīrā bhāshurke prothom dekhlô. — After the wedding Mira met her husband's elder brother for the first time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biyer pôre mīrā bhāshurke prothom dekhlô.* — After the wedding Mira met her husband's elder brother for the first time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a husband's sister, then the Bengali for a husband's younger brother, then say bhāshur again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a husband's sister, then the Bengali for a husband's younger brother, then say *bhāshur* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভাশুর (bhāshur) mean? (\"A husband's elder brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

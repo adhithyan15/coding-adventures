@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:be630a8d4b0660dd",
+  "lessonIds": [
+    "BN-C373-ekebare",
+    "BN-C373-sompurno",
+    "BN-C373-ontoto",
+    "BN-C373-pray",
+    "BN-C373-angshik"
+  ],
+  "tex": "bengali/book/chapters/ch373-all-or-part.tex"
+}

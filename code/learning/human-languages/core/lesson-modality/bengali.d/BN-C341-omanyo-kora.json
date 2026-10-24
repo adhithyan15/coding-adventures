@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C341-omanyo-kora",
+    "language": "bengali",
+    "chapter": 341,
+    "sequence": 21570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:219527e7160e524f"
+  },
+  "findings": []
+}

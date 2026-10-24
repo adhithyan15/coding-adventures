@@ -1,0 +1,11 @@
+{
+  "id": "BN-C350-mulyobodh",
+  "pathSegment": "BN-PATH-350-ADORSHO350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-350-ADORSHO350",
+      "order": 1
+    }
+  ]
+}

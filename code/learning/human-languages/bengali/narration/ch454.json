@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 454,
+  "title": "Shyness and Hesitation",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:30f5e61fa8bbc08b",
+  "lessons": [
+    {
+      "id": "BN-C454-songkoch",
+      "sequence": 27820,
+      "title": "সংকোচ (sôngkoch) — reluctance; bashful hesitation",
+      "headword": "সংকোচ",
+      "romanization": "sôngkoch",
+      "gloss": "reluctance; bashful hesitation",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aaaaa22d8dca466",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to stand up to, then the Bengali for to back down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: সংকোচ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংকোচ — sôngkoch — \"reluctance; bashful hesitation\"."
+            },
+            {
+              "kind": "speech",
+              "text": "সংকোচ না করে তোমার প্রশ্নটা জিজ্ঞাসা করো। sôngkoch nā kôre tomār prôshnôṭā jigyāsā kôro. Don't hold back: ask your question."
+            },
+            {
+              "kind": "speech",
+              "text": "সংকোচ (sôngkoch) is the shrinking-back of a guest or a newcomer who does not want to impose: সংকোচ (sôngkoch) করবেন না, please don't hold back."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "সংকোচ (sôngkoch) is a tatsama, Sanskrit saṃkoca, \"contraction, shrinking together\" (Monier-Williams): shrinking back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkoch",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkoch*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkoch, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkoch*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sôngkoch nā kôre tomār prôshnôṭā jigyāsā kôro. — Don't hold back: ask your question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sôngkoch nā kôre tomār prôshnôṭā jigyāsā kôro.* — Don't hold back: ask your question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to stand up to, then the Bengali for to back down, then say sôngkoch again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to stand up to, then the Bengali for to back down, then say *sôngkoch* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does সংকোচ (sôngkoch) mean? (\"Reluctance; bashful hesitation\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C454-dvidha",
+      "sequence": 27830,
+      "title": "দ্বিধা (dvidhā) — doubt; being in two minds",
+      "headword": "দ্বিধা",
+      "romanization": "dvidhā",
+      "gloss": "doubt; being in two minds",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8d5987c5962820a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to back down, then the Bengali for reluctance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: দ্বিধা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দ্বিধা — dvidhā — \"doubt; being in two minds\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন চাকরি নিয়ে অরুণের মনে দ্বিধা ছিল। nôtun chākri niye ôruner mône dvidhā chhilô. Arun was in two minds about the new job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "দ্বিধা (dvidhā) is a tatsama, Sanskrit dvidhā, \"in two ways, divided\" (Monier-Williams); Bengali turned the adverb into a noun, a mind split in two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dvidhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dvidhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dvidhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dvidhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun chākri niye ôruner mône dvidhā chhilô. — Arun was in two minds about the new job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun chākri niye ôruner mône dvidhā chhilô.* — Arun was in two minds about the new job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to back down, then the Bengali for reluctance, then say dvidhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to back down, then the Bengali for reluctance, then say *dvidhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does দ্বিধা (dvidhā) mean? (\"Doubt; being in two minds\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C454-aroshto",
+      "sequence": 27840,
+      "title": "আড়ষ্ট (āṛôshṭô) — stiff; awkward and tongue-tied",
+      "headword": "আড়ষ্ট",
+      "romanization": "āṛôshṭô",
+      "gloss": "stiff; awkward and tongue-tied",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c645e3115327bf1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for reluctance, then the Bengali for being in two minds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: আড়ষ্ট",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আড়ষ্ট — āṛôshṭô — \"stiff; awkward and tongue-tied\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন লোকের সামনে মীরা আড়ষ্ট হয়ে যায়। nôtun loker sāmne mīrā āṛôshṭô hôye jāy. In front of new people Mira goes stiff and tongue-tied."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আড়ষ্ট (āṛôshṭô) is a Bengali word for stiffness, of the body or of the manner; its origin is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṛôshṭô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṛôshṭô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṛôshṭô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṛôshṭô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun loker sāmne mīrā āṛôshṭô hôye jāy. — In front of new people Mira goes stiff and tongue-tied.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun loker sāmne mīrā āṛôshṭô hôye jāy.* — In front of new people Mira goes stiff and tongue-tied.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for reluctance, then the Bengali for being in two minds, then say āṛôshṭô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for reluctance, then the Bengali for being in two minds, then say *āṛôshṭô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does আড়ষ্ট (āṛôshṭô) mean? (\"Stiff; awkward and tongue-tied\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C454-jorosoro",
+      "sequence": 27850,
+      "title": "জড়সড় (jôṛôsôṛô) — huddled up; shrinking (with shyness or cold)",
+      "headword": "জড়সড়",
+      "romanization": "jôṛôsôṛô",
+      "gloss": "huddled up; shrinking (with shyness or cold)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:070d92ae2d0a5325",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for being in two minds, then the Bengali for stiff and awkward."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জড়সড়",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জড়সড় — jôṛôsôṛô — \"huddled up; shrinking (with shyness or cold)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "শীতে কুকুরটা জড়সড় হয়ে বসে ছিল। shīte kukurṭā jôṛôsôṛô hôye bôse chhilô. The dog sat huddled up in the cold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জড়সড় (jôṛôsôṛô) is a rhyming doubling whose first half probably belongs with Sanskrit jaḍa, \"dull, numb with cold\", under which CDIAL lists Bengali forms (CDIAL 5090)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôṛôsôṛô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôṛôsôṛô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jôṛôsôṛô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jôṛôsôṛô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīte kukurṭā jôṛôsôṛô hôye bôse chhilô. — The dog sat huddled up in the cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīte kukurṭā jôṛôsôṛô hôye bôse chhilô.* — The dog sat huddled up in the cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for being in two minds, then the Bengali for stiff and awkward, then say jôṛôsôṛô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for being in two minds, then the Bengali for stiff and awkward, then say *jôṛôsôṛô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জড়সড় (jôṛôsôṛô) mean? (\"Huddled up; shrinking (with shyness or cold)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C454-itostoto-kora",
+      "sequence": 27860,
+      "title": "ইতস্তত করা (itôstôtô kôrā) — to hesitate",
+      "headword": "ইতস্তত করা",
+      "romanization": "itôstôtô kôrā",
+      "gloss": "to hesitate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bdabd0e5f372e95",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for stiff and awkward, then the Bengali for huddled up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ইতস্তত করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইতস্তত করা — itôstôtô kôrā — \"to hesitate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দরজার সামনে অরুণ ইতস্তত করল। dôrjār sāmne ôrun itôstôtô kôrlô. At the door Arun hesitated."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি দরজায় ইতস্তত করলেন, tini dôrjāy itôstôtô kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ইতস্তত করা (itôstôtô kôrā) is Sanskrit itastatas, \"here and there, hither and thither\" (Monier-Williams), with kôrā, \"to do\" (CDIAL 2814): going this way and that."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itôstôtô kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itôstôtô kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "itôstôtô kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *itôstôtô kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dôrjār sāmne ôrun itôstôtô kôrlô. — At the door Arun hesitated.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dôrjār sāmne ôrun itôstôtô kôrlô.* — At the door Arun hesitated.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for stiff and awkward, then the Bengali for huddled up, then say itôstôtô kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for stiff and awkward, then the Bengali for huddled up, then say *itôstôtô kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ইতস্তত করা (itôstôtô kôrā) mean? (\"To hesitate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

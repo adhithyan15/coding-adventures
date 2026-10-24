@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:63d4684ce0b25024",
+  "lessonIds": [
+    "BN-C305-prodip",
+    "BN-C305-atoshbaji",
+    "BN-C305-alpona",
+    "BN-C305-jholmol-kora",
+    "BN-C305-phanus"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch305.txt",
+  "json": "bengali/narration/ch305.json",
+  "textHash": "fnv1a64:410493664ed103bd",
+  "jsonHash": "fnv1a64:9ac17a96813a2a61",
+  "findings": []
+}

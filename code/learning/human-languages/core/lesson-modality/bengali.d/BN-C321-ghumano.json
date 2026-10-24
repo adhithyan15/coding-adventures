@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C321-ghumano",
+    "language": "bengali",
+    "chapter": 321,
+    "sequence": 20340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a7b871e2551fcc3"
+  },
+  "findings": []
+}

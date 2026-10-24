@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:5e0f4843835c5924",
+  "lessonIds": [
+    "BN-C301-protyokkhodorshi",
+    "BN-C301-biboron",
+    "BN-C301-bhidio",
+    "BN-C301-bistarit",
+    "BN-C301-jachai-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch301.txt",
+  "json": "bengali/narration/ch301.json",
+  "textHash": "fnv1a64:f7343189fb19609a",
+  "jsonHash": "fnv1a64:1952b8a4cf31c882",
+  "findings": []
+}

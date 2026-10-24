@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "BN-W268-letter-murdhanya-na",
+    "language": "bengali",
+    "chapter": 268,
+    "sequence": 16730,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4fe235223e681bb9",
+    "detachableSegments": [
+      "Script you'll notice: ণ",
+      "Writing: ণ — copy the printed shape"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

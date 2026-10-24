@@ -1,0 +1,21 @@
+{
+  "chapter": 461,
+  "title": "Stubborn and Restless",
+  "label": "ch:bn-stubborn-and-restless",
+  "canDo": "I can say that someone is stubborn, restless or whimsical.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-R461-review-454-461",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say that someone is stubborn, restless or whimsical.",
+    "assesses": [
+      "BN-LEX-C461-JEDI461-01",
+      "BN-LEX-C461-JEDI461-02",
+      "BN-LEX-C461-JEDI461-03",
+      "BN-LEX-C461-JEDI461-04",
+      "BN-LEX-C461-JEDI461-05"
+    ]
+  }
+}

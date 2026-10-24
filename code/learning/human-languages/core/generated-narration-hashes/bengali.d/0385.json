@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:fb1fe7b65904bf54",
+  "lessonIds": [
+    "BN-C385-ghonta",
+    "BN-C385-ghori",
+    "BN-C385-tiktik-kora",
+    "BN-C385-opekkha-kora",
+    "BN-C385-bench"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch385.txt",
+  "json": "bengali/narration/ch385.json",
+  "textHash": "fnv1a64:f2fb690743344b64",
+  "jsonHash": "fnv1a64:df75bcbbf57e0d5a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:3d25495288cc84e2",
+  "lessonIds": [
+    "BN-C328-prishtha",
+    "BN-C328-onubad-kora",
+    "BN-C328-pandulipi",
+    "BN-C328-sarangsho",
+    "BN-C328-rochona-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch328.txt",
+  "json": "bengali/narration/ch328.json",
+  "textHash": "fnv1a64:eaba919cf0f2b4f0",
+  "jsonHash": "fnv1a64:78f6ee8bb20b257e",
+  "findings": []
+}

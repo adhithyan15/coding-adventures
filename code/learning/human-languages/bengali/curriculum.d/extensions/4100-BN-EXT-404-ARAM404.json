@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-404-ARAM404",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say a room is comfortable, take breakfast and rest a while.",
+  "prerequisites": []
+}

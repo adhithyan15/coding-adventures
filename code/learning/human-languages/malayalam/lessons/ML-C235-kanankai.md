@@ -14,7 +14,7 @@ romanization: "kaṇaṅkai"
 concept_tag: ML-AROGYAM235-KANANKAI
 prerequisites: [ML-C234-avesam, ML-C234-asvasam]
 sounds: []
-roots: [dravidian-kan-joint, dravidian-tala-kai]
+roots: [dravidian-kan-joint, dravidian-kai-hand]
 etymology_hook: "kaṇaṅkai: native Dravidian, 'the hand's joint': kaṇ 'joint' (DEDR 1160) + kai 'hand' (DEDR 2023)"
 duration:
   max_seconds: 200

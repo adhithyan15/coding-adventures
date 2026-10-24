@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-530-BATIL530",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "BN-EXT-530-BATIL530"
+  ],
+  "after": []
+}

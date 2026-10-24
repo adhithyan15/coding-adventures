@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C292-phata",
+    "language": "bengali",
+    "chapter": 292,
+    "sequence": 18850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e61240a3f83be7b"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:925ef3b01ba1feda",
+  "lessonIds": [
+    "BN-C447-aphsos",
+    "BN-C447-onushochona",
+    "BN-C447-onutopto",
+    "BN-C447-postano",
+    "BN-C447-svikar-kora"
+  ],
+  "tex": "bengali/book/chapters/ch447-regret.tex"
+}

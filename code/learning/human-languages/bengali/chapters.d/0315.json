@@ -1,0 +1,21 @@
+{
+  "chapter": 315,
+  "title": "Swords and Cannons",
+  "label": "ch:bn-swords-and-cannons",
+  "canDo": "I can name old weapons: swords, shields, guns and cannons.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-R315-review-308-315",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can name old weapons: swords, shields, guns and cannons.",
+    "assesses": [
+      "BN-LEX-C315-OSTRO315-01",
+      "BN-LEX-C315-OSTRO315-02",
+      "BN-LEX-C315-OSTRO315-03",
+      "BN-LEX-C315-OSTRO315-04",
+      "BN-LEX-C315-OSTRO315-05"
+    ]
+  }
+}

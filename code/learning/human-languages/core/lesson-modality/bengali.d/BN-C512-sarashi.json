@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C512-sarashi",
+    "language": "bengali",
+    "chapter": 512,
+    "sequence": 31040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70dd5232eadde08c"
+  },
+  "findings": []
+}

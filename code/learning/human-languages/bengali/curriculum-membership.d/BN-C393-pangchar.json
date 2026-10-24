@@ -1,0 +1,11 @@
+{
+  "id": "BN-C393-pangchar",
+  "pathSegment": "BN-PATH-393-PANGCHAR393",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-393-PANGCHAR393",
+      "order": 2
+    }
+  ]
+}

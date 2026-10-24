@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 346,
+  "title": "Standing for Office",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c9ac1934409c4994",
+  "lessons": [
+    {
+      "id": "BN-C346-prarthi",
+      "sequence": 21820,
+      "title": "প্রার্থী (prārthī) — a candidate",
+      "headword": "প্রার্থী",
+      "romanization": "prārthī",
+      "gloss": "a candidate",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7fbaea2714a6362",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to approve, then the Bengali for to repeal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: প্রার্থী",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রার্থী — prārthī — \"a candidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই নির্বাচনে চারজন প্রার্থী আছেন। ei nirbāchône chārjôn prārthī āchhen. There are four candidates in this election."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "প্রার্থী (prārthī) is Sanskrit prārthin, one who wishes for something (Monier-Williams). Bengali uses it for one who seeks an office or a job, a candidate."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prārthī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prārthī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "prārthī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *prārthī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei nirbāchône chārjôn prārthī āchhen. — There are four candidates in this election.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei nirbāchône chārjôn prārthī āchhen.* — There are four candidates in this election.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to approve, then the Bengali for to repeal, then say prārthī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to approve, then the Bengali for to repeal, then say *prārthī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does প্রার্থী (prārthī) mean? (\"A candidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C346-rashtropoti",
+      "sequence": 21830,
+      "title": "রাষ্ট্রপতি (rāshṭrôpôti) — a president (of a country)",
+      "headword": "রাষ্ট্রপতি",
+      "romanization": "rāshṭrôpôti",
+      "gloss": "a president (of a country)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:714dce0a18408edd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to repeal, then the Bengali for a candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রাষ্ট্রপতি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাষ্ট্রপতি — rāshṭrôpôti — \"a president (of a country)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "রাষ্ট্রপতি সংসদে বক্তব্য রাখলেন। rāshṭrôpôti sôngsôde bôktôbyô rākhlen. The president addressed parliament."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রাষ্ট্রপতি (rāshṭrôpôti) is Sanskrit rāṣṭrapati, lord of a realm (Monier-Williams). The modern Bengali sense, an elected head of state, is a twentieth-century use."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāshṭrôpôti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāshṭrôpôti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāshṭrôpôti, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāshṭrôpôti*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāshṭrôpôti sôngsôde bôktôbyô rākhlen. — The president addressed parliament.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāshṭrôpôti sôngsôde bôktôbyô rākhlen.* — The president addressed parliament.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to repeal, then the Bengali for a candidate, then say rāshṭrôpôti again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to repeal, then the Bengali for a candidate, then say *rāshṭrôpôti* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রাষ্ট্রপতি (rāshṭrôpôti) mean? (\"A president (of a country)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C346-bhotar",
+      "sequence": 21840,
+      "title": "ভোটার (bhoṭār) — a voter",
+      "headword": "ভোটার",
+      "romanization": "bhoṭār",
+      "gloss": "a voter",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6d8f65eaad9e6e7a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a candidate, then the Bengali for a president."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ভোটার",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোটার — bhoṭār — \"a voter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "এই গ্রামে দুই হাজার ভোটার আছে। ei grāme dui hājār bhoṭār āchhe. There are two thousand voters in this village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ভোটার (bhoṭār) is English voter, beside ভোট from English vote; Bengali has no v, so it is heard as bh."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoṭār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoṭār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhoṭār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhoṭār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ei grāme dui hājār bhoṭār āchhe. — There are two thousand voters in this village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ei grāme dui hājār bhoṭār āchhe.* — There are two thousand voters in this village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a candidate, then the Bengali for a president, then say bhoṭār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a candidate, then the Bengali for a president, then say *bhoṭār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ভোটার (bhoṭār) mean? (\"A voter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C346-podotyag-kora",
+      "sequence": 21850,
+      "title": "পদত্যাগ করা (pôdôtyāg kôrā) — to resign",
+      "headword": "পদত্যাগ করা",
+      "romanization": "pôdôtyāg kôrā",
+      "gloss": "to resign",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34c4a7543bbe9a7f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a president, then the Bengali for a voter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: পদত্যাগ করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পদত্যাগ করা — pôdôtyāg kôrā — \"to resign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুর্নীতির অভিযোগের পরে মন্ত্রী পদত্যাগ করলেন। durnītir ôbhijoger pôre môntrī pôdôtyāg kôrlen. The minister resigned after the corruption charges."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি পদত্যাগ করলেন, tini pôdôtyāg kôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "পদত্যাগ করা (pôdôtyāg kôrā) is Sanskrit pada, a position, with tyāga, leaving or giving up (Monier-Williams), and করা: to give up one's post."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôdôtyāg kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôdôtyāg kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pôdôtyāg kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pôdôtyāg kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durnītir ôbhijoger pôre môntrī pôdôtyāg kôrlen. — The minister resigned after the corruption charges.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durnītir ôbhijoger pôre môntrī pôdôtyāg kôrlen.* — The minister resigned after the corruption charges.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a president, then the Bengali for a voter, then say pôdôtyāg kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a president, then the Bengali for a voter, then say *pôdôtyāg kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does পদত্যাগ করা (pôdôtyāg kôrā) mean? (\"To resign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C346-shopoth-neoya",
+      "sequence": 21860,
+      "title": "শপথ নেওয়া (shôpôth neoyā) — to take an oath; to be sworn in",
+      "headword": "শপথ নেওয়া",
+      "romanization": "shôpôth neoyā",
+      "gloss": "to take an oath; to be sworn in",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79c29b8cd58a75aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a voter, then the Bengali for to resign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: শপথ নেওয়া",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শপথ নেওয়া — shôpôth neoyā — \"to take an oath; to be sworn in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন রাষ্ট্রপতি আজ শপথ নিলেন। nôtun rāshṭrôpôti āj shôpôth nilen. The new president was sworn in today."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি শপথ নিলেন, tini shôpôth nilen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "শপথ নেওয়া (shôpôth neoyā) is Sanskrit śapatha, an oath (Monier-Williams), with নেওয়া 'to take': to take an oath, as a new office-holder does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons and opinions."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôpôth neoyā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôpôth neoyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shôpôth neoyā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shôpôth neoyā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun rāshṭrôpôti āj shôpôth nilen. — The new president was sworn in today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun rāshṭrôpôti āj shôpôth nilen.* — The new president was sworn in today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a voter, then the Bengali for to resign, then say shôpôth neoyā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a voter, then the Bengali for to resign, then say *shôpôth neoyā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does শপথ নেওয়া (shôpôth neoyā) mean? (\"To take an oath; to be sworn in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

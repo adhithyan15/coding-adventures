@@ -1,0 +1,11 @@
+{
+  "id": "BN-C430-chash-kora",
+  "pathSegment": "BN-PATH-430-KHET430",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-430-KHET430",
+      "order": 4
+    }
+  ]
+}

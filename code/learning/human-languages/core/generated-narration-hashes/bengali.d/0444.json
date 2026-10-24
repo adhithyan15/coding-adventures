@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:f4f1990a72cffd0d",
+  "lessonIds": [
+    "BN-C444-obhiman",
+    "BN-C444-onujog",
+    "BN-C444-mukh-bhar-kora",
+    "BN-C444-khoma-kora",
+    "BN-C444-monomalinyo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch444.txt",
+  "json": "bengali/narration/ch444.json",
+  "textHash": "fnv1a64:b9a3b2e6c59a25d7",
+  "jsonHash": "fnv1a64:c190f74b114705c8",
+  "findings": []
+}

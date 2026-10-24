@@ -1,0 +1,11 @@
+{
+  "id": "BN-C465-bibechona-kora",
+  "pathSegment": "BN-PATH-465-BIBEK465",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-465-BIBEK465",
+      "order": 4
+    }
+  ]
+}

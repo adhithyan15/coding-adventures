@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C451-ghinghine",
+    "language": "bengali",
+    "chapter": 451,
+    "sequence": 27660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3fbfe575cc854a1e"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C396-dar",
+    "language": "bengali",
+    "chapter": 396,
+    "sequence": 24620,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6afc302afeb7cb03"
+  },
+  "findings": []
+}

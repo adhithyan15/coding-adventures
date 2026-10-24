@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C320-sthapotyo",
+    "language": "bengali",
+    "chapter": 320,
+    "sequence": 20290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2689076decf748f8"
+  },
+  "findings": []
+}

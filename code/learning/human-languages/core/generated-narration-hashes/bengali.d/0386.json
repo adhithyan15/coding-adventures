@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:f6cecb622073fe97",
+  "lessonIds": [
+    "BN-C386-kuli",
+    "BN-C386-sutkes",
+    "BN-C386-troli",
+    "BN-C386-namano",
+    "BN-C386-bohon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch386.txt",
+  "json": "bengali/narration/ch386.json",
+  "textHash": "fnv1a64:4c5c133250a28a36",
+  "jsonHash": "fnv1a64:65ecff18f2220be7",
+  "findings": []
+}

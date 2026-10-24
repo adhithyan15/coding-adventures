@@ -30,6 +30,35 @@ by the first path step are the same decoded object. Equal bytes decoded
 independently are insufficient. Its distinct non-copyable result retains both
 complete inputs and does not discard the path-length transition.
 
+`bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path` applies
+the same exact-target rule to the stronger construction-bound proof. That input
+retains one exact two-link constructed path, both authenticated adjacency
+projections, complete intermediate policy, the advanced path-length state, and
+reviewed selection of its exact terminal root. The binder takes the target only
+from that retained construction and rejects server policy produced for a
+byte-equal independently decoded certificate. Its distinct non-copyable result
+retains both complete inputs for later constraint policy.
+
+`validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy`
+then applies the selected reviewed terminal's supported DNS policy without
+detaching either endpoint from that construction. It takes the target only from
+the retained complete server policy and the constraint bytes only from the
+reviewed root retained by the same authenticated constructed path. Entries
+without out-of-band constraints retain the entire proof without DNS evidence;
+constrained entries re-decode the exact target's Subject Alternative Name under
+separate caller-owned limits and retain optional payload-free count evidence.
+
+`validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy`
+then consumes that complete construction-bound anchor-policy result. It finds
+NameConstraints only on the exact intermediate retained by the authenticated
+construction and re-decodes Subject Alternative Name only from the exact target
+retained by the same proof. An absent extension preserves all prior evidence
+without a new DNS result. A present extension must be critical and must decode
+under separate caller-owned limits as the supported permitted-and-excluded-
+dNSName subset. Exclusions take precedence, including wildcard overlap, and
+the distinct non-copyable result retains the complete prior proof plus optional
+payload-free intermediate DNS evidence.
+
 `validate_x509_rsa_sha256_reviewed_server_anchor_policy` then consumes that
 complete direct-link evidence and checks the selected snapshot entry itself.
 Entries without out-of-band name constraints produce a stronger non-copyable
@@ -64,7 +93,8 @@ the complete prior proof plus optional payload-free intermediate DNS evidence.
 
 This is exact-object evidence composition plus deliberately narrow selected-
 anchor and intermediate DNS policy for direct and exactly one-intermediate RSA
-SHA-256 paths, not complete certificate-path or TLS validation. The reviewed
+SHA-256 paths, including the fixed construction-bound proof, not complete
+certificate-path or TLS validation. The reviewed
 snapshot input remains permitted-dNSName-only; exact critical intermediate
 extensions support bounded permitted and excluded dNSName subtrees. The crate
 does not apply directory-name, IP, or other constraint forms; other anchor
@@ -76,11 +106,12 @@ X.509, or cryptographic implementation is linked here.
 The focused unit and integration tests cover the security-sensitive
 exact-object predicate, the public two-link target binding with a static public
 Let's Encrypt precertificate, R13 intermediate, and reviewed ISRG Root X1, the
-two-link anchor-policy and intermediate-policy retention, byte-equal separately decoded target
-rejection, complete-input getters,
-unconstrained and constrained policy branches, exact reviewed `.tr` bytes,
-all-target-DNS matching, DNS-absent SANs, criticality, exclusion precedence,
-unsupported non-DNS forms, malformed inputs, independent decoder
+construction-bound target, selected-anchor-policy, and intermediate-policy
+retention, ordinary two-link anchor-policy and intermediate-policy retention,
+byte-equal separately decoded target rejection, complete-input
+getters, unconstrained and constrained policy branches, exact reviewed `.tr`
+bytes, all-target-DNS matching, DNS-absent SANs, criticality, exclusion
+precedence, unsupported non-DNS forms, malformed inputs, independent decoder
 budgets, and payload-free failures. The static integration fixtures record
 their public sources and SHA-256 digests; tests perform no network effects. The
 upstream evidence types intentionally expose no forging constructors, so this

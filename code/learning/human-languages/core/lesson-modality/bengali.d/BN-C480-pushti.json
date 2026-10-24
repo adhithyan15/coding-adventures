@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C480-pushti",
+    "language": "bengali",
+    "chapter": 480,
+    "sequence": 29150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e70854d629967d1"
+  },
+  "findings": []
+}

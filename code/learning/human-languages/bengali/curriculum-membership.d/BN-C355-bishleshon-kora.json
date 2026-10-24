@@ -1,0 +1,11 @@
+{
+  "id": "BN-C355-bishleshon-kora",
+  "pathSegment": "BN-PATH-355-NOMUNA355",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-355-NOMUNA355",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-270-ASK-WAY",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "BN-EXT-270-ASK-WAY"
+  ],
+  "after": []
+}

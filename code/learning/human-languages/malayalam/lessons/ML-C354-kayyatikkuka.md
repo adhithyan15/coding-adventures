@@ -14,7 +14,7 @@ romanization: "kayyaṭikkuka"
 concept_tag: ML-VERB-KAYYATIKKUKA
 prerequisites: [ML-C354-madhyamam, ML-C354-prasamgikkuka]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-adi-beat]
+roots: [dravidian-kai-hand, dravidian-adi-beat]
 etymology_hook: 'kayyaṭikkuka = kai ''hand'' (DEDR 2023) + aṭikkuka ''to strike'' (DEDR 77)'
 duration:
   max_seconds: 200

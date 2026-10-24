@@ -4,7 +4,7 @@
   "chapter": 350,
   "title": "Headlines and Editions",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:14011f82e169590f",
+  "sourceHash": "fnv1a64:6c2648df7c894b47",
   "lessons": [
     {
       "id": "ML-C350-talakkettu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9eebffa41e23371b",
+      "sourceHash": "fnv1a64:7cb0c6f2934eb1d9",
       "notice": null,
       "blocks": [
         {

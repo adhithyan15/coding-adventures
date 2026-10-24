@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C307-dhak",
+    "language": "bengali",
+    "chapter": 307,
+    "sequence": 19580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d76b1cfa48417a5"
+  },
+  "findings": []
+}

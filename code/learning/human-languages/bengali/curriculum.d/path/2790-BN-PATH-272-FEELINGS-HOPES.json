@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-272-FEELINGS-HOPES",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-272-FEELINGS-HOPES"
+  ],
+  "after": []
+}

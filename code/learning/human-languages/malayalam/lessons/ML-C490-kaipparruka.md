@@ -14,7 +14,7 @@ romanization: "kaippaṟṟuka"
 concept_tag: ML-VERB-KAIPPARRUKA
 prerequisites: [ML-C490-tapalppetti, ML-C490-koriyar]
 sounds: []
-roots: [dravidian-tala-kai, dravidian-parru-hold]
+roots: [dravidian-kai-hand, dravidian-parru-hold]
 etymology_hook: 'kaippaṟṟuka: native kai ''hand'' (DEDR 2023) + paṟṟuka ''to seize'' (DEDR 4034)'
 duration:
   max_seconds: 200

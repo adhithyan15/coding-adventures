@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:bab5b7e24397ab9e",
+  "lessonIds": [
+    "BN-C493-desk",
+    "BN-C493-kerani",
+    "BN-C493-silmohor",
+    "BN-C493-pion",
+    "BN-C493-taip-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch493.txt",
+  "json": "bengali/narration/ch493.json",
+  "textHash": "fnv1a64:490bda91cfe6d536",
+  "jsonHash": "fnv1a64:4b266520f3128c36",
+  "findings": []
+}

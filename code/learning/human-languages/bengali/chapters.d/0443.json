@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Temper and Grumbling",
+  "label": "ch:bn-temper-and-grumbling",
+  "canDo": "I can say that someone is irritable or has lost their temper.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C443-gojgoj-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say that someone is irritable or has lost their temper.",
+    "assesses": [
+      "BN-LEX-C443-KHOBH443-03",
+      "BN-LEX-C443-KHOBH443-04",
+      "BN-LEX-C443-KHOBH443-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Drought and Hunger",
+  "label": "ch:bn-drought-and-hunger",
+  "canDo": "I can talk about a drought, a famine and dry land.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C292-jholse-jaoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can talk about a drought, a famine and dry land.",
+    "assesses": [
+      "BN-LEX-C292-KHORA292-03",
+      "BN-LEX-C292-KHORA292-04",
+      "BN-LEX-C292-KHORA292-05"
+    ]
+  }
+}

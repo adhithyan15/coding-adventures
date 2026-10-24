@@ -1,0 +1,11 @@
+{
+  "id": "BN-C510-jhul",
+  "pathSegment": "BN-PATH-510-SAPHAI510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-510-SAPHAI510",
+      "order": 1
+    }
+  ]
+}

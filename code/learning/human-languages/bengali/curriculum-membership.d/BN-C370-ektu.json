@@ -1,0 +1,11 @@
+{
+  "id": "BN-C370-ektu",
+  "pathSegment": "BN-PATH-370-KHUB370",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-370-KHUB370",
+      "order": 4
+    }
+  ]
+}

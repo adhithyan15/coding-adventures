@@ -1,0 +1,11 @@
+{
+  "id": "BN-C399-tabu",
+  "pathSegment": "BN-PATH-399-BHROMON399",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-399-BHROMON399",
+      "order": 2
+    }
+  ]
+}

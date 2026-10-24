@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C529-dotana",
+    "language": "bengali",
+    "chapter": 529,
+    "sequence": 31900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d327bfb54c8c4dd4"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "BN-C438-abeg",
+  "pathSegment": "BN-PATH-438-MON438",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-438-MON438",
+      "order": 2
+    }
+  ]
+}

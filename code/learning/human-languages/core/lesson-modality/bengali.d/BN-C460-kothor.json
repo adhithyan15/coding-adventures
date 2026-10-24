@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C460-kothor",
+    "language": "bengali",
+    "chapter": 460,
+    "sequence": 28130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7d4f129e75c5e630"
+  },
+  "findings": []
+}

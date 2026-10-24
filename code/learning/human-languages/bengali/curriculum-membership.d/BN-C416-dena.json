@@ -1,0 +1,11 @@
+{
+  "id": "BN-C416-dena",
+  "pathSegment": "BN-PATH-416-KISTI416",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "BN-EXT-416-KISTI416",
+      "order": 1
+    }
+  ]
+}

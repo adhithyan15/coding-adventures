@@ -1,0 +1,709 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 298,
+  "title": "Rumour and Uproar",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:67b2091538b8c51e",
+  "lessons": [
+    {
+      "id": "BN-C298-uttejona",
+      "sequence": 19120,
+      "title": "উত্তেজনা (uttejônā) — excitement; tension",
+      "headword": "উত্তেজনা",
+      "romanization": "uttejônā",
+      "gloss": "excitement; tension",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1387b983dfe2d4d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for a public statement, then the Bengali for to mention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: উত্তেজনা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উত্তেজনা — uttejônā — \"excitement; tension\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খবরটা শুনে পাড়ায় উত্তেজনা ছড়াল। khôbôrṭā shune pāṛāy uttejônā chhôṛālô. When the news came, tension spread through the neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "উত্তেজনা (uttejônā) is Sanskrit uttejana (feminine uttejanā), 'incitement, stimulation' (Monier-Williams), from ut- 'up' and tejas 'sharpness, heat': a stirring up."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttejônā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttejônā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uttejônā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uttejônā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôbôrṭā shune pāṛāy uttejônā chhôṛālô. — When the news came, tension spread through the neighbourhood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôbôrṭā shune pāṛāy uttejônā chhôṛālô.* — When the news came, tension spread through the neighbourhood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for a public statement, then the Bengali for to mention, then say uttejônā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for a public statement, then the Bengali for to mention, then say *uttejônā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does উত্তেজনা (uttejônā) mean? (\"Excitement; tension\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C298-rotano",
+      "sequence": 19130,
+      "title": "রটানো (rôṭāno) — to spread a rumour; to put about",
+      "headword": "রটানো",
+      "romanization": "rôṭāno",
+      "gloss": "to spread a rumour; to put about",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8fe0854d729870a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to mention, then the Bengali for tension."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: রটানো",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রটানো — rôṭāno — \"to spread a rumour; to put about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "কেউ রটাল যে চোর আবার আসবে। keu rôṭālô je chor ābār āsbe. Someone put it about that the thief would come back."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই লোক খবরটা রটাল, sei lok khôbôrṭā rôṭālô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "রটানো (rôṭāno) is usually linked with Sanskrit raṭati, 'cries, yells' (CDIAL 10590): what is shouted about gets about."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôṭāno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôṭāno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rôṭāno, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rôṭāno*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "keu rôṭālô je chor ābār āsbe. — Someone put it about that the thief would come back.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *keu rôṭālô je chor ābār āsbe.* — Someone put it about that the thief would come back.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to mention, then the Bengali for tension, then say rôṭāno again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to mention, then the Bengali for tension, then say *rôṭāno* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does রটানো (rôṭāno) mean? (\"To spread a rumour; to put about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C298-hoichoi",
+      "sequence": 19140,
+      "title": "হইচই (hôichôi) — an uproar; a commotion",
+      "headword": "হইচই",
+      "romanization": "hôichôi",
+      "gloss": "an uproar; a commotion",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ff0f73418b42d2eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for tension, then the Bengali for to spread a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: হইচই",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হইচই — hôichôi — \"an uproar; a commotion\"."
+            },
+            {
+              "kind": "speech",
+              "text": "খবরটা শুনে পাড়ায় হইচই পড়ে গেল। khôbôrṭā shune pāṛāy hôichôi pôṛe gelô. When the news came, the neighbourhood was in an uproar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "হইচই (hôichôi) is an expressive word, like English hubbub: its sound is the noise. হইচই পড়ে যাওয়া, an uproar breaks out. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hôichôi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hôichôi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hôichôi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hôichôi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khôbôrṭā shune pāṛāy hôichôi pôṛe gelô. — When the news came, the neighbourhood was in an uproar.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khôbôrṭā shune pāṛāy hôichôi pôṛe gelô.* — When the news came, the neighbourhood was in an uproar.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for tension, then the Bengali for to spread a rumour, then say hôichôi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for tension, then the Bengali for to spread a rumour, then say *hôichôi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does হইচই (hôichôi) mean? (\"An uproar; a commotion\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C298-phisphis-kora",
+      "sequence": 19150,
+      "title": "ফিসফিস করা (phisphis kôrā) — to whisper",
+      "headword": "ফিসফিস করা",
+      "romanization": "phisphis kôrā",
+      "gloss": "to whisper",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5a392dd7894f176",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to spread a rumour, then the Bengali for an uproar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ফিসফিস করা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিসফিস করা — phisphis kôrā — \"to whisper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ক্লাসে ছাত্ররা ফিসফিস করে গল্প করছিল। klāse chhātrôrā phisphis kôre gôlpo kôrchhilô. In class the students were whispering to each other."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): সেই মেয়ে ফিসফিস করল, sei meye phisphis kôrlô."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ফিসফিস করা (phisphis kôrā) puts ফিসফিস, an imitative word for the hiss of a whisper, before করা. ফিসফিস করে বলা, to say something in a whisper. No dictionary we use records an older form, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisphis kôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisphis kôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisphis kôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisphis kôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "klāse chhātrôrā phisphis kôre gôlpo kôrchhilô. — In class the students were whispering to each other.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *klāse chhātrôrā phisphis kôre gôlpo kôrchhilô.* — In class the students were whispering to each other.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to spread a rumour, then the Bengali for an uproar, then say phisphis kôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to spread a rumour, then the Bengali for an uproar, then say *phisphis kôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ফিসফিস করা (phisphis kôrā) mean? (\"To whisper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C298-chancholyo",
+      "sequence": 19160,
+      "title": "চাঞ্চল্য (chānchôlyô) — a sensation; a stir",
+      "headword": "চাঞ্চল্য",
+      "romanization": "chānchôlyô",
+      "gloss": "a sensation; a stir",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4457d792518980a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for an uproar, then the Bengali for to whisper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চাঞ্চল্য",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাঞ্চল্য — chānchôlyô — \"a sensation; a stir\"."
+            },
+            {
+              "kind": "speech",
+              "text": "দুর্ঘটনার খবরে শহরে চাঞ্চল্য ছড়াল। durghôṭônār khôbôre shôhôre chānchôlyô chhôṛālô. News of the accident caused a stir in the town."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চাঞ্চল্য (chānchôlyô) is Sanskrit cāñcalya, 'unsteadiness, restlessness' (Monier-Williams); a town in a stir is a restless town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chānchôlyô",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chānchôlyô*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chānchôlyô, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chānchôlyô*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "durghôṭônār khôbôre shôhôre chānchôlyô chhôṛālô. — News of the accident caused a stir in the town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *durghôṭônār khôbôre shôhôre chānchôlyô chhôṛālô.* — News of the accident caused a stir in the town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for an uproar, then the Bengali for to whisper, then say chānchôlyô again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for an uproar, then the Bengali for to whisper, then say *chānchôlyô* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চাঞ্চল্য (chānchôlyô) mean? (\"A sensation; a stir\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

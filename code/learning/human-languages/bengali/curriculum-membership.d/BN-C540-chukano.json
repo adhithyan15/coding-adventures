@@ -1,0 +1,11 @@
+{
+  "id": "BN-C540-chukano",
+  "pathSegment": "BN-PATH-540-MASHUL540",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-540-MASHUL540",
+      "order": 4
+    }
+  ]
+}

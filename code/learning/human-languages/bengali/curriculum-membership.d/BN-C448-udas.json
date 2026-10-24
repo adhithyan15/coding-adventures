@@ -1,0 +1,11 @@
+{
+  "id": "BN-C448-udas",
+  "pathSegment": "BN-PATH-448-BIROHO448",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-448-BIROHO448",
+      "order": 2
+    }
+  ]
+}

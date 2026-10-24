@@ -1,0 +1,19 @@
+{
+  "chapter": 457,
+  "title": "Generous and Mean",
+  "label": "ch:bn-generous-and-mean",
+  "canDo": "I can say whether someone is generous or mean.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C457-mohot",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 457: I can say whether someone is generous or mean.",
+    "assesses": [
+      "BN-LEX-C457-UDAR457-03",
+      "BN-LEX-C457-UDAR457-04",
+      "BN-LEX-C457-UDAR457-05"
+    ]
+  }
+}

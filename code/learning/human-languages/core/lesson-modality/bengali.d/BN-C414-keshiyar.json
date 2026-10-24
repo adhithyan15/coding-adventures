@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C414-keshiyar",
+    "language": "bengali",
+    "chapter": 414,
+    "sequence": 25550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ca4990ab883029b8"
+  },
+  "findings": []
+}

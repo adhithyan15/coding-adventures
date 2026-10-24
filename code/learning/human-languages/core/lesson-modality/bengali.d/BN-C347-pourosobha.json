@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C347-pourosobha",
+    "language": "bengali",
+    "chapter": 347,
+    "sequence": 21880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:705744ac46eba83d"
+  },
+  "findings": []
+}

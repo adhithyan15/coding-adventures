@@ -1,0 +1,11 @@
+{
+  "id": "BN-C523-porbotarohon",
+  "pathSegment": "BN-PATH-523-BAIRE523",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-523-BAIRE523",
+      "order": 2
+    }
+  ]
+}

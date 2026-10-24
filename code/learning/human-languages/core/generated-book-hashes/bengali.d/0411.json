@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:8bb9faeccd7a4fa8",
+  "lessonIds": [
+    "BN-C411-dakghor",
+    "BN-C411-ophis",
+    "BN-C411-chithi",
+    "BN-C411-piyon",
+    "BN-C411-pathano"
+  ],
+  "tex": "bengali/book/chapters/ch411-post-and-offices.tex"
+}

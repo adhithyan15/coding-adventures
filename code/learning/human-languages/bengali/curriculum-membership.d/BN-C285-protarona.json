@@ -1,0 +1,11 @@
+{
+  "id": "BN-C285-protarona",
+  "pathSegment": "BN-PATH-285-HUMKI285",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-285-HUMKI285",
+      "order": 4
+    }
+  ]
+}

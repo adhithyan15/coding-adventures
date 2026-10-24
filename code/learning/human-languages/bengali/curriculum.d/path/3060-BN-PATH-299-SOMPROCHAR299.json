@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-299-SOMPROCHAR299",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-299-SOMPROCHAR299"
+  ],
+  "after": []
+}

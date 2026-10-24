@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C343-khotipuron",
+    "language": "bengali",
+    "chapter": 343,
+    "sequence": 21680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc6cdac9a7f7c48b"
+  },
+  "findings": []
+}

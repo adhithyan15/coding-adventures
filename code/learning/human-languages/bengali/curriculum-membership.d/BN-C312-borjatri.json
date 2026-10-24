@@ -1,0 +1,11 @@
+{
+  "id": "BN-C312-borjatri",
+  "pathSegment": "BN-PATH-312-ONUSHTHAN312",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-312-ONUSHTHAN312",
+      "order": 4
+    }
+  ]
+}

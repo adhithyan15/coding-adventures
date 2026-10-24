@@ -1,0 +1,517 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 196,
+  "title": "Start the Work",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:0444710926bc3f1c",
+  "lessons": [
+    {
+      "id": "PA-C196-work-command-return",
+      "sequence": 10670,
+      "title": "Return to work and a polite command",
+      "headword": "ਕੰਮ · ਕਰੋ",
+      "romanization": "kamm; karo",
+      "gloss": "retrieve work and the polite command do",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f4d753c38ceb994",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm; karo; YOU SAY: ਕੰਮ; ਕਰੋ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm; karo*; YOU SAY: **ਕੰਮ; ਕਰੋ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the familiar work word first and the familiar polite command last. The middle slot stays empty until the next lesson owns its new word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm; YOU SAY: ਕੰਮ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm*; YOU SAY: **ਕੰਮ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "karo; YOU SAY: ਕਰੋ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *karo*; YOU SAY: **ਕਰੋ**]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the first word, pause for the empty middle, then say the last."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the two familiar words around the empty middle slot. This opener owns no new word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C196-shuru",
+      "sequence": 10680,
+      "title": "One noun for a beginning or start",
+      "headword": "ਸ਼ੁਰੂ",
+      "romanization": "shuruu",
+      "gloss": "beginning or start",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:64ce2bf661385a50",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the familiar first and last words of the work instruction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: direct owner",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ਼ੁਰੂ (shuruu) — shurū — beginning; start."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear and say the whole word before reading it. Keep it as a whole word rather than inventing smaller Punjabi pieces. This lesson owns the word alone; the complete instruction comes only after a separate retrieval."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "cognates",
+          "title": "Across the family",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The Punjabi University dictionary records this Punjabi noun for a beginning or start; its index uses the equivalent precomposed letter spelling. Wiktionary records the Punjabi word as borrowed from Arabic. Keep that source history separate from present-day Punjabi use, and learn the Punjabi form as one whole. Sources: Punjabi University Punjabi-English Dictionary; Wiktionary: ਸ਼ੁਰੂ (shuruu)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shurū; YOU SAY: ਸ਼ੁਰੂ (shuruu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shurū*; YOU SAY: **ਸ਼ੁਰੂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸ਼ੁਰੂ (shuruu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸ਼ੁਰੂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸ਼ੁਰੂ (shuruu) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸ਼ੁਰੂ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the noun for “beginning” or “start” without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C196-shuru-review",
+      "sequence": 10690,
+      "title": "Retrieve the new word on its own",
+      "headword": "ਸ਼ੁਰੂ",
+      "romanization": "shuruu",
+      "gloss": "retrieve beginning or start by sound, meaning, and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:fba3774cdaff3561",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Wrap-up Recall"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Guided Practice and Wrap-up Recall."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "shurū; YOU SAY: ਸ਼ੁਰੂ (shuruu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *shurū*; YOU SAY: **ਸ਼ੁਰੂ**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "beginning; start; YOU SAY: ਸ਼ੁਰੂ (shuruu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *beginning; start*; YOU SAY: **ਸ਼ੁਰੂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਸ਼ੁਰੂ (shuruu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਸ਼ੁਰੂ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਸ਼ੁਰੂ (shuruu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਸ਼ੁਰੂ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep one noun and one meaning here. Broader location and verb patterns stay outside this bounded lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say and then write the word once from memory."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C196-start-work-frame",
+      "sequence": 10700,
+      "title": "Put the new word into one work instruction",
+      "headword": "ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ",
+      "romanization": "kamm shuruu karo",
+      "gloss": "start the work",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9345f558f8c8b26",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve ਕੰਮ, then ਸ਼ੁਰੂ (shuruu), then ਕਰੋ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo) — kamm shurū karo — start the work."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the new noun whole between familiar ਕੰਮ and ਕਰੋ. Familiar ਕਰੋ carries the polite command in the already-owned noun-plus-ਕਰਨਾ pattern. Gill and Gleason describe such noun/adjective-plus-verb conjuncts as conventional combinations: this chapter teaches only this one instruction, not every possible combination, tense, or function. Source: Harjeet Singh Gill and Henry A. Gleason, Jr., A Reference Grammar of Punjabi (1969), pp. 122 and 124, conjunct verbs."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm shurū karo; YOU SAY: ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm shurū karo*; YOU SAY: **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover and write ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover and write **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Produce the complete polite instruction."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C196-payoff",
+      "sequence": 10710,
+      "title": "A bounded start-word payoff",
+      "headword": "ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ",
+      "romanization": "kamm shuruu karo",
+      "gloss": "recognise and produce one polite start-work instruction",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9f2c1e9191390d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the new word alone before rebuilding its instruction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "kamm shurū karo; YOU SAY: ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *kamm shurū karo*; YOU SAY: **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ (kamm shuruu karo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਕੰਮ ਸ਼ੁਰੂ ਕਰੋ**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the new word, then produce the complete work instruction."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the nineteenth prerequisite tranche exposed by Punjabi A2 mock drafting. It does not unblock Punjabi A2 mock 1 by itself. It is not an A2 mock, not A2 readiness or attainment, and not external or human validation."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

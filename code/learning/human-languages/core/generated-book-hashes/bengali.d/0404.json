@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:68ea93a531b0360b",
+  "lessonIds": [
+    "BN-C404-aram",
+    "BN-C404-ayesh",
+    "BN-C404-jolkhabar",
+    "BN-C404-jirono",
+    "BN-C404-helan-deoya"
+  ],
+  "tex": "bengali/book/chapters/ch404-rest-and-comfort.tex"
+}

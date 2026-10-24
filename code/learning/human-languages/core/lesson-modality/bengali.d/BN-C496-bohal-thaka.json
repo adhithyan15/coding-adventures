@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C496-bohal-thaka",
+    "language": "bengali",
+    "chapter": 496,
+    "sequence": 30240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c485c869ee344485"
+  },
+  "findings": []
+}

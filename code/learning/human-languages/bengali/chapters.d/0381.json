@@ -1,0 +1,19 @@
+{
+  "chapter": 381,
+  "title": "Making It Work",
+  "label": "ch:bn-making-it-work",
+  "canDo": "I can say what arrangements work and what breaks down.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C381-onushilon-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can say what arrangements work and what breaks down.",
+    "assesses": [
+      "BN-LEX-C381-BYOBOSTHA381-03",
+      "BN-LEX-C381-BYOBOSTHA381-04",
+      "BN-LEX-C381-BYOBOSTHA381-05"
+    ]
+  }
+}

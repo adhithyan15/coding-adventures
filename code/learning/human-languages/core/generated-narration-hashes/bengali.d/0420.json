@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:cdd3a86682b9d4ac",
+  "lessonIds": [
+    "BN-C420-bikri",
+    "BN-C420-pherioyala",
+    "BN-C420-dalal",
+    "BN-C420-hat",
+    "BN-C420-bikono"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch420.txt",
+  "json": "bengali/narration/ch420.json",
+  "textHash": "fnv1a64:bbdaa5d7dc14f6f5",
+  "jsonHash": "fnv1a64:5da46c4a62188b82",
+  "findings": []
+}

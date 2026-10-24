@@ -1,0 +1,11 @@
+{
+  "id": "BN-C481-didi",
+  "pathSegment": "BN-PATH-481-MA481",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-481-MA481",
+      "order": 2
+    }
+  ]
+}

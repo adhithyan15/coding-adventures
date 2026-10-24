@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Fire!",
+  "label": "ch:bn-fire",
+  "canDo": "I can describe a fire: flames, sparks and an explosion.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C279-bisphoron",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can describe a fire: flames, sparks and an explosion.",
+    "assesses": [
+      "BN-LEX-C279-SHIKHA279-03",
+      "BN-LEX-C279-SHIKHA279-04",
+      "BN-LEX-C279-SHIKHA279-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:5c72ece63da2fde5",
+  "lessonIds": [
+    "BN-C522-jogbyayam",
+    "BN-C522-paloyan",
+    "BN-C522-phit",
+    "BN-C522-bakano",
+    "BN-C522-kusti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch522.txt",
+  "json": "bengali/narration/ch522.json",
+  "textHash": "fnv1a64:35d056de91730837",
+  "jsonHash": "fnv1a64:5cffab25011cfc44",
+  "findings": []
+}

@@ -11,7 +11,7 @@ romanization: "tala ceyyi"
 concept_tag: TE-BODY-BASIC
 prerequisites: [TE-C12-kutumbam]
 sounds: [telugu-geminate-yya]
-roots: [dravidian-tala-kay]
+roots: [dravidian-talai-head, dravidian-kai-hand]
 etymology_hook: "చెయ్యి ceyyi (hand) LOOKS unrelated to Tamil/Kannada/Malayalam's kai — but it's the same Proto-Dravidian root *kay-, reshaped by Telugu's own regular k-to-c sound change"
 duration:
   max_seconds: 240

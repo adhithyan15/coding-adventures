@@ -1,0 +1,11 @@
+{
+  "id": "BN-C318-songgram",
+  "pathSegment": "BN-PATH-318-BIPLOB318",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-318-BIPLOB318",
+      "order": 2
+    }
+  ]
+}

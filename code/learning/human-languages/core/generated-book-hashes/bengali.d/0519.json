@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:244422db3a15375f",
+  "lessonIds": [
+    "BN-C519-gelari",
+    "BN-C519-mech",
+    "BN-C519-odhinayok",
+    "BN-C519-rephari",
+    "BN-C519-hara"
+  ],
+  "tex": "bengali/book/chapters/ch519-the-match.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Conch Shells and Prayers",
+  "label": "ch:bn-conch-shells-and-prayers",
+  "canDo": "I can talk about prayers, devotees and holy things.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C310-pobitro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about prayers, devotees and holy things.",
+    "assesses": [
+      "BN-LEX-C310-SHONKHO310-03",
+      "BN-LEX-C310-SHONKHO310-04",
+      "BN-LEX-C310-SHONKHO310-05"
+    ]
+  }
+}

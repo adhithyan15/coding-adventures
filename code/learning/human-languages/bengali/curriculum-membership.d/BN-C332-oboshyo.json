@@ -1,0 +1,11 @@
+{
+  "id": "BN-C332-oboshyo",
+  "pathSegment": "BN-PATH-332-SUTORANG332",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-332-SUTORANG332",
+      "order": 3
+    }
+  ]
+}

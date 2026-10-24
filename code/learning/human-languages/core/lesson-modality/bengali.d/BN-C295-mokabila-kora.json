@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C295-mokabila-kora",
+    "language": "bengali",
+    "chapter": 295,
+    "sequence": 19000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:309dbf63e27d05a8"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 503,
+  "title": "Online",
+  "label": "ch:bn-online",
+  "canDo": "I can talk about websites, links and downloading.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C503-daunlod-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about websites, links and downloading.",
+    "assesses": [
+      "BN-LEX-C503-ONLINE503-03",
+      "BN-LEX-C503-ONLINE503-04",
+      "BN-LEX-C503-ONLINE503-05"
+    ]
+  }
+}

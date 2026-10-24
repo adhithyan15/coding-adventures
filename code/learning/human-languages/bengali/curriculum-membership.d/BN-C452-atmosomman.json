@@ -1,0 +1,11 @@
+{
+  "id": "BN-C452-atmosomman",
+  "pathSegment": "BN-PATH-452-DEMAK452",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "BN-EXT-452-DEMAK452",
+      "order": 2
+    }
+  ]
+}

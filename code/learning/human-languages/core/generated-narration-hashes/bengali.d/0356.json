@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:b4d7eff4e541d3d2",
+  "lessonIds": [
+    "BN-C356-shotangsho",
+    "BN-C356-onupat",
+    "BN-C356-hiseb-kora",
+    "BN-C356-mapkathi",
+    "BN-C356-mulyayon-kora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch356.txt",
+  "json": "bengali/narration/ch356.json",
+  "textHash": "fnv1a64:dcc79bad3017ad8d",
+  "jsonHash": "fnv1a64:bb6fa735b6ce1687",
+  "findings": []
+}

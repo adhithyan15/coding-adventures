@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Must and May",
+  "label": "ch:bn-must-and-may",
+  "canDo": "I can say what is required, what is allowed and when a rule bends.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C375-shithil-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can say what is required, what is allowed and when a rule bends.",
+    "assesses": [
+      "BN-LEX-C375-ONUMOTI375-03",
+      "BN-LEX-C375-ONUMOTI375-04",
+      "BN-LEX-C375-ONUMOTI375-05"
+    ]
+  }
+}

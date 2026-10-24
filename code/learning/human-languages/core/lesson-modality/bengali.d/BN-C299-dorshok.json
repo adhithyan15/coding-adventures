@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C299-dorshok",
+    "language": "bengali",
+    "chapter": 299,
+    "sequence": 19210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:092835bb872b4dff"
+  },
+  "findings": []
+}

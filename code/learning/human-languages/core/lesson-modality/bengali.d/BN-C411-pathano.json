@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C411-pathano",
+    "language": "bengali",
+    "chapter": 411,
+    "sequence": 25420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9924c9beac0c4929"
+  },
+  "findings": []
+}

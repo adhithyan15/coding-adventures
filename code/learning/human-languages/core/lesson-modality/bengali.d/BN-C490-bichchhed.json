@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C490-bichchhed",
+    "language": "bengali",
+    "chapter": 490,
+    "sequence": 29660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a48fbf9372d7919a"
+  },
+  "findings": []
+}

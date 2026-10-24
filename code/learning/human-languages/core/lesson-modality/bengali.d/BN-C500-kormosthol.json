@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C500-kormosthol",
+    "language": "bengali",
+    "chapter": 500,
+    "sequence": 30430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e765508108f7385"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:cf433594cd85bee3",
+  "lessonIds": [
+    "BN-C370-khub",
+    "BN-C370-bhishon",
+    "BN-C370-beshi",
+    "BN-C370-kom",
+    "BN-C370-ektu"
+  ],
+  "tex": "bengali/book/chapters/ch370-how-much.tex"
+}

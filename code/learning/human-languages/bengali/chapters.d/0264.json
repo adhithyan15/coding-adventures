@@ -1,0 +1,22 @@
+{
+  "chapter": 264,
+  "title": "What Happened, and Where I Was",
+  "label": "ch:bn-what-happened-and-where-i-was",
+  "canDo": "I can say what happened with the past by person (gelām, gelô, gelen), say where I was (chhilām), and read and write ঘ in ঘটা.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "BN-R264-what-happened",
+    "kind": "production",
+    "summary": "Complete BN-R264-what-happened: say what happened and where you were, in the past.",
+    "assesses": [
+      "BN-GRAMMAR-C264-PAST-PERSON-01",
+      "BN-GRAMMAR-C264-PAST-STEMS-01",
+      "BN-GRAMMAR-C264-WAS-01",
+      "BN-GRAMMAR-C264-WAS-NOT-01",
+      "BN-LEX-C264-GHOTA-01",
+      "BN-SCRIPT-C264-GHA-01"
+    ]
+  }
+}

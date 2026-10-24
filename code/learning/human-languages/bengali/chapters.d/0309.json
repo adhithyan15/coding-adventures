@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "Kites and the New Year",
+  "label": "ch:bn-kites-and-the-new-year",
+  "canDo": "I can talk about kite flying and the customs of the New Year.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C309-protha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about kite flying and the customs of the New Year.",
+    "assesses": [
+      "BN-LEX-C309-GHURI309-03",
+      "BN-LEX-C309-GHURI309-04",
+      "BN-LEX-C309-GHURI309-05"
+    ]
+  }
+}

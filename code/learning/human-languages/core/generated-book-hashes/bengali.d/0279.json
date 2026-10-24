@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:85d1c3f886b27f37",
+  "lessonIds": [
+    "BN-C279-jvola",
+    "BN-C279-shikha",
+    "BN-C279-sphulinggo",
+    "BN-C279-pure-jaoya",
+    "BN-C279-bisphoron"
+  ],
+  "tex": "bengali/book/chapters/ch279-fire.tex"
+}

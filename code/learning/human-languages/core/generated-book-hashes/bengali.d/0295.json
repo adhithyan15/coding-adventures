@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:a05e46b49008c403",
+  "lessonIds": [
+    "BN-C295-khoti",
+    "BN-C295-dhvongsostup",
+    "BN-C295-meramot-kora",
+    "BN-C295-mokabila-kora",
+    "BN-C295-phire-paoya"
+  ],
+  "tex": "bengali/book/chapters/ch295-counting-the-cost.tex"
+}

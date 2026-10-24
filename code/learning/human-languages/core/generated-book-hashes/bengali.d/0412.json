@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:e8a1d03b7761eec6",
+  "lessonIds": [
+    "BN-C412-pachil",
+    "BN-C412-get",
+    "BN-C412-dalan",
+    "BN-C412-lemppost",
+    "BN-C412-topkano"
+  ],
+  "tex": "bengali/book/chapters/ch412-walls-and-gates.tex"
+}

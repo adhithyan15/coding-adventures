@@ -1,0 +1,19 @@
+{
+  "chapter": 413,
+  "title": "Drains and Rubbish",
+  "label": "ch:bn-drains-and-rubbish",
+  "canDo": "I can complain about drains, pipes and rubbish in the lane.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C413-jonjal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 413: I can complain about drains, pipes and rubbish in the lane.",
+    "assesses": [
+      "BN-LEX-C413-NORDOMA413-03",
+      "BN-LEX-C413-NORDOMA413-04",
+      "BN-LEX-C413-NORDOMA413-05"
+    ]
+  }
+}

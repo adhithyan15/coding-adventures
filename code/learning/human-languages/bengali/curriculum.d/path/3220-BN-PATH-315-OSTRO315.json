@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-315-OSTRO315",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "BN-EXT-315-OSTRO315"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C329-somapti",
+    "language": "bengali",
+    "chapter": 329,
+    "sequence": 20720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2fc347c7830a3f5"
+  },
+  "findings": []
+}

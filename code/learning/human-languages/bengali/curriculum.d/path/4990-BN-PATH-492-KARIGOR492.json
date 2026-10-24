@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-492-KARIGOR492",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "BN-EXT-492-KARIGOR492"
+  ],
+  "after": []
+}

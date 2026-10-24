@@ -1,0 +1,11 @@
+{
+  "id": "BN-C533-phoskano",
+  "pathSegment": "BN-PATH-533-DOIBAT533",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "BN-EXT-533-DOIBAT533",
+      "order": 3
+    }
+  ]
+}

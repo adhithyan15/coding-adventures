@@ -1,0 +1,11 @@
+{
+  "id": "BN-C508-tangano",
+  "pathSegment": "BN-PATH-508-GHOR508",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-508-GHOR508",
+      "order": 4
+    }
+  ]
+}

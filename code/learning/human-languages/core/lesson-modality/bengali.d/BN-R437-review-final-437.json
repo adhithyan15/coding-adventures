@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-R437-review-final-437",
+    "language": "bengali",
+    "chapter": 437,
+    "sequence": 26770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce06d7d39a8651d9"
+  },
+  "findings": []
+}

@@ -1,0 +1,842 @@
+{
+  "version": 1,
+  "language": "bengali",
+  "chapter": 461,
+  "title": "Stubborn and Restless",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c5d901929f7b32d1",
+  "lessons": [
+    {
+      "id": "BN-C461-jedi",
+      "sequence": 28170,
+      "title": "জেদি (jedi) — headstrong; stubborn",
+      "headword": "জেদি",
+      "romanization": "jedi",
+      "gloss": "headstrong; stubborn",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02d6d062058279bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for selfish, then the Bengali for to oppress."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: জেদি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জেদি — jedi — \"headstrong; stubborn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার জেদি বোন খেলনাটা ছাড়ল না। āmār jedi bon khelnāṭā chhāṛlô nā. My headstrong sister would not let go of the toy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "জেদি (jedi) is jed, \"stubbornness\", usually traced to Arabic ḍidd, \"opposition\", through Persian, with the ending -i."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jedi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jedi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jedi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jedi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār jedi bon khelnāṭā chhāṛlô nā. — My headstrong sister would not let go of the toy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār jedi bon khelnāṭā chhāṛlô nā.* — My headstrong sister would not let go of the toy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for selfish, then the Bengali for to oppress, then say jedi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for selfish, then the Bengali for to oppress, then say *jedi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does জেদি (jedi) mean? (\"Headstrong; stubborn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C461-ekguye",
+      "sequence": 28180,
+      "title": "একগুঁয়ে (ekgũye) — obstinate; pig-headed",
+      "headword": "একগুঁয়ে",
+      "romanization": "ekgũye",
+      "gloss": "obstinate; pig-headed",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3161f9ec6ade43bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for to oppress, then the Bengali for headstrong."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: একগুঁয়ে",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "একগুঁয়ে — ekgũye — \"obstinate; pig-headed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "একগুঁয়ে ছেলেটা ডাক্তারের কাছে যেতে রাজি হল না। ekgũye chheleṭā ḍāktārer kāchhe jete rāji hôlô nā. The obstinate boy would not agree to go to the doctor."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "একগুঁয়ে (ekgũye) begins with এক, one, as if set on one thing only; the origin of the second part is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekgũye",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekgũye*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekgũye, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekgũye*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ekgũye chheleṭā ḍāktārer kāchhe jete rāji hôlô nā. — The obstinate boy would not agree to go to the doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ekgũye chheleṭā ḍāktārer kāchhe jete rāji hôlô nā.* — The obstinate boy would not agree to go to the doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for to oppress, then the Bengali for headstrong, then say ekgũye again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for to oppress, then the Bengali for headstrong, then say *ekgũye* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does একগুঁয়ে (ekgũye) mean? (\"Obstinate; pig-headed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C461-chonchol",
+      "sequence": 28190,
+      "title": "চঞ্চল (chônchôl) — restless; never still",
+      "headword": "চঞ্চল",
+      "romanization": "chônchôl",
+      "gloss": "restless; never still",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65e6971c8ab11f2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for headstrong, then the Bengali for obstinate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: চঞ্চল",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চঞ্চল — chônchôl — \"restless; never still\"."
+            },
+            {
+              "kind": "speech",
+              "text": "চঞ্চল শিশুটা এক জায়গায় বসে থাকে না। chônchôl shishuṭā ek jāygāy bôse thāke nā. The fidgety child never stays sitting in one place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "চঞ্চল (chônchôl) is a tatsama, Sanskrit cañcala, \"moving to and fro, unsteady, flickering\" (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chônchôl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chônchôl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chônchôl, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chônchôl*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chônchôl shishuṭā ek jāygāy bôse thāke nā. — The fidgety child never stays sitting in one place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chônchôl shishuṭā ek jāygāy bôse thāke nā.* — The fidgety child never stays sitting in one place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for headstrong, then the Bengali for obstinate, then say chônchôl again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for headstrong, then the Bengali for obstinate, then say *chônchôl* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does চঞ্চল (chônchôl) mean? (\"Restless; never still\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C461-khamkheyali",
+      "sequence": 28200,
+      "title": "খামখেয়ালি (khāmkheyāli) — whimsical; capricious",
+      "headword": "খামখেয়ালি",
+      "romanization": "khāmkheyāli",
+      "gloss": "whimsical; capricious",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:77d825ae6d14970d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for obstinate, then the Bengali for never still."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: খামখেয়ালি",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খামখেয়ালি — khāmkheyāli — \"whimsical; capricious\"."
+            },
+            {
+              "kind": "speech",
+              "text": "আমার খামখেয়ালি মামা হঠাৎ চাকরি ছাড়লেন। āmār khāmkheyāli māmā hôṭhāt chākri chhāṛlen. My whimsical uncle suddenly quit his job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "খামখেয়ালি (khāmkheyāli) is usually traced to Persian khām, \"raw, unripe\", and khayāl, \"a fancy\" (Arabic, through Persian), the খেয়াল of খেয়াল করা (taught): a half-baked fancy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāmkheyāli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāmkheyāli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khāmkheyāli, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khāmkheyāli*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āmār khāmkheyāli māmā hôṭhāt chākri chhāṛlen. — My whimsical uncle suddenly quit his job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āmār khāmkheyāli māmā hôṭhāt chākri chhāṛlen.* — My whimsical uncle suddenly quit his job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for obstinate, then the Bengali for never still, then say khāmkheyāli again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for obstinate, then the Bengali for never still, then say *khāmkheyāli* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does খামখেয়ালি (khāmkheyāli) mean? (\"Whimsical; capricious\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C461-go-dhora",
+      "sequence": 28210,
+      "title": "গোঁ ধরা (gõ dhôrā) — to dig one's heels in",
+      "headword": "গোঁ ধরা",
+      "romanization": "gõ dhôrā",
+      "gloss": "to dig one's heels in",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:373c75dda5e51135",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Bengali for never still, then the Bengali for whimsical."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: গোঁ ধরা",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গোঁ ধরা — gõ dhôrā — \"to dig one's heels in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "নতুন সাইকেলের জন্য ছেলেটা গোঁ ধরল। nôtun sāikeler jônyô chheleṭā gõ dhôrlô. The boy dug his heels in about getting a new bicycle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he/she …): তিনি গোঁ ধরলেন, tini gõ dhôrlen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "গোঁ ধরা (gõ dhôrā) is gõ, a stubborn will, which CDIAL lists for Bengali as a whim (CDIAL 4025), with ধরা (taught), to hold (CDIAL 6747)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for describing what you lived and felt."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gõ dhôrā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gõ dhôrā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gõ dhôrā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gõ dhôrā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nôtun sāikeler jônyô chheleṭā gõ dhôrlô. — The boy dug his heels in about getting a new bicycle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nôtun sāikeler jônyô chheleṭā gõ dhôrlô.* — The boy dug his heels in about getting a new bicycle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Bengali for never still, then the Bengali for whimsical, then say gõ dhôrā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Bengali for never still, then the Bengali for whimsical, then say *gõ dhôrā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does গোঁ ধরা (gõ dhôrā) mean? (\"To dig one's heels in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-R461-review-454-461",
+      "sequence": 28220,
+      "title": "Looking back: from Shyness and Hesitation to Stubborn and Restless",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Shyness and Hesitation to Stubborn and Restless",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e682933ce924a6e3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Bengali for reluctance and being in two minds."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reluctance, being in two minds, stiff and awkward, huddled up, to hesitate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reluctance, being in two minds, stiff and awkward, huddled up, to hesitate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patience, enthusiasm, keen interest, eager, to be able to wait",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: patience, enthusiasm, keen interest, eager, to be able to wait]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "character, a good quality, a habit, conduct, to master",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: character, a good quality, a habit, conduct, to master]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "generous, miserly, sincere, helpful to others, noble",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: generous, miserly, sincere, helpful to others, noble]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "honest, two-faced, trustworthy, cunning, to cheat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: honest, two-faced, trustworthy, cunning, to cheat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "modest, soft-spoken, insolent, ill-mannered, to flatter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: modest, soft-spoken, insolent, ill-mannered, to flatter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cruel, stern, aggressive, selfish, to oppress",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cruel, stern, aggressive, selfish, to oppress]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "headstrong, obstinate, never still, whimsical, to dig one's heels in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: headstrong, obstinate, never still, whimsical, to dig one's heels in]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Reluctance? (সংকোচ, sôngkoch.) Being in two minds? (দ্বিধা, dvidhā.) Stiff and awkward? (আড়ষ্ট, āṛôshṭô.) Huddled up? (জড়সড়, jôṛôsôṛô.) To hesitate? (ইতস্তত করা, itôstôtô kôrā.) Patience? (ধৈর্য, dhoirjô.) Enthusiasm? (উৎসাহ, utsāhô.) Keen interest? (আগ্রহ, āgrôhô.) Eager? (উৎসুক, utsuk.) To be able to wait? (তর সওয়া, tôr sôoyā.) Character? (চরিত্র, chôritrô.) A good quality? (গুণ, gun.) A habit? (অভ্যাস, ôbhyās.) Conduct? (আচরণ, āchôrôn.) To master? (রপ্ত করা, rôptô kôrā.) Generous? (উদার, udār.) Miserly? (কৃপণ, kripôn.) Sincere? (আন্তরিক, āntôrik.) Helpful to others? (পরোপকারী, pôropôkārī.) Noble? (মহৎ, môhôt.) Honest? (সৎ, sôt.) Two-faced? (কপট, kôpôṭ.) Trustworthy? (বিশ্বস্ত, bishvôstô.) Cunning? (ধূর্ত, dhūrtô.) To cheat? (ঠকানো, ṭhôkāno.) Modest? (বিনয়ী, binôyī.) Soft-spoken? (নম্র, nômrô.) Insolent? (উদ্ধত, uddhôtô.) Ill-mannered? (বেয়াদব, beyādôb.) To flatter? (তোষামোদ করা, toshāmod kôrā.) Cruel? (নিষ্ঠুর, nishṭhur.) Stern? (কঠোর, kôṭhor.) Aggressive? (উগ্র, ugrô.) Selfish? (স্বার্থপর, svārthôpôr.) To oppress? (অত্যাচার করা, ôtyāchār kôrā.) Headstrong? (জেদি, jedi.) Obstinate? (একগুঁয়ে, ekgũye.) Never still? (চঞ্চল, chônchôl.) Whimsical? (খামখেয়ালি, khāmkheyāli.) To dig one's heels in? (গোঁ ধরা, gõ dhôrā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

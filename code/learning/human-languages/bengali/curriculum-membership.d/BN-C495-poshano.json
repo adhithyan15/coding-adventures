@@ -1,0 +1,11 @@
+{
+  "id": "BN-C495-poshano",
+  "pathSegment": "BN-PATH-495-BETON495",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-495-BETON495",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 280,
+  "title": "The Rescue",
+  "label": "ch:bn-the-rescue",
+  "canDo": "I can say who came to help and how people were rescued.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C280-ashroy",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can say who came to help and how people were rescued.",
+    "assesses": [
+      "BN-LEX-C280-UDDHAR280-03",
+      "BN-LEX-C280-UDDHAR280-04",
+      "BN-LEX-C280-UDDHAR280-05"
+    ]
+  }
+}

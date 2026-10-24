@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-269-SHOULD-SO",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-269-SHOULD-SO"
+  ],
+  "after": []
+}

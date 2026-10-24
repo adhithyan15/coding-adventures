@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "What Lies Ahead",
+  "label": "ch:bn-what-lies-ahead",
+  "canDo": "I can talk about destiny, forecasts and sensing what is coming.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C532-jyotishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can talk about destiny, forecasts and sensing what is coming.",
+    "assesses": [
+      "BN-LEX-C532-BHOBITOBBO532-03",
+      "BN-LEX-C532-BHOBITOBBO532-04",
+      "BN-LEX-C532-BHOBITOBBO532-05"
+    ]
+  }
+}

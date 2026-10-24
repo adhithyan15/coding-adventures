@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-414-BANK414",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can deposit money, queue at a counter and pay by cheque or in cash.",
+  "prerequisites": []
+}

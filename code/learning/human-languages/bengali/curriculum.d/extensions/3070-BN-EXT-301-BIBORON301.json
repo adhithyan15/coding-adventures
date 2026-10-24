@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-301-BIBORON301",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can give an account of what I saw and check the details.",
+  "prerequisites": []
+}

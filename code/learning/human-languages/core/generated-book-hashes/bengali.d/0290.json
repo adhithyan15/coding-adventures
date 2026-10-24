@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:9c8981ceb41ea573",
+  "lessonIds": [
+    "BN-C290-dheu",
+    "BN-C290-tir",
+    "BN-C290-bhangon",
+    "BN-C290-grihohin",
+    "BN-C290-helikoptar"
+  ],
+  "tex": "bengali/book/chapters/ch290-waves-and-wreckage.tex"
+}

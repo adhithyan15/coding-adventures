@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:e52091905461e358",
+  "lessonIds": [
+    "BN-C294-sotorko",
+    "BN-C294-sabdhan",
+    "BN-C294-songket",
+    "BN-C294-ashongka",
+    "BN-C294-erano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch294.txt",
+  "json": "bengali/narration/ch294.json",
+  "textHash": "fnv1a64:27ef8dd03a0f696a",
+  "jsonHash": "fnv1a64:94c6a48dfd8a40c4",
+  "findings": []
+}

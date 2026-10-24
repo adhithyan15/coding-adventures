@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "Honest and Deceitful",
+  "label": "ch:bn-honest-and-deceitful",
+  "canDo": "I can say whether someone is honest or a cheat.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C458-thokano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can say whether someone is honest or a cheat.",
+    "assesses": [
+      "BN-LEX-C458-SOT458-03",
+      "BN-LEX-C458-SOT458-04",
+      "BN-LEX-C458-SOT458-05"
+    ]
+  }
+}

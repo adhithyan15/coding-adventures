@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C530-talbahana-kora",
+    "language": "bengali",
+    "chapter": 530,
+    "sequence": 31970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6784c7be2bced0e8"
+  },
+  "findings": []
+}

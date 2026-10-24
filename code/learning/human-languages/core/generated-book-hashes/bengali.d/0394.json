@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:7cfdb4b2bfa01f2f",
+  "lessonIds": [
+    "BN-C394-bigrano",
+    "BN-C394-jontrangsho",
+    "BN-C394-skru",
+    "BN-C394-stiyaring",
+    "BN-C394-ghosha"
+  ],
+  "tex": "bengali/book/chapters/ch394-breakdowns-and-spare-parts.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:0236bf6ca1b0dbd0",
+  "lessonIds": [
+    "BN-C432-chura",
+    "BN-C432-upotyoka",
+    "BN-C432-dhibi",
+    "BN-C432-morubhumi",
+    "BN-C432-jonggol"
+  ],
+  "tex": "bengali/book/chapters/ch432-peaks-valleys-and-deserts.tex"
+}

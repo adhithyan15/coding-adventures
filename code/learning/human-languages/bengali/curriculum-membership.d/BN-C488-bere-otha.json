@@ -1,0 +1,11 @@
+{
+  "id": "BN-C488-bere-otha",
+  "pathSegment": "BN-PATH-488-SHOISHOB488",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "BN-EXT-488-SHOISHOB488",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "Warnings",
+  "label": "ch:bn-warnings",
+  "canDo": "I can talk about warnings, signals and staying safe.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C294-erano",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can talk about warnings, signals and staying safe.",
+    "assesses": [
+      "BN-LEX-C294-SOTORKO294-03",
+      "BN-LEX-C294-SOTORKO294-04",
+      "BN-LEX-C294-SOTORKO294-05"
+    ]
+  }
+}

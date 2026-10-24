@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C295-dhvongsostup",
+    "language": "bengali",
+    "chapter": 295,
+    "sequence": 18980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:21c8da82847af5ce"
+  },
+  "findings": []
+}

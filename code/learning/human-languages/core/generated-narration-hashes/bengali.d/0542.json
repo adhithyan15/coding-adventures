@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 542,
+  "sourceHash": "fnv1a64:20c5ed51113ca2db",
+  "lessonIds": [
+    "BN-C542-bheste-jaoya",
+    "BN-C542-nishphol",
+    "BN-C542-bishringkhol",
+    "BN-C542-khosa",
+    "BN-C542-golmal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch542.txt",
+  "json": "bengali/narration/ch542.json",
+  "textHash": "fnv1a64:a3f5626ce950fc7c",
+  "jsonHash": "fnv1a64:813739a1a4bbe603",
+  "findings": []
+}

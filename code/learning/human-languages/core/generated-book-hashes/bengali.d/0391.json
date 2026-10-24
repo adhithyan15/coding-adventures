@@ -1,0 +1,14 @@
+{
+  "language": "bengali",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:ba60c7867e41825f",
+  "lessonIds": [
+    "BN-C391-songghorsho",
+    "BN-C391-tola",
+    "BN-C391-nora",
+    "BN-C391-chharano",
+    "BN-C391-kosha",
+    "BN-R391-review-384-391"
+  ],
+  "tex": "bengali/book/chapters/ch391-collisions-and-close-calls.tex"
+}

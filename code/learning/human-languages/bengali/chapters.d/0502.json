@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Screens and Phones",
+  "label": "ch:bn-screens-and-phones",
+  "canDo": "I can talk about computers, phones and videos.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C502-charj-deoya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about computers, phones and videos.",
+    "assesses": [
+      "BN-LEX-C502-KOMPIUTAR502-03",
+      "BN-LEX-C502-KOMPIUTAR502-04",
+      "BN-LEX-C502-KOMPIUTAR502-05"
+    ]
+  }
+}

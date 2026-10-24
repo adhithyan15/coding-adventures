@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Long Illnesses",
+  "label": "ch:bn-long-illnesses",
+  "canDo": "I can name long illnesses such as asthma and diabetes.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C474-jondis",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can name long illnesses such as asthma and diabetes.",
+    "assesses": [
+      "BN-LEX-C474-HANPANI474-03",
+      "BN-LEX-C474-HANPANI474-04",
+      "BN-LEX-C474-HANPANI474-05"
+    ]
+  }
+}

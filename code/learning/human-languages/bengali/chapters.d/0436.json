@@ -1,0 +1,19 @@
+{
+  "chapter": 436,
+  "title": "Buds and Sprouts",
+  "label": "ch:bn-buds-and-sprouts",
+  "canDo": "I can say seeds sprouted, trees came into bud and flowers bloomed, and plant a tree.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "BN-C436-pota",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can say seeds sprouted, trees came into bud and flowers bloomed, and plant a tree.",
+    "assesses": [
+      "BN-LEX-C436-PHOTA436-03",
+      "BN-LEX-C436-PHOTA436-04",
+      "BN-LEX-C436-PHOTA436-05"
+    ]
+  }
+}

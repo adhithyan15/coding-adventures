@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Put Off or Settled",
+  "label": "ch:bn-put-off-or-settled",
+  "canDo": "I can say that a plan is put off, fixed or settled.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "BN-C530-sabyosto-kora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can say that a plan is put off, fixed or settled.",
+    "assesses": [
+      "BN-LEX-C530-BATIL530-03",
+      "BN-LEX-C530-BATIL530-04",
+      "BN-LEX-C530-BATIL530-05"
+    ]
+  }
+}

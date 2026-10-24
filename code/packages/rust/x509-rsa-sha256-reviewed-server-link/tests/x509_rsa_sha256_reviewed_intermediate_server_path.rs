@@ -3,6 +3,9 @@ use rsa_public_operation::RsaPublicOperationLimits;
 use tls_server_identity::{MatchKind, ReferenceIdentity};
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_issuer_candidate_selection::select_unique_x509_issuer_candidate_by;
+use x509_certificate_path_construction::{
+    construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
+};
 use x509_certificate_path_length_policy::X509CertificatePathLengthState;
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
@@ -12,18 +15,26 @@ use x509_certificate_policy::{
 use x509_intermediate_certificate_policy::validate_x509_intermediate_certificate_policy;
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
+    advance_constructed_x509_rsa_sha256_intermediate_path_length,
     advance_x509_rsa_sha256_authenticated_intermediate_path_length,
     bind_x509_rsa_sha256_intermediate_issuer_policy_link,
+    verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link,
+    verify_constructed_x509_rsa_sha256_issuer_link,
     verify_selected_x509_rsa_sha256_issuer_link_with_policies,
     VerifiedX509RsaSha256IssuerPolicyLink, X509RsaSha256IssuerLinkPolicy,
 };
 use x509_rsa_sha256_reviewed_anchor_link::{
     bind_x509_rsa_sha256_authenticated_intermediate_path_to_reviewed_anchor,
+    bind_x509_rsa_sha256_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_sha256_issuer_link_to_reviewed_anchor,
+    BoundX509RsaSha256ConstructedReviewedIntermediatePath,
     BoundX509RsaSha256ReviewedIntermediatePath,
 };
 use x509_rsa_sha256_reviewed_server_link::{
+    bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path,
     bind_x509_rsa_sha256_reviewed_intermediate_server_path,
+    validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy,
+    validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy,
     validate_x509_rsa_sha256_reviewed_intermediate_server_anchor_policy,
     validate_x509_rsa_sha256_reviewed_intermediate_server_name_constraints_policy,
     X509RsaSha256ReviewedServerLinkErrorKind,
@@ -98,6 +109,76 @@ fn link_policy() -> X509RsaSha256IssuerLinkPolicy<'static> {
 fn observed_time() -> X509Time {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     decode_x509_time(decoder.decode_exact(b"\x17\x0d260201000000Z").unwrap()).unwrap()
+}
+
+fn constructed_intermediate_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy<
+    'certificate,
+    'encoded,
+> {
+    let role_policy = validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]) || oid.equals(&[2, 5, 29, 19]),
+    )
+    .unwrap();
+    let profiles = algorithm_profiles();
+    let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
+    let self_issued = classify_certificate_self_issued(certificate, |issuer, subject| {
+        issuer.encoded() == subject.encoded()
+    });
+
+    validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap()
+}
+
+fn constructed_reviewed_path<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>(
+    path: &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> BoundX509RsaSha256ConstructedReviewedIntermediatePath<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    let intermediate = path.issuer_certificate(0).unwrap();
+    let root = path.issuer_certificate(1).unwrap();
+    let authenticated_intermediate =
+        verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link(
+            path.adjacent_link(0).unwrap(),
+            constructed_intermediate_policy(intermediate),
+            link_policy(),
+        )
+        .unwrap();
+    let authenticated_path = advance_constructed_x509_rsa_sha256_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated_intermediate,
+    )
+    .unwrap();
+    let authenticated_terminal = verify_constructed_x509_rsa_sha256_issuer_link(
+        path.adjacent_link(1).unwrap(),
+        link_policy(),
+    )
+    .unwrap();
+
+    bind_x509_rsa_sha256_constructed_intermediate_path_to_reviewed_anchor(
+        authenticated_path,
+        authenticated_terminal,
+        select_reviewed_webpki_root_anchor(root).unwrap(),
+    )
+    .unwrap()
 }
 
 fn strongest_link<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>(
@@ -312,6 +393,240 @@ fn rejects_byte_equal_distinct_server_target_from_real_reviewed_path() {
         "X.509 RSA SHA-256 reviewed server link error EvidenceMismatch"
     );
     assert!(!error.to_string().contains("valid-isrgrootx1"));
+}
+
+#[test]
+fn binds_server_policy_to_the_exact_constructed_authenticated_reviewed_path() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &leaf,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let policy = server_policy(&leaf);
+    let reviewed_path = constructed_reviewed_path(&path);
+
+    let bound =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .unwrap();
+
+    assert!(std::ptr::eq(bound.server_policy().certificate(), &leaf));
+    assert_eq!(
+        bound.server_policy().identity().match_kind(),
+        MatchKind::ExactDns
+    );
+    let retained_path = bound.reviewed_intermediate_path();
+    assert!(std::ptr::eq(
+        retained_path
+            .authenticated_path()
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        retained_path
+            .authenticated_path()
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        retained_path.reviewed_anchor().candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509RsaSha256ConstructedReviewedIntermediateServerPath"
+    );
+}
+
+#[test]
+fn rejects_byte_equal_distinct_policy_target_for_a_constructed_reviewed_path() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let path_leaf = decode(&leaf_encoded);
+    let detached_policy_leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &path_leaf,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let policy = server_policy(&detached_policy_leaf);
+    let reviewed_path = constructed_reviewed_path(&path);
+
+    let error =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .expect_err("byte-equal targets decoded into distinct objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaSha256ReviewedServerLinkErrorKind::EvidenceMismatch
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("valid-isrgrootx1"));
+    assert!(!diagnostic.contains("Let's Encrypt"));
+}
+
+#[test]
+fn applies_selected_anchor_policy_to_the_exact_constructed_reviewed_path() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &leaf,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let policy = server_policy(&leaf);
+    let reviewed_path = constructed_reviewed_path(&path);
+    let bound =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .unwrap();
+
+    let validated =
+        validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy(
+            bound,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    assert!(validated.constrained_dns_names().is_none());
+    let retained = validated.reviewed_intermediate_server_path();
+    assert!(std::ptr::eq(retained.server_policy().certificate(), &leaf));
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        retained
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{validated:?}"),
+        "ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy"
+    );
+}
+
+#[test]
+fn retains_the_exact_constructed_path_when_the_intermediate_has_no_name_constraints() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &leaf,
+        &candidates,
+        2,
+        3,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let policy = server_policy(&leaf);
+    let reviewed_path = constructed_reviewed_path(&path);
+    let bound =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .unwrap();
+    let anchor_policy =
+        validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy(
+            bound,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    let validated =
+        validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy(
+            anchor_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+
+    assert_eq!(validated.constrained_dns_names(), None);
+    let retained = validated
+        .anchor_policy()
+        .reviewed_intermediate_server_path();
+    assert!(std::ptr::eq(retained.server_policy().certificate(), &leaf));
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .authenticated_intermediate()
+            .verified_link()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        retained
+            .reviewed_intermediate_path()
+            .authenticated_path()
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        retained
+            .reviewed_intermediate_path()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{validated:?}"),
+        "ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy"
+    );
 }
 
 #[test]

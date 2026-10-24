@@ -1,0 +1,19 @@
+{
+  "chapter": 527,
+  "title": "On Stage",
+  "label": "ch:bn-on-stage",
+  "canDo": "I can talk about the stage, actors, rehearsals and applause.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "BN-C527-hattali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 527: I can talk about the stage, actors, rehearsals and applause.",
+    "assesses": [
+      "BN-LEX-C527-MONCHO527-03",
+      "BN-LEX-C527-MONCHO527-04",
+      "BN-LEX-C527-MONCHO527-05"
+    ]
+  }
+}

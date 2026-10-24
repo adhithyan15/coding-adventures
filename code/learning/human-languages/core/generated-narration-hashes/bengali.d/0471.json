@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:7e02d26d36062387",
+  "lessonIds": [
+    "BN-C471-osukh",
+    "BN-C471-lokkhon",
+    "BN-C471-bhoga",
+    "BN-C471-ogyan-hooya",
+    "BN-C471-shojyashayi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch471.txt",
+  "json": "bengali/narration/ch471.json",
+  "textHash": "fnv1a64:08455e125b7b098b",
+  "jsonHash": "fnv1a64:c2ddeb1142dcba0f",
+  "findings": []
+}

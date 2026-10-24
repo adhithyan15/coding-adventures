@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "BN-C395-bidesh",
+    "language": "bengali",
+    "chapter": 395,
+    "sequence": 24590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49aeebe0f2890d25"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 536,
+  "sourceHash": "fnv1a64:9849a3ef243ac9d8",
+  "lessonIds": [
+    "BN-C536-suparish",
+    "BN-C536-sommoti",
+    "BN-C536-rokom",
+    "BN-C536-dhoron",
+    "BN-C536-khap-khaoya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch536.txt",
+  "json": "bengali/narration/ch536.json",
+  "textHash": "fnv1a64:d3dbd434fae3e5f4",
+  "jsonHash": "fnv1a64:8273f8ff2365da9a",
+  "findings": []
+}

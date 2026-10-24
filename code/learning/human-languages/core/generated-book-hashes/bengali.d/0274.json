@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:083074b5909079ec",
+  "lessonIds": [
+    "BN-C274-jodi-tahole",
+    "BN-C274-brishti-hole",
+    "BN-C274-dhoka",
+    "BN-W274-letter-ddha",
+    "BN-R274-if-and-otherwise"
+  ],
+  "tex": "bengali/book/chapters/ch274-if-and-otherwise.tex"
+}

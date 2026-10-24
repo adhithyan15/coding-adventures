@@ -1,0 +1,19 @@
+{
+  "language": "bengali",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:4f006e876c357c0f",
+  "lessonIds": [
+    "BN-C480-pushti",
+    "BN-C480-dhen",
+    "BN-C480-nesha",
+    "BN-C480-dhumpan",
+    "BN-C480-jhorano"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "bengali/narration/ch480.txt",
+  "json": "bengali/narration/ch480.json",
+  "textHash": "fnv1a64:b8857e3062c2a1b4",
+  "jsonHash": "fnv1a64:6121a89aeb07e6ce",
+  "findings": []
+}

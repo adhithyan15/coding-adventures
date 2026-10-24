@@ -1,0 +1,9 @@
+{
+  "id": "BN-PATH-349-PROTIBAD349",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "BN-EXT-349-PROTIBAD349"
+  ],
+  "after": []
+}

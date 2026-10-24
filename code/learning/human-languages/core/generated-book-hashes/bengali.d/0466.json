@@ -1,0 +1,13 @@
+{
+  "language": "bengali",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:dfe1281f34580919",
+  "lessonIds": [
+    "BN-C466-shorir",
+    "BN-C466-bahu",
+    "BN-C466-angul",
+    "BN-C466-pith",
+    "BN-C466-ghar"
+  ],
+  "tex": "bengali/book/chapters/ch466-the-body.tex"
+}

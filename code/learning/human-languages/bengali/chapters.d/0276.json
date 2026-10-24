@@ -1,0 +1,19 @@
+{
+  "chapter": 276,
+  "title": "Something Happened",
+  "label": "ch:bn-something-happened",
+  "canDo": "I can say that something happened and how many people were there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "BN-C276-durghotona",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 276: I can say that something happened and how many people were there.",
+    "assesses": [
+      "BN-LEX-C276-GHOTONA276-03",
+      "BN-LEX-C276-GHOTONA276-04",
+      "BN-LEX-C276-GHOTONA276-05"
+    ]
+  }
+}

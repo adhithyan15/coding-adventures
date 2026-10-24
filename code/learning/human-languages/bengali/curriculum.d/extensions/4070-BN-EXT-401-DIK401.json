@@ -1,0 +1,8 @@
+{
+  "id": "BN-EXT-401-DIK401",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say which way is south, east and west, read a compass and look to the horizon.",
+  "prerequisites": []
+}
