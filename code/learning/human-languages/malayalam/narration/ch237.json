@@ -4,7 +4,7 @@
   "chapter": 237,
   "title": "Daytime, Someday, Day before, Following day, Day before yesterday",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ed8a9653c0deeccd",
+  "sourceHash": "fnv1a64:e38dda31759101e4",
   "lessons": [
     {
       "id": "ML-C237-pakal",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a3dc3d179241551",
+      "sourceHash": "fnv1a64:ee28cdc33b3a8eaf",
       "notice": null,
       "blocks": [
         {

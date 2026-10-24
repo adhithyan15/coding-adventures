@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Signature, Work, School",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3596efb4f92596e2",
+  "sourceHash": "fnv1a64:664084cf3c269074",
   "lessons": [
     {
       "id": "TA-C105-signature",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1c40f08bbda716a",
+      "sourceHash": "fnv1a64:25deed7044acb482",
       "notice": null,
       "blocks": [
         {

@@ -4,7 +4,7 @@
   "chapter": 537,
   "title": "Inside the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a9ae6f18f670b407",
+  "sourceHash": "fnv1a64:af5aa71797060623",
   "lessons": [
     {
       "id": "ML-C537-talaccoru",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ddfc45d30962163",
+      "sourceHash": "fnv1a64:95e3eeb84d852351",
       "notice": null,
       "blocks": [
         {

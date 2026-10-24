@@ -4,7 +4,7 @@
   "chapter": 473,
   "title": "Catching the Bus",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b6ad7db5927d7e11",
+  "sourceHash": "fnv1a64:db22365b47bfdce4",
   "lessons": [
     {
       "id": "ML-C473-srroppu",
@@ -161,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:269fb064d3ded4bc",
+      "sourceHash": "fnv1a64:2915d98d3a3f7a19",
       "notice": null,
       "blocks": [
         {

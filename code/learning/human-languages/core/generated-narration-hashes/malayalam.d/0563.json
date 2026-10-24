@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 563,
-  "sourceHash": "fnv1a64:de5d85284f6d21ad",
+  "sourceHash": "fnv1a64:c98d160fc292725a",
   "lessonIds": [
     "ML-C563-kathapatram",
     "ML-C563-ramgam",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch563.txt",
   "json": "malayalam/narration/ch563.json",
   "textHash": "fnv1a64:70b99b852c0d18ae",
-  "jsonHash": "fnv1a64:06967b2f90024c66",
+  "jsonHash": "fnv1a64:25fa663e5bc862dc",
   "findings": []
 }

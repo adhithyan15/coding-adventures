@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 350,
-  "sourceHash": "fnv1a64:14011f82e169590f",
+  "sourceHash": "fnv1a64:6c2648df7c894b47",
   "lessonIds": [
     "ML-C350-talakkettu",
     "ML-C350-patradhipar",
@@ -14,6 +14,6 @@
   "text": "malayalam/narration/ch350.txt",
   "json": "malayalam/narration/ch350.json",
   "textHash": "fnv1a64:5e47effa4a4fc8e6",
-  "jsonHash": "fnv1a64:d03c5c642929a922",
+  "jsonHash": "fnv1a64:80060630e9d0650b",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 252,
   "title": "Joke, Snake-boat race, Vishu kani, Vishu gift of money, Firecracker",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:271160316845a589",
+  "sourceHash": "fnv1a64:e5faad3d7444a8b7",
   "lessons": [
     {
       "id": "ML-C252-tamasa",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b21b28636a112a02",
+      "sourceHash": "fnv1a64:4233dc0af22d9b41",
       "notice": null,
       "blocks": [
         {

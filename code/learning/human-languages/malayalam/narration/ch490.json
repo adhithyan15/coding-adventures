@@ -4,7 +4,7 @@
   "chapter": 490,
   "title": "Post and Parcels",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2959220119b30744",
+  "sourceHash": "fnv1a64:70d62220eb3995cf",
   "lessons": [
     {
       "id": "ML-C490-tapalppetti",
@@ -303,7 +303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53acb18eeea4ea57",
+      "sourceHash": "fnv1a64:2fa4f7c1f0e3c46a",
       "notice": null,
       "blocks": [
         {
