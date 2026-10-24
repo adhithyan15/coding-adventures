@@ -22,7 +22,10 @@ fn state_restore_and_checked_loading_are_complete_and_atomic() {
 
     let mut invalid = valid.clone();
     invalid.memory.pop();
-    assert!(matches!(cpu.restore(&invalid), Err(VaxError::InvalidState(_))));
+    assert!(matches!(
+        cpu.restore(&invalid),
+        Err(VaxError::InvalidState(_))
+    ));
     assert_eq!(cpu.get_state(), valid);
 
     assert_eq!(
@@ -96,10 +99,7 @@ fn autoincrement_autodecrement_absolute_displacement_and_index_modes_execute() {
             encoding::indexed(3, encoding::register_deferred(2)),
             encoding::register(8),
         ),
-        encoding::movl(
-            encoding::autoincrement_deferred(9),
-            encoding::register(10),
-        ),
+        encoding::movl(encoding::autoincrement_deferred(9), encoding::register(10)),
         vec![encoding::HALT],
     ]);
     let mut cpu = VaxSimulator::new();
@@ -125,27 +125,80 @@ fn autoincrement_autodecrement_absolute_displacement_and_index_modes_execute() {
 #[test]
 fn byte_word_long_arithmetic_logic_and_flags_execute() {
     let program = encoding::assemble(&[
-        encoding::instruction(0xc1, &[encoding::literal(7), encoding::literal(5), encoding::register(0)]),
-        encoding::instruction(0xc3, &[encoding::literal(2), encoding::register(0), encoding::register(1)]),
-        encoding::instruction(0xc5, &[encoding::literal(3), encoding::register(1), encoding::register(2)]),
-        encoding::instruction(0xc9, &[encoding::literal(1), encoding::register(2), encoding::register(3)]),
-        encoding::instruction(0xcb, &[encoding::literal(8), encoding::register(3), encoding::register(4)]),
-        encoding::instruction(0xcd, &[encoding::literal(3), encoding::register(4), encoding::register(5)]),
+        encoding::instruction(
+            0xc1,
+            &[
+                encoding::literal(7),
+                encoding::literal(5),
+                encoding::register(0),
+            ],
+        ),
+        encoding::instruction(
+            0xc3,
+            &[
+                encoding::literal(2),
+                encoding::register(0),
+                encoding::register(1),
+            ],
+        ),
+        encoding::instruction(
+            0xc5,
+            &[
+                encoding::literal(3),
+                encoding::register(1),
+                encoding::register(2),
+            ],
+        ),
+        encoding::instruction(
+            0xc9,
+            &[
+                encoding::literal(1),
+                encoding::register(2),
+                encoding::register(3),
+            ],
+        ),
+        encoding::instruction(
+            0xcb,
+            &[
+                encoding::literal(8),
+                encoding::register(3),
+                encoding::register(4),
+            ],
+        ),
+        encoding::instruction(
+            0xcd,
+            &[
+                encoding::literal(3),
+                encoding::register(4),
+                encoding::register(5),
+            ],
+        ),
         encoding::instruction(0x91, &[encoding::literal(26), encoding::register(5)]),
         vec![encoding::HALT],
     ]);
     let result = run(&program);
     assert_eq!(&result.final_state.regs[..6], &[12, 10, 30, 31, 23, 20]);
-    assert_eq!(result.final_state.psl, Psl { n: true, z: false, v: false, c: true });
+    assert_eq!(
+        result.final_state.psl,
+        Psl {
+            n: false,
+            z: false,
+            v: false,
+            c: false
+        }
+    );
 }
 
 #[test]
 fn move_unary_zero_extend_address_and_stack_operations_execute() {
     let program = encoding::assemble(&[
-        encoding::instruction(0xd0, &[encoding::immediate_long(0xffff_80ff), encoding::register(0)]),
+        encoding::instruction(
+            0xd0,
+            &[encoding::immediate_long(0xffff_80ff), encoding::register(0)],
+        ),
         encoding::instruction(0x9a, &[encoding::register(0), encoding::register(1)]),
         encoding::instruction(0x9b, &[encoding::register(0), encoding::register(2)]),
-        encoding::instruction(0x92, &[encoding::register(1), encoding::register(3)]),
+        encoding::instruction(0xd2, &[encoding::register(1), encoding::register(3)]),
         encoding::instruction(0xd4, &[encoding::register(4)]),
         encoding::instruction(0xd6, &[encoding::register(4)]),
         encoding::instruction(0xd7, &[encoding::register(4)]),
@@ -163,7 +216,10 @@ fn move_unary_zero_extend_address_and_stack_operations_execute() {
     assert_eq!(result.final_state.regs[4], 0);
     assert_eq!(result.final_state.regs[5], 0x345);
     assert_eq!(result.final_state.regs[REGISTER_SP], 0x3fc);
-    assert_eq!(&result.final_state.memory[0x3fc..0x400], &[0x45, 0x03, 0, 0]);
+    assert_eq!(
+        &result.final_state.memory[0x3fc..0x400],
+        &[0x45, 0x03, 0, 0]
+    );
 }
 
 #[test]
@@ -172,7 +228,7 @@ fn branches_subroutines_and_returns_execute() {
         encoding::instruction(0xd4, &[encoding::register(0)]),
         encoding::branch_byte(0x13, 3),
         encoding::movl(encoding::literal(1), encoding::register(1)),
-        encoding::branch_byte(0x10, 3),
+        encoding::branch_byte(0x10, 4),
         encoding::movl(encoding::literal(2), encoding::register(1)),
         vec![encoding::HALT],
         encoding::movl(encoding::literal(7), encoding::register(2)),
@@ -190,10 +246,31 @@ fn branches_subroutines_and_returns_execute() {
 #[test]
 fn typed_faults_and_run_limits_are_atomic() {
     let cases = [
-        (vec![0xfc], VaxError::UnsupportedTwoByteOpcode { prefix: 0xfc, pc: 0 }),
-        (vec![0xff], VaxError::UnsupportedTwoByteOpcode { prefix: 0xff, pc: 0 }),
-        (vec![0xd0, 0x8f, 1], VaxError::TruncatedInstruction { pc: 0 }),
-        (vec![0xd0, 0x8f, 0, 0, 0, 0, 0x00], VaxError::InvalidDestinationMode { specifier: 0, pc: 0 }),
+        (
+            vec![0xfc],
+            VaxError::UnsupportedTwoByteOpcode {
+                prefix: 0xfc,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xff],
+            VaxError::UnsupportedTwoByteOpcode {
+                prefix: 0xff,
+                pc: 0,
+            },
+        ),
+        (
+            vec![0xd0, 0x8f, 1],
+            VaxError::TruncatedInstruction { pc: 0 },
+        ),
+        (
+            vec![0xd0, 0x8f, 0, 0, 0, 0, 0x00],
+            VaxError::InvalidDestinationMode {
+                specifier: 0,
+                pc: 0,
+            },
+        ),
     ];
     for (program, expected) in cases {
         let mut cpu = VaxSimulator::new();
@@ -205,7 +282,14 @@ fn typed_faults_and_run_limits_are_atomic() {
 
     let mut cpu = VaxSimulator::new();
     let divide = encoding::assemble(&[
-        encoding::instruction(0xc7, &[encoding::literal(0), encoding::literal(4), encoding::register(0)]),
+        encoding::instruction(
+            0xc7,
+            &[
+                encoding::literal(0),
+                encoding::literal(4),
+                encoding::register(0),
+            ],
+        ),
         vec![encoding::HALT],
     ]);
     cpu.load_checked(&divide).unwrap();
@@ -215,7 +299,10 @@ fn typed_faults_and_run_limits_are_atomic() {
 
     cpu.load_checked(&[encoding::NOP, 0x11, 0xfd]).unwrap();
     let before = cpu.get_state();
-    assert_eq!(cpu.run_loaded_checked(3), Err(VaxError::StepLimitExceeded { max_steps: 3 }));
+    assert_eq!(
+        cpu.run_loaded_checked(3),
+        Err(VaxError::StepLimitExceeded { max_steps: 3 })
+    );
     assert_eq!(cpu.get_state(), before);
 
     cpu.load_checked(&[encoding::HALT]).unwrap();

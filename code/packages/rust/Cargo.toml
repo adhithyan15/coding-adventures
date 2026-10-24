@@ -227,6 +227,7 @@ members = [
     "sparc-v8-gatelevel",
     "sparc-v8-simulator",
     "alpha-axp-simulator",
+    "vax11-780-simulator",
     "alpha-axp-gatelevel",
     "powerpc601-simulator",
     "powerpc601-gatelevel",
