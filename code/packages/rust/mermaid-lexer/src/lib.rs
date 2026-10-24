@@ -1684,6 +1684,23 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_parallel_relationships() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCAR ||--o{ PERSON : \"insured for\"\nCAR }o--|| PERSON : \"owned by\"\n",
+        );
+        let car_ids = tokens.iter().filter(|token| token.value == "CAR").count();
+        let person_ids = tokens
+            .iter()
+            .filter(|token| token.value == "PERSON")
+            .count();
+
+        assert_eq!(car_ids, 2);
+        assert_eq!(person_ids, 2);
+        assert!(tokens.iter().any(|token| token.value == "insured for"));
+        assert!(tokens.iter().any(|token| token.value == "owned by"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
