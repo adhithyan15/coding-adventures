@@ -127,6 +127,59 @@ fn constructs_one_unique_target_to_terminal_chain_in_order() {
 }
 
 #[test]
+fn projects_exact_adjacent_links_from_the_retained_path_order() {
+    let root_name = name(b"root");
+    let intermediate_name = name(b"intermediate");
+    let target = decoded_certificate(1, &intermediate_name, &name(b"service"));
+    let candidates = vec![
+        decoded_certificate(2, &root_name, &name(b"unrelated")),
+        decoded_certificate(3, &root_name, &root_name),
+        decoded_certificate(4, &root_name, &intermediate_name),
+    ];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        3,
+        4,
+        |certificate| std::ptr::eq(certificate, &candidates[1]),
+        same_encoded_name,
+    )
+    .unwrap();
+
+    let target_link = path.adjacent_link(0).expect("target link");
+    assert_eq!(target_link.issuer_depth(), 0);
+    assert!(std::ptr::eq(target_link.constructed_path(), &path));
+    assert!(std::ptr::eq(
+        target_link.child_target_certificate().unwrap(),
+        &target
+    ));
+    assert!(target_link.child_candidate_certificate().is_none());
+    assert!(std::ptr::eq(
+        target_link.issuer_certificate(),
+        &candidates[2]
+    ));
+    assert_eq!(
+        format!("{target_link:?}"),
+        "ConstructedX509CertificatePathAdjacentLink"
+    );
+
+    let intermediate_link = path.adjacent_link(1).expect("intermediate link");
+    assert_eq!(intermediate_link.issuer_depth(), 1);
+    assert!(intermediate_link.child_target_certificate().is_none());
+    assert!(std::ptr::eq(
+        intermediate_link.child_candidate_certificate().unwrap(),
+        &candidates[2]
+    ));
+    assert!(std::ptr::eq(
+        intermediate_link.issuer_certificate(),
+        &candidates[1]
+    ));
+
+    assert!(path.adjacent_link(2).is_none());
+    assert!(path.adjacent_link(usize::MAX).is_none());
+}
+
+#[test]
 fn accepts_a_terminal_target_without_invoking_name_policy() {
     let target = decoded_certificate(1, &name(b"root"), &name(b"root"));
     let candidates = Vec::new();
@@ -144,6 +197,7 @@ fn accepts_a_terminal_target_without_invoking_name_policy() {
     assert_eq!(path.certificate_count(), 1);
     assert_eq!(path.issuer_count(), 0);
     assert!(path.target_is_terminal());
+    assert!(path.adjacent_link(0).is_none());
 }
 
 #[test]
