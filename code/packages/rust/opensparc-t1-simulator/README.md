@@ -54,4 +54,4 @@ The completion contract covers decode families, both condition-code widths,
 all scalar memory widths, register-window overlap and counters, delay slots and
 annul, links, lifecycle validation, fault atomicity, and run rollback. Release
 tests, strict Clippy, and rustdoc warnings pass. The completion baseline is
-87.30% line coverage (804/921).
+88.52% line coverage (933/1,054).

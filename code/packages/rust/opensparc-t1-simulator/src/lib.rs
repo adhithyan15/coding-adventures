@@ -89,7 +89,7 @@ impl Default for OpenSparcT1State {
             cwp: 0,
             cansave: WINDOWS - 2,
             canrestore: 0,
-            cleanwin: WINDOWS - 1,
+            cleanwin: WINDOWS - 2,
             otherwin: 0,
             wstate: 0,
             memory: vec![0; MEMORY_SIZE],
@@ -108,6 +108,7 @@ pub enum InstructionClass {
     Sethi,
     Branch,
     PredictedBranch,
+    RegisterBranch,
     Arithmetic,
     Logical,
     Shift,
@@ -361,6 +362,12 @@ impl OpenSparcT1Simulator {
         origin: u64,
         max_steps: usize,
     ) -> Result<ExecutionResult, OpenSparcT1Error> {
+        if max_steps > MAX_RETAINED_STEPS {
+            return Err(OpenSparcT1Error::RetentionLimitExceeded {
+                requested: max_steps,
+                limit: MAX_RETAINED_STEPS,
+            });
+        }
         let before = self.state.clone();
         self.load(program, origin)?;
         match self.run(max_steps) {
@@ -421,11 +428,17 @@ fn validate_state(state: &OpenSparcT1State) -> Result<(), OpenSparcT1Error> {
     if state.cansave > WINDOWS - 2
         || state.canrestore > WINDOWS - 2
         || state.otherwin > WINDOWS - 2
-        || state.cleanwin >= WINDOWS
+        || state.cleanwin > WINDOWS - 2
+        || state.cleanwin < state.canrestore
         || state.cansave + state.canrestore + state.otherwin != WINDOWS - 2
     {
         return Err(OpenSparcT1Error::InvalidState {
             reason: "register-window counters are inconsistent",
+        });
+    }
+    if state.wstate & !0x3f != 0 {
+        return Err(OpenSparcT1Error::InvalidState {
+            reason: "WSTATE contains reserved bits",
         });
     }
     if state.pc & 3 != 0 || state.npc & 3 != 0 {
@@ -534,6 +547,9 @@ fn fetch(state: &OpenSparcT1State) -> Result<u32, OpenSparcT1Error> {
     if state.pc & 3 != 0 {
         return Err(OpenSparcT1Error::MisalignedFetch { pc: state.pc });
     }
+    if state.loaded_len < 4 {
+        return Err(OpenSparcT1Error::FetchOutsideProgram { pc: state.pc });
+    }
     let relative = state.pc.checked_sub(state.loaded_origin);
     if relative.is_none_or(|offset| offset > state.loaded_len.saturating_sub(4) as u64) {
         return Err(OpenSparcT1Error::FetchOutsideProgram { pc: state.pc });
@@ -585,6 +601,7 @@ fn classify_at(word: u32, pc: u64) -> Result<InstructionClass, OpenSparcT1Error>
         0 => match (word >> 22) & 7 {
             1 => Ok(InstructionClass::PredictedBranch),
             2 => Ok(InstructionClass::Branch),
+            3 => Ok(InstructionClass::RegisterBranch),
             4 => Ok(InstructionClass::Sethi),
             5..=7 => Err(OpenSparcT1Error::UnsupportedInstruction { word, pc }),
             _ => Err(OpenSparcT1Error::UnknownInstruction { word, pc }),
@@ -619,6 +636,7 @@ fn is_delayed_control_transfer(class: InstructionClass) -> bool {
         InstructionClass::Call
             | InstructionClass::Branch
             | InstructionClass::PredictedBranch
+            | InstructionClass::RegisterBranch
             | InstructionClass::ControlTransfer
     )
 }
@@ -809,11 +827,12 @@ fn execute_word(
                 delayed_transfer(state, next)?;
             }
             Ok(if class == InstructionClass::PredictedBranch {
-                "bpcc"
+                predicted_branch_mnemonic(condition)
             } else {
-                "bicc"
+                integer_branch_mnemonic(condition)
             })
         }
+        InstructionClass::RegisterBranch => execute_register_branch(state, word),
         InstructionClass::Arithmetic => execute_arithmetic(state, word),
         InstructionClass::Logical => execute_logical(state, word),
         InstructionClass::Shift => execute_shift(state, word),
@@ -832,14 +851,33 @@ fn execute_word(
         InstructionClass::Window => execute_window(state, word),
         InstructionClass::Memory => execute_memory(state, word),
         InstructionClass::Trap => {
+            if word & (1 << 29) != 0 {
+                return Err(OpenSparcT1Error::UnknownInstruction { word, pc: old_pc });
+            }
+            let cc = match (word >> 11) & 3 {
+                0 => state.ccr.icc,
+                2 => state.ccr.xcc,
+                _ => {
+                    return Err(OpenSparcT1Error::UnknownInstruction { word, pc: old_pc });
+                }
+            };
+            let immediate = word & (1 << 13) != 0;
+            if (immediate && word & 0x700 != 0) || (!immediate && word & 0x7e0 != 0) {
+                return Err(OpenSparcT1Error::UnknownInstruction { word, pc: old_pc });
+            }
             let condition = rd(word) & 0xf;
-            let taken = branch_condition(condition, state.ccr.icc);
+            let taken = branch_condition(condition, cc);
             if !taken {
                 advance(state);
-                return Ok("tcc");
+                return Ok(trap_mnemonic(condition));
             }
-            let number = (read_register(state, rs1(word))?.wrapping_add(operand2(state, word)?)
-                & 0xff) as u8;
+            let operand = if immediate {
+                u64::from((word & 0xff) as u8)
+            } else {
+                read_register(state, (word & 0x1f) as u8)?
+            };
+            let mask = if state.pstate.privileged { 0xff } else { 0x7f };
+            let number = (read_register(state, rs1(word))?.wrapping_add(operand) & mask) as u8;
             if condition == 8 && number == 0 {
                 advance(state);
                 state.halted = true;
@@ -887,6 +925,80 @@ fn execute_arithmetic(
     })
 }
 
+fn execute_register_branch(
+    state: &mut OpenSparcT1State,
+    word: u32,
+) -> Result<&'static str, OpenSparcT1Error> {
+    if word & (1 << 28) != 0 {
+        return Err(OpenSparcT1Error::UnknownInstruction { word, pc: state.pc });
+    }
+    let condition = ((word >> 25) & 7) as u8;
+    if condition == 0 || condition == 4 {
+        return Err(OpenSparcT1Error::UnknownInstruction { word, pc: state.pc });
+    }
+    let value = read_register(state, rs1(word))? as i64;
+    let taken = match condition {
+        1 => value == 0,
+        2 => value <= 0,
+        3 => value < 0,
+        5 => value != 0,
+        6 => value > 0,
+        _ => value >= 0,
+    };
+    let displacement = (((word >> 20) & 3) << 14) | (word & 0x3fff);
+    let target = state
+        .pc
+        .wrapping_add_signed(sign_extend(displacement, 16) << 2);
+    if target & 3 != 0 {
+        return Err(OpenSparcT1Error::MisalignedTarget { target });
+    }
+    if !taken && word & (1 << 29) != 0 {
+        state.pc = state.npc.wrapping_add(4);
+        state.npc = state.npc.wrapping_add(8);
+        state.delay_slot = false;
+    } else {
+        let next = if taken {
+            target
+        } else {
+            state.npc.wrapping_add(4)
+        };
+        delayed_transfer(state, next)?;
+    }
+    Ok(register_branch_mnemonic(condition))
+}
+
+fn integer_branch_mnemonic(condition: u8) -> &'static str {
+    [
+        "bn", "be", "ble", "bl", "bleu", "bcs", "bneg", "bvs", "ba", "bne", "bg", "bge", "bgu",
+        "bcc", "bpos", "bvc",
+    ][usize::from(condition & 0xf)]
+}
+
+fn predicted_branch_mnemonic(condition: u8) -> &'static str {
+    [
+        "bpn", "bpe", "bple", "bpl", "bpleu", "bpcs", "bpneg", "bpvs", "bpa", "bpne", "bpg",
+        "bpge", "bpgu", "bpcc", "bppos", "bpvc",
+    ][usize::from(condition & 0xf)]
+}
+
+fn register_branch_mnemonic(condition: u8) -> &'static str {
+    match condition {
+        1 => "brz",
+        2 => "brlez",
+        3 => "brlz",
+        5 => "brnz",
+        6 => "brgz",
+        _ => "brgez",
+    }
+}
+
+fn trap_mnemonic(condition: u8) -> &'static str {
+    [
+        "tn", "te", "tle", "tl", "tleu", "tcs", "tneg", "tvs", "ta", "tne", "tg", "tge", "tgu",
+        "tcc", "tpos", "tvc",
+    ][usize::from(condition & 0xf)]
+}
+
 fn execute_logical(
     state: &mut OpenSparcT1State,
     word: u32,
@@ -930,16 +1042,26 @@ fn execute_shift(
 ) -> Result<&'static str, OpenSparcT1Error> {
     let a = read_register(state, rs1(word))?;
     let extended = word & (1 << 12) != 0;
-    let count = if word & (1 << 13) != 0 {
+    let immediate = word & (1 << 13) != 0;
+    let reserved_mask = if immediate {
+        if extended {
+            0x0fc0
+        } else {
+            0x0fe0
+        }
+    } else {
+        0x0fe0
+    };
+    if word & reserved_mask != 0 {
+        return Err(OpenSparcT1Error::UnknownInstruction { word, pc: state.pc });
+    }
+    let count = if immediate {
         if extended {
             word & 0x3f
         } else {
             word & 0x1f
         }
     } else {
-        if word & 0xfe0 != 0 {
-            return Err(OpenSparcT1Error::UnknownInstruction { word, pc: state.pc });
-        }
         let raw = read_register(state, (word & 0x1f) as u8)?;
         (raw & if extended { 63 } else { 31 }) as u32
     };
@@ -1161,6 +1283,24 @@ pub mod encoding {
     }
 
     #[must_use]
+    pub const fn encode_bpr(
+        condition: u32,
+        annul: bool,
+        predict_taken: bool,
+        rs1: u32,
+        displacement_words: i32,
+    ) -> u32 {
+        let displacement = displacement_words as u32;
+        ((annul as u32) << 29)
+            | ((condition & 7) << 25)
+            | (3 << 22)
+            | (((displacement >> 14) & 3) << 20)
+            | ((predict_taken as u32) << 19)
+            | ((rs1 & 0x1f) << 14)
+            | (displacement & 0x3fff)
+    }
+
+    #[must_use]
     pub const fn encode_add(rd: u32, rs1: u32, rs2: u32) -> u32 {
         reg(0x00, rd, rs1, rs2)
     }
@@ -1250,7 +1390,24 @@ pub mod encoding {
     }
     #[must_use]
     pub const fn encode_ta(number: u32) -> u32 {
-        imm(0x3a, 8, 0, number as i32)
+        encode_tcc(8, false, 0, number, true)
+    }
+
+    #[must_use]
+    pub const fn encode_tcc(
+        condition: u32,
+        xcc: bool,
+        rs1: u32,
+        operand: u32,
+        immediate: bool,
+    ) -> u32 {
+        (2 << 30)
+            | ((condition & 0xf) << 25)
+            | (0x3a << 19)
+            | ((rs1 & 0x1f) << 14)
+            | ((immediate as u32) << 13)
+            | ((if xcc { 2 } else { 0 }) << 11)
+            | (operand & if immediate { 0xff } else { 0x1f })
     }
 
     #[must_use]

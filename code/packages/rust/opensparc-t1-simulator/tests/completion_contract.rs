@@ -21,6 +21,10 @@ fn format_and_family_classification_is_explicit() {
             encode_bpcc(9, false, true, 1),
             InstructionClass::PredictedBranch,
         ),
+        (
+            encode_bpr(5, false, true, 1, 1),
+            InstructionClass::RegisterBranch,
+        ),
         (encode_add(1, 2, 3), InstructionClass::Arithmetic),
         (encode_xor(1, 2, 3), InstructionClass::Logical),
         (encode_sllx(1, 2, 3), InstructionClass::Shift),
@@ -54,7 +58,7 @@ fn reset_and_load_expose_complete_strand_state() {
     assert_eq!(state.cwp, 0);
     assert_eq!(state.cansave, 6);
     assert_eq!(state.canrestore, 0);
-    assert_eq!(state.cleanwin, 7);
+    assert_eq!(state.cleanwin, 6);
     assert_eq!(state.loaded_len, 0);
 
     let simulator = loaded(&[encode_nop(), encode_ta(0)]);
@@ -67,6 +71,17 @@ fn reset_and_load_expose_complete_strand_state() {
     );
     assert_eq!(state.loaded_origin, ORIGIN);
     assert_eq!(state.loaded_len, 8);
+}
+
+#[test]
+fn an_empty_default_state_cannot_fetch_zero_filled_memory() {
+    let mut simulator = OpenSparcT1Simulator::new();
+    let before = simulator.get_state();
+    assert_eq!(
+        simulator.step(),
+        Err(OpenSparcT1Error::FetchOutsideProgram { pc: 0 })
+    );
+    assert_eq!(simulator.get_state(), before);
 }
 
 #[test]
@@ -110,6 +125,12 @@ fn restore_validates_all_structural_invariants_atomically() {
         |state: &mut OpenSparcT1State| state.gl = 4,
         |state: &mut OpenSparcT1State| state.cwp = 8,
         |state: &mut OpenSparcT1State| state.cansave = 7,
+        |state: &mut OpenSparcT1State| {
+            state.cansave = 5;
+            state.canrestore = 1;
+            state.cleanwin = 0;
+        },
+        |state: &mut OpenSparcT1State| state.wstate = 0x40,
         |state: &mut OpenSparcT1State| state.pc = 1,
         |state: &mut OpenSparcT1State| state.npc = 2,
         |state: &mut OpenSparcT1State| state.pstate.cle = true,
@@ -172,8 +193,8 @@ fn save_and_restore_rotate_eight_windows_with_overlap() {
 #[test]
 fn window_spill_fill_and_clean_faults_are_atomic() {
     let cases = [
-        (encode_save(1, 0, 0), 0, 0, 7, "spill"),
-        (encode_restore(1, 0, 0), 6, 0, 7, "fill"),
+        (encode_save(1, 0, 0), 0, 0, 6, "spill"),
+        (encode_restore(1, 0, 0), 6, 0, 6, "fill"),
         (encode_save(1, 0, 0), 1, 1, 1, "clean"),
     ];
     for (word, cansave, canrestore, cleanwin, kind) in cases {
@@ -286,6 +307,76 @@ fn immediates_shifts_and_multiply_divide_execute() {
 }
 
 #[test]
+fn reserved_shift_fields_are_rejected_atomically() {
+    let malformed = [
+        encode_sllx(1, 2, 3) | (1 << 6),
+        encode_srl(1, 2, 3) | (1 << 5),
+        encode_format3(2, 1, 0x27, 2, false, 3) | (1 << 5),
+    ];
+    for word in malformed {
+        let mut simulator = loaded(&[word]);
+        let before = simulator.get_state();
+        assert!(matches!(
+            simulator.step(),
+            Err(OpenSparcT1Error::UnknownInstruction { .. })
+        ));
+        assert_eq!(simulator.get_state(), before);
+    }
+}
+
+#[test]
+fn register_branches_execute_delay_and_annul_rules() {
+    let mut taken = loaded(&[
+        encode_bpr(5, false, true, 1, 2),
+        encode_add_imm(2, 0, 7),
+        encode_ta(0),
+    ]);
+    taken.write_register(1, 1).unwrap();
+    assert_eq!(taken.step().unwrap().mnemonic, "brnz");
+    assert!(taken.get_state().delay_slot);
+    taken.step().unwrap();
+    assert_eq!(taken.read_register(2).unwrap(), 7);
+    assert!(taken.step().unwrap().state_after.halted);
+
+    let mut annulled = loaded(&[
+        encode_bpr(1, true, false, 1, 2),
+        encode_add_imm(2, 0, 9),
+        encode_ta(0),
+    ]);
+    annulled.write_register(1, 1).unwrap();
+    annulled.step().unwrap();
+    assert_eq!(annulled.get_state().pc, ORIGIN + 8);
+    assert!(!annulled.get_state().delay_slot);
+    assert_eq!(annulled.read_register(2).unwrap(), 0);
+
+    let mut negative = loaded(&[
+        encode_bpr(3, false, false, 1, 2),
+        encode_nop(),
+        encode_ta(0),
+    ]);
+    negative.write_register(1, u64::MAX).unwrap();
+    negative.step().unwrap();
+    assert!(negative.get_state().delay_slot);
+}
+
+#[test]
+fn reserved_register_branch_encodings_are_rejected_atomically() {
+    for word in [
+        encode_bpr(5, false, false, 1, 1) | (1 << 28),
+        encode_bpr(0, false, false, 1, 1),
+        encode_bpr(4, false, false, 1, 1),
+    ] {
+        let mut simulator = loaded(&[word]);
+        let before = simulator.get_state();
+        assert!(matches!(
+            simulator.step(),
+            Err(OpenSparcT1Error::UnknownInstruction { .. })
+        ));
+        assert_eq!(simulator.get_state(), before);
+    }
+}
+
+#[test]
 fn thirty_two_bit_left_shift_preserves_the_full_register_width() {
     let word = encode_format3(2, 2, 0x25, 1, true, 1);
     let mut simulator = loaded(&[word, encode_ta(0)]);
@@ -316,6 +407,7 @@ fn delayed_branch_executes_slot_before_target() {
         encode_ta(0),
     ]);
     let branch = simulator.step().unwrap();
+    assert_eq!(branch.mnemonic, "ba");
     assert_eq!(
         (branch.pc_after, branch.npc_after),
         (ORIGIN + 4, ORIGIN + 12)
@@ -336,7 +428,7 @@ fn conditional_annul_skips_only_an_untaken_delay_slot() {
         encode_add_imm(2, 0, 2),
         encode_ta(0),
     ]);
-    simulator.step().unwrap();
+    assert_eq!(simulator.step().unwrap().mnemonic, "be");
     assert_eq!(simulator.get_state().pc, ORIGIN + 8);
     assert!(!simulator.get_state().delay_slot);
     simulator.step().unwrap();
@@ -384,7 +476,7 @@ fn predicted_branch_selects_xcc() {
     state.ccr.icc.z = false;
     state.ccr.xcc.z = true;
     simulator.restore(state).unwrap();
-    simulator.step().unwrap();
+    assert_eq!(simulator.step().unwrap().mnemonic, "bpe");
     assert_eq!(simulator.get_state().npc, ORIGIN + 12);
 }
 
@@ -543,6 +635,51 @@ fn halt_and_other_traps_have_distinct_behavior() {
 }
 
 #[test]
+fn traps_select_the_requested_condition_bank_and_validate_reserved_fields() {
+    let mut nonprivileged = loaded(&[encode_ta(0x80)]);
+    let mut state = nonprivileged.get_state();
+    state.pstate.privileged = false;
+    nonprivileged.restore(state).unwrap();
+    assert_eq!(nonprivileged.step().unwrap().mnemonic, "ta 0");
+    assert!(nonprivileged.get_state().halted);
+
+    let mut xcc = loaded(&[encode_tcc(1, true, 0, 1, true)]);
+    let mut state = xcc.get_state();
+    state.ccr.xcc.z = true;
+    state.ccr.icc.z = false;
+    xcc.restore(state).unwrap();
+    assert_eq!(
+        xcc.step(),
+        Err(OpenSparcT1Error::UnsupportedTrap {
+            number: 1,
+            pc: ORIGIN
+        })
+    );
+
+    let mut icc = loaded(&[encode_tcc(1, false, 0, 1, true)]);
+    let mut state = icc.get_state();
+    state.ccr.xcc.z = true;
+    state.ccr.icc.z = false;
+    icc.restore(state).unwrap();
+    assert_eq!(icc.step().unwrap().mnemonic, "te");
+
+    for word in [
+        encode_ta(0) | (1 << 29),
+        encode_ta(0) | (1 << 11),
+        encode_ta(0) | (1 << 8),
+        encode_tcc(8, false, 0, 1, false) | (1 << 5),
+    ] {
+        let mut simulator = loaded(&[word]);
+        let before = simulator.get_state();
+        assert!(matches!(
+            simulator.step(),
+            Err(OpenSparcT1Error::UnknownInstruction { .. })
+        ));
+        assert_eq!(simulator.get_state(), before);
+    }
+}
+
+#[test]
 fn run_is_transactional_and_traces_complete_state() {
     let mut simulator = loaded(&[encode_add_imm(1, 0, 7), encode_ta(0)]);
     let result = simulator.run(2).unwrap();
@@ -594,6 +731,14 @@ fn execute_loads_and_runs_transactionally() {
     assert_eq!(simulator.read_register(1).unwrap(), 9);
     let before = simulator.get_state();
     assert!(simulator.execute(&[0; 3], 0, 1).is_err());
+    assert_eq!(simulator.get_state(), before);
+    assert_eq!(
+        simulator.execute(&[0; 3], 0, 1025),
+        Err(OpenSparcT1Error::RetentionLimitExceeded {
+            requested: 1025,
+            limit: 1024
+        })
+    );
     assert_eq!(simulator.get_state(), before);
 }
 

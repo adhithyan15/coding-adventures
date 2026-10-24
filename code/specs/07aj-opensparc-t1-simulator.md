@@ -150,6 +150,6 @@ Completion requires:
    memory widths, and fault atomicity;
 3. lifecycle, restore, rollback, malformed-image, retention, and bounded-run
    tests;
-4. line coverage above 80% (completion baseline: 87.30%, 804/921); and
+4. line coverage above 80% (completion baseline: 88.52%, 933/1,054); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.

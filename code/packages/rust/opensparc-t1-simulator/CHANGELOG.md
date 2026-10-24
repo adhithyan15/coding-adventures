@@ -11,5 +11,5 @@
 - Add complete-state traces, transactional step/run/execute, typed atomic
   faults, trace retention limits, and deterministic `ta 0` semihosting halt.
 - Add completion tests for classification, state, windows, flags, control
-  transfer, transport, lifecycle, and rollback, reaching 87.30% line coverage
-  (804/921).
+  transfer, transport, lifecycle, reserved encodings, predicted register
+  branches, and rollback, reaching 88.52% line coverage (933/1,054).
