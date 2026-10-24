@@ -197,6 +197,14 @@ const ER_NUMERIC_ENTITIES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-numeric-entities-11.16.1-visual-corpus.json"
 ));
+const ER_RECURSIVE_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-recursive-relationships-11.16.1-corpus.json"
+));
+const ER_RECURSIVE_RELATIONSHIPS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-recursive-relationships-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2647,6 +2655,30 @@ fn pinned_er_numeric_entity_identifiers_reach_semantic_ir() {
     assert_eq!(diagram.relationships.len(), 1);
     assert_eq!(diagram.relationships[0].from, "2.5");
     assert_eq!(diagram.relationships[0].to, "99.99");
+}
+
+#[test]
+fn pinned_er_recursive_relationship_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_RECURSIVE_RELATIONSHIPS_CORPUS)
+        .expect("ER recursive relationship corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_RECURSIVE_RELATIONSHIPS_VISUAL_CORPUS)
+        .expect("ER recursive relationship visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER recursive relationship source"),
+    )
+    .expect("ER recursive relationship fixture must parse");
+
+    assert_eq!(diagram.nodes.len(), 1);
+    assert_eq!(diagram.nodes[0].id, "NODE");
+    assert_eq!(diagram.nodes[0].compartments[0].entries, ["id: string [PK]"]);
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].from, "NODE");
+    assert_eq!(diagram.relationships[0].to, "NODE");
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some("leads to"));
 }
 
 #[test]
