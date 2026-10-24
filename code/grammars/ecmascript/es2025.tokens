@@ -379,7 +379,7 @@ transitions:
   # ── Regex-vs-division (gap-115, gap-119) ─────────────────────────────────
   # Value-producing tokens -> the next `/` is DIVISION. (One rule per line:
   # the transition parser reads each indented line as a complete rule.)
-  on (NAME | NUMBER | STRING | REGEX | TEMPLATE_NO_SUB | PRIVATE_NAME | RPAREN | RBRACKET) -> set-mode div
+  on (NAME | NUMBER | BIGINT | STRING | REGEX | TEMPLATE_NO_SUB | PRIVATE_NAME | RPAREN | RBRACKET) -> set-mode div
   on KEYWORD="this"  -> set-mode div
   on KEYWORD="super" -> set-mode div
   on KEYWORD="true"  -> set-mode div

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the small read-only `KindRegistry` and `RegisteredKind` contracts used by
+  the plugin host and orchestrator to share immutable extension-kind ancestry.
 - Reconcile the kernel documentation with the shipped FM04/FM05 split: the
   minimal style/interactivity shapes are deliberate leaf-level compatibility
   envelopes, while the normative schemas and validators live in their
