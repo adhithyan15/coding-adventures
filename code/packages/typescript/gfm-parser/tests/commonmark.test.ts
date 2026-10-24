@@ -233,9 +233,9 @@ describe("parse — block structure", () => {
   it("fenced code block with language", () => {
     const doc = parse("```typescript\nconst x = 1;\n```\n");
     const node = doc.children[0]!;
-    expect(node.type).toBe("code_block");
-    if (node.type === "code_block") {
-      expect(node.language).toBe("typescript");
+    expect(node.type).toBe("fenced_block");
+    if (node.type === "fenced_block") {
+      expect(node.name).toBe("typescript");
       expect(node.value).toBe("const x = 1;\n");
     }
   });

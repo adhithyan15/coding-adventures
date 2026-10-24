@@ -1,5 +1,9 @@
 # Changelog — @coding-adventures/document-ast-to-html
 
+## Unreleased
+
+- Renders `fenced_block` through the existing escaped pre/code fallback. Only escaped `name` is a language class hint; full `info` is never interpolated into HTML and named fences execute no plugins.
+
 ## [0.1.0] — 2026-03-24
 
 ### Added

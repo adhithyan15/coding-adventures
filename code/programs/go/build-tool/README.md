@@ -14,6 +14,13 @@ deleted/renamed old paths. Normal dependency propagation selects its consumers.
 Other language filters and nearby schema/docs/lookalike paths do not gain that
 relation, and a missing Go reader fails before plan output is replaced.
 
+Changes to the exact `code/specs/gfm-fenced-block-v1/cases.json` path seed
+the TypeScript `gfm-parser` native reader for all/TypeScript selections on all
+three platforms, including deleted or renamed old paths. Normal dependency
+propagation schedules its consumers. Nearby files and unrelated language
+filters do not gain this relation; an absent or wrong-language reader fails
+before plan output is created or replaced.
+
 ## What it does
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.

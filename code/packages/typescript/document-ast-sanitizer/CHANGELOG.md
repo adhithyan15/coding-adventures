@@ -1,5 +1,9 @@
 # Changelog — @coding-adventures/document-ast-sanitizer
 
+## Unreleased
+
+- Applies `dropCodeBlocks` to both code variants. Retained fenced nodes preserve inert name/info/payload fields; no fence-specific execution or broader sanitization guarantee is introduced.
+
 ## 0.1.0 — 2026-03-24
 
 Initial release.

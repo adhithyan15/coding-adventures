@@ -1,5 +1,9 @@
 # Changelog — @coding-adventures/forme-transform-internal-links
 
+## Unreleased
+
+- Treats fenced metadata and payload as opaque. Link-like code text never invokes the slug resolver, and the fresh-tree transform preserves all fence fields.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.
