@@ -137,13 +137,7 @@ fn constructed_intermediate_policy<'certificate, 'encoded>(
     .unwrap()
 }
 
-fn constructed_reviewed_path<
-    'path,
-    'target,
-    'target_encoded,
-    'candidates,
-    'candidate_encoded,
->(
+fn constructed_reviewed_path<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>(
     path: &'path ConstructedX509CertificatePath<
         'target,
         'target_encoded,
@@ -418,11 +412,9 @@ fn binds_server_policy_to_the_exact_constructed_authenticated_reviewed_path() {
     let policy = server_policy(&leaf);
     let reviewed_path = constructed_reviewed_path(&path);
 
-    let bound = bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(
-        policy,
-        reviewed_path,
-    )
-    .unwrap();
+    let bound =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .unwrap();
 
     assert!(std::ptr::eq(bound.server_policy().certificate(), &leaf));
     assert_eq!(
@@ -476,11 +468,9 @@ fn rejects_byte_equal_distinct_policy_target_for_a_constructed_reviewed_path() {
     let policy = server_policy(&detached_policy_leaf);
     let reviewed_path = constructed_reviewed_path(&path);
 
-    let error = bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(
-        policy,
-        reviewed_path,
-    )
-    .expect_err("byte-equal targets decoded into distinct objects must not bind");
+    let error =
+        bind_x509_rsa_sha256_constructed_reviewed_intermediate_server_path(policy, reviewed_path)
+            .expect_err("byte-equal targets decoded into distinct objects must not bind");
 
     assert_eq!(
         error.kind(),
