@@ -272,6 +272,47 @@ fn traces_faults_and_bounded_execution_are_atomic() {
 }
 
 #[test]
+fn typed_decode_lifecycle_faults_are_atomic_and_have_stable_text() {
+    let cases: &[&[u8]] = &[
+        &[0x10],       // truncated prefix
+        &[0x10, 0x12], // unused page-2 opcode
+        &[0xa6, 0x87], // reserved indexed postbyte
+        &[0x1f, 0x06], // invalid transfer register
+        &[0x86],       // truncated immediate
+    ];
+    for bytes in cases {
+        let mut cpu = Motorola6809Simulator::new();
+        cpu.load(bytes, 0).unwrap();
+        let before = cpu.get_state();
+        let error = cpu.step().expect_err("malformed instruction must fail");
+        assert!(!error.to_string().is_empty());
+        assert_eq!(cpu.get_state(), before);
+    }
+
+    let mut cpu = Motorola6809Simulator::new();
+    assert_eq!(cpu.load(&[], 0), Err(Motorola6809Error::EmptyProgram));
+    assert!(matches!(
+        cpu.load(&[0; 2], 0xffff),
+        Err(Motorola6809Error::ProgramOutOfRange { .. })
+    ));
+
+    cpu.load(&[0x12], 0).unwrap();
+    let mut invalid = cpu.get_state();
+    invalid.memory.pop();
+    assert!(matches!(
+        cpu.restore(invalid),
+        Err(Motorola6809Error::InvalidState { .. })
+    ));
+
+    let before = cpu.get_state();
+    assert!(matches!(
+        cpu.execute(&[0x12], 0, 1),
+        Err(Motorola6809Error::StepLimitExceeded { limit: 1 })
+    ));
+    assert_eq!(cpu.get_state(), before);
+}
+
+#[test]
 fn arbitrary_byte_streams_do_not_panic_or_partially_mutate() {
     let mut seed = 0x6809_u64;
     for len in 1..=32 {

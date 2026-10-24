@@ -43,8 +43,8 @@ the whole address space.
 `step` is atomic. `run(max_steps)` and `execute` are transactional as a whole.
 Every successful step returns before/after PC, exact raw bytes, dynamic width,
 an uppercase conventional mnemonic, and complete state after the transition.
-An execution retains at most 65,536 traces; larger limits are rejected before
-allocation or mutation.
+Because every trace owns a complete 64 KiB snapshot, an execution retains at
+most 1,024 traces; larger limits are rejected before allocation or mutation.
 
 `SYNC` and `CWAI` enter deterministic wait state after their architectural
 flag/stack effects. With no asynchronous device model in this layer, a later

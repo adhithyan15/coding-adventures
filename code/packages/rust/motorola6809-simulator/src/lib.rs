@@ -5,7 +5,7 @@ use core::fmt;
 /// Size of the MC6809's sixteen-bit address space.
 pub const MEMORY_SIZE: usize = 65_536;
 /// Maximum number of traces retained by one bounded execution.
-pub const MAX_RETAINED_STEPS: usize = 65_536;
+pub const MAX_RETAINED_STEPS: usize = 1_024;
 
 pub const CC_C: u8 = 0x01;
 pub const CC_V: u8 = 0x02;
