@@ -1,7 +1,6 @@
 use motorola6809_simulator::{
-    indexed_postbyte_is_valid, opcode_is_documented, Motorola6809Error,
-    Motorola6809Simulator, CC_C, CC_E, CC_F, CC_H, CC_I, CC_N, CC_V, CC_Z,
-    MAX_RETAINED_STEPS, MEMORY_SIZE,
+    indexed_postbyte_is_valid, opcode_is_documented, Motorola6809Error, Motorola6809Simulator,
+    CC_C, CC_E, CC_F, CC_H, CC_I, CC_N, CC_V, CC_Z, MAX_RETAINED_STEPS, MEMORY_SIZE,
 };
 
 fn image(parts: &[&[u8]]) -> Vec<u8> {
@@ -34,6 +33,37 @@ fn opcode_pages_and_indexed_postbytes_have_exact_classification() {
             .count(),
         217
     );
+}
+
+#[test]
+fn every_documented_encoding_executes_from_a_nontrivial_state() {
+    for page in [0_u8, 0x10, 0x11] {
+        for opcode in 0_u8..=u8::MAX {
+            if !opcode_is_documented(page, opcode) || (page == 0 && matches!(opcode, 0x10 | 0x11)) {
+                continue;
+            }
+            let mut program = if page == 0 {
+                vec![opcode, 0, 0, 0, 0, 0, 0x13]
+            } else {
+                vec![page, opcode, 0, 0, 0, 0, 0, 0x13]
+            };
+            let mut cpu = Motorola6809Simulator::new();
+            cpu.load(&program, 0).unwrap();
+            cpu.write_a(0x12);
+            cpu.write_b(0x34);
+            cpu.write_x(0x2000);
+            cpu.write_y(0x2100);
+            cpu.write_u(0x3000);
+            cpu.write_s(0x4000);
+            cpu.write_memory(0xfff2, &[0, 0]).unwrap();
+            cpu.write_memory(0xfff4, &[0, 0]).unwrap();
+            cpu.write_memory(0xfffa, &[0, 0]).unwrap();
+            cpu.step().unwrap_or_else(|error| {
+                panic!("page {page:#04x} opcode {opcode:#04x} failed: {error}")
+            });
+            program.clear();
+        }
+    }
 }
 
 #[test]
@@ -117,7 +147,7 @@ fn indexed_auto_update_indirection_and_pc_relative_forms_are_exact() {
         &image(&[
             &[0xa6, 0x80],       // LDA ,X+
             &[0xe6, 0x91],       // LDB [,X++]
-            &[0xae, 0x8c, 0x04], // LDX 4,PCR
+            &[0xae, 0x8c, 0x01], // LDX 1,PCR
             &[0x13],
             &[0x12, 0x34],
         ]),
@@ -132,7 +162,7 @@ fn indexed_auto_update_indirection_and_pc_relative_forms_are_exact() {
     cpu.step().unwrap();
     assert_eq!((cpu.read_b(), cpu.read_x()), (0xbb, 0x2003));
     cpu.step().unwrap();
-    assert_eq!(cpu.read_x(), 0x000b);
+    assert_eq!(cpu.read_x(), 0x1234);
 }
 
 #[test]
@@ -140,15 +170,15 @@ fn branches_calls_transfers_and_both_stack_banks_round_trip() {
     let mut cpu = Motorola6809Simulator::new();
     cpu.load(
         &image(&[
-            &[0x86, 0x12],       // LDA #$12
-            &[0xc6, 0x34],       // LDB #$34
-            &[0x1f, 0x01],       // TFR D,X
-            &[0x34, 0x17],       // PSHS X,B,A,CC
-            &[0x4f, 0x5f],       // CLRA; CLRB
-            &[0x35, 0x17],       // PULS X,B,A,CC
-            &[0x8d, 0x02],       // BSR subroutine
-            &[0x13],             // SYNC
-            &[0x4c, 0x39],       // INCA; RTS
+            &[0x86, 0x12], // LDA #$12
+            &[0xc6, 0x34], // LDB #$34
+            &[0x1f, 0x01], // TFR D,X
+            &[0x34, 0x17], // PSHS X,B,A,CC
+            &[0x4f, 0x5f], // CLRA; CLRB
+            &[0x35, 0x17], // PULS X,B,A,CC
+            &[0x8d, 0x01], // BSR subroutine
+            &[0x13],       // SYNC
+            &[0x4c, 0x39], // INCA; RTS
         ]),
         0,
     )
@@ -183,7 +213,11 @@ fn short_and_long_branch_predicates_cover_taken_and_not_taken() {
 
 #[test]
 fn software_interrupts_and_rti_restore_full_frames() {
-    for (instruction, vector) in [(&[0x3f][..], 0xfffa), (&[0x10, 0x3f], 0xfff4), (&[0x11, 0x3f], 0xfff2)] {
+    for (instruction, vector) in [
+        (&[0x3f][..], 0xfffa),
+        (&[0x10, 0x3f], 0xfff4),
+        (&[0x11, 0x3f], 0xfff2),
+    ] {
         let mut program = instruction.to_vec();
         program.extend_from_slice(&[0x13, 0x3b]);
         let handler = (instruction.len() + 1) as u16;
@@ -198,7 +232,10 @@ fn software_interrupts_and_rti_restore_full_frames() {
         cpu.write_memory(vector, &handler.to_be_bytes()).unwrap();
         cpu.run(8).unwrap();
         let state = cpu.get_state();
-        assert_eq!((state.a, state.b, state.x, state.y, state.u), (0x12, 0x34, 0x5678, 0x9abc, 0xdef0));
+        assert_eq!(
+            (state.a, state.b, state.x, state.y, state.u),
+            (0x12, 0x34, 0x5678, 0x9abc, 0xdef0)
+        );
     }
 }
 
@@ -215,7 +252,10 @@ fn traces_faults_and_bounded_execution_are_atomic() {
     let mut unknown = Motorola6809Simulator::new();
     unknown.load(&[0x01], 0).unwrap();
     let before = unknown.get_state();
-    assert!(matches!(unknown.step(), Err(Motorola6809Error::UnknownOpcode { .. })));
+    assert!(matches!(
+        unknown.step(),
+        Err(Motorola6809Error::UnknownOpcode { .. })
+    ));
     assert_eq!(unknown.get_state(), before);
 
     let mut bounded = Motorola6809Simulator::new();
