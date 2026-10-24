@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R337-review-330-337
+spine_node: SPINE-GIVE-REASONS
+sequence: 21400
+chapter: 337
+type: review
+headword: (dialogue)
+gloss: a review of the words from Where It Came From to Show Me the Proof
+concept_tag: REVIEW
+prerequisites: [BN-C330-utso, BN-C330-srishti-kora, BN-C330-probhab, BN-C330-protikriya, BN-C330-prerona, BN-C331-uddeshyo, BN-C331-upokar, BN-C331-labh, BN-C331-loksan, BN-C331-upojogi, BN-C332-sutorang, BN-C332-tachhara, BN-C332-othoch, BN-C332-oboshyo, BN-C332-khata, BN-C333-jukti, BN-C333-boktobyo, BN-C333-pokkho, BN-C333-biruddhe, BN-C333-somorthon-kora, BN-C334-apotti, BN-C334-bitorko, BN-C334-motamot, BN-C334-birodhita-kora, BN-C334-upekkha-kora, BN-C335-osvikar-kora, BN-C335-somalochona-kora, BN-C335-drishtibhonggi, BN-C335-udahoron, BN-C335-prosonggo, BN-C336-gurutvo, BN-C336-bishesh, BN-C336-mul, BN-C336-bekhya-kora, BN-C336-songkkhepe, BN-C337-proman, BN-C337-nishchito, BN-C337-bhitti, BN-C337-shonakto-kora, BN-C337-udghaton-kora]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C330-UTSO330-01, BN-LEX-C330-UTSO330-02, BN-LEX-C330-UTSO330-03, BN-LEX-C330-UTSO330-04, BN-LEX-C330-UTSO330-05, BN-LEX-C331-UDDESHYO331-01, BN-LEX-C331-UDDESHYO331-02, BN-LEX-C331-UDDESHYO331-03, BN-LEX-C331-UDDESHYO331-04, BN-LEX-C331-UDDESHYO331-05, BN-LEX-C332-SUTORANG332-01, BN-LEX-C332-SUTORANG332-02, BN-LEX-C332-SUTORANG332-03, BN-LEX-C332-SUTORANG332-04, BN-LEX-C332-SUTORANG332-05, BN-LEX-C333-JUKTI333-01, BN-LEX-C333-JUKTI333-02, BN-LEX-C333-JUKTI333-03, BN-LEX-C333-JUKTI333-04, BN-LEX-C333-JUKTI333-05, BN-LEX-C334-APOTTI334-01, BN-LEX-C334-APOTTI334-02, BN-LEX-C334-APOTTI334-03, BN-LEX-C334-APOTTI334-04, BN-LEX-C334-APOTTI334-05, BN-LEX-C335-PROSONGO335-01, BN-LEX-C335-PROSONGO335-02, BN-LEX-C335-PROSONGO335-03, BN-LEX-C335-PROSONGO335-04, BN-LEX-C335-PROSONGO335-05, BN-LEX-C336-GURUTTO336-01, BN-LEX-C336-GURUTTO336-02, BN-LEX-C336-GURUTTO336-03, BN-LEX-C336-GURUTTO336-04, BN-LEX-C336-GURUTTO336-05, BN-LEX-C337-PROMAN337-01, BN-LEX-C337-PROMAN337-02, BN-LEX-C337-PROMAN337-03, BN-LEX-C337-PROMAN337-04, BN-LEX-C337-PROMAN337-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C330-UTSO330-01, BN-LEX-C330-UTSO330-02, BN-LEX-C330-UTSO330-03, BN-LEX-C330-UTSO330-04, BN-LEX-C330-UTSO330-05, BN-LEX-C331-UDDESHYO331-01, BN-LEX-C331-UDDESHYO331-02, BN-LEX-C331-UDDESHYO331-03, BN-LEX-C331-UDDESHYO331-04, BN-LEX-C331-UDDESHYO331-05, BN-LEX-C332-SUTORANG332-01, BN-LEX-C332-SUTORANG332-02, BN-LEX-C332-SUTORANG332-03, BN-LEX-C332-SUTORANG332-04, BN-LEX-C332-SUTORANG332-05, BN-LEX-C333-JUKTI333-01, BN-LEX-C333-JUKTI333-02, BN-LEX-C333-JUKTI333-03, BN-LEX-C333-JUKTI333-04, BN-LEX-C333-JUKTI333-05, BN-LEX-C334-APOTTI334-01, BN-LEX-C334-APOTTI334-02, BN-LEX-C334-APOTTI334-03, BN-LEX-C334-APOTTI334-04, BN-LEX-C334-APOTTI334-05, BN-LEX-C335-PROSONGO335-01, BN-LEX-C335-PROSONGO335-02, BN-LEX-C335-PROSONGO335-03, BN-LEX-C335-PROSONGO335-04, BN-LEX-C335-PROSONGO335-05, BN-LEX-C336-GURUTTO336-01, BN-LEX-C336-GURUTTO336-02, BN-LEX-C336-GURUTTO336-03, BN-LEX-C336-GURUTTO336-04, BN-LEX-C336-GURUTTO336-05, BN-LEX-C337-PROMAN337-01, BN-LEX-C337-PROMAN337-02, BN-LEX-C337-PROMAN337-03, BN-LEX-C337-PROMAN337-04, BN-LEX-C337-PROMAN337-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C330-utso, BN-C330-srishti-kora, BN-C330-probhab, BN-C330-protikriya, BN-C330-prerona, BN-C331-uddeshyo, BN-C331-upokar, BN-C331-labh, BN-C331-loksan, BN-C331-upojogi, BN-C332-sutorang, BN-C332-tachhara, BN-C332-othoch, BN-C332-oboshyo, BN-C332-khata, BN-C333-jukti, BN-C333-boktobyo, BN-C333-pokkho, BN-C333-biruddhe, BN-C333-somorthon-kora, BN-C334-apotti, BN-C334-bitorko, BN-C334-motamot, BN-C334-birodhita-kora, BN-C334-upekkha-kora, BN-C335-osvikar-kora, BN-C335-somalochona-kora, BN-C335-drishtibhonggi, BN-C335-udahoron, BN-C335-prosonggo, BN-C336-gurutvo, BN-C336-bishesh, BN-C336-mul, BN-C336-bekhya-kora, BN-C336-songkkhepe, BN-C337-proman, BN-C337-nishchito, BN-C337-bhitti, BN-C337-shonakto-kora, BN-C337-udghaton-kora]
+---
+
+# Looking back: from Where It Came From to Show Me the Proof
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C330-UTSO330-01, BN-LEX-C330-UTSO330-02] -->
+
+[PAUSE 3s] Say the Bengali for a source and to create.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C330-UTSO330-01, BN-LEX-C330-UTSO330-02, BN-LEX-C330-UTSO330-03, BN-LEX-C330-UTSO330-04, BN-LEX-C330-UTSO330-05, BN-LEX-C331-UDDESHYO331-01, BN-LEX-C331-UDDESHYO331-02, BN-LEX-C331-UDDESHYO331-03, BN-LEX-C331-UDDESHYO331-04, BN-LEX-C331-UDDESHYO331-05, BN-LEX-C332-SUTORANG332-01, BN-LEX-C332-SUTORANG332-02, BN-LEX-C332-SUTORANG332-03, BN-LEX-C332-SUTORANG332-04, BN-LEX-C332-SUTORANG332-05, BN-LEX-C333-JUKTI333-01, BN-LEX-C333-JUKTI333-02, BN-LEX-C333-JUKTI333-03, BN-LEX-C333-JUKTI333-04, BN-LEX-C333-JUKTI333-05, BN-LEX-C334-APOTTI334-01, BN-LEX-C334-APOTTI334-02, BN-LEX-C334-APOTTI334-03, BN-LEX-C334-APOTTI334-04, BN-LEX-C334-APOTTI334-05, BN-LEX-C335-PROSONGO335-01, BN-LEX-C335-PROSONGO335-02, BN-LEX-C335-PROSONGO335-03, BN-LEX-C335-PROSONGO335-04, BN-LEX-C335-PROSONGO335-05, BN-LEX-C336-GURUTTO336-01, BN-LEX-C336-GURUTTO336-02, BN-LEX-C336-GURUTTO336-03, BN-LEX-C336-GURUTTO336-04, BN-LEX-C336-GURUTTO336-05, BN-LEX-C337-PROMAN337-01, BN-LEX-C337-PROMAN337-02, BN-LEX-C337-PROMAN337-03, BN-LEX-C337-PROMAN337-04, BN-LEX-C337-PROMAN337-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a source, to create, an influence, a reaction, an inspiration]
+- [YOU SAY: a purpose, a good turn, a profit, a financial loss, useful]
+- [YOU SAY: therefore, besides, and yet, mind you, to hold good]
+- [YOU SAY: an argument, a statement, a side in a dispute, against, to back]
+- [YOU SAY: an objection, a debate, views, to oppose, to disregard]
+- [YOU SAY: to deny, to criticise, an outlook, an example, a topic of talk]
+- [YOU SAY: importance, special, main, to interpret, briefly]
+- [YOU SAY: proof, sure, a basis, to identify, to uncover]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C330-UTSO330-01, BN-LEX-C330-UTSO330-02, BN-LEX-C330-UTSO330-03, BN-LEX-C330-UTSO330-04, BN-LEX-C330-UTSO330-05, BN-LEX-C331-UDDESHYO331-01, BN-LEX-C331-UDDESHYO331-02, BN-LEX-C331-UDDESHYO331-03, BN-LEX-C331-UDDESHYO331-04, BN-LEX-C331-UDDESHYO331-05, BN-LEX-C332-SUTORANG332-01, BN-LEX-C332-SUTORANG332-02, BN-LEX-C332-SUTORANG332-03, BN-LEX-C332-SUTORANG332-04, BN-LEX-C332-SUTORANG332-05, BN-LEX-C333-JUKTI333-01, BN-LEX-C333-JUKTI333-02, BN-LEX-C333-JUKTI333-03, BN-LEX-C333-JUKTI333-04, BN-LEX-C333-JUKTI333-05, BN-LEX-C334-APOTTI334-01, BN-LEX-C334-APOTTI334-02, BN-LEX-C334-APOTTI334-03, BN-LEX-C334-APOTTI334-04, BN-LEX-C334-APOTTI334-05, BN-LEX-C335-PROSONGO335-01, BN-LEX-C335-PROSONGO335-02, BN-LEX-C335-PROSONGO335-03, BN-LEX-C335-PROSONGO335-04, BN-LEX-C335-PROSONGO335-05, BN-LEX-C336-GURUTTO336-01, BN-LEX-C336-GURUTTO336-02, BN-LEX-C336-GURUTTO336-03, BN-LEX-C336-GURUTTO336-04, BN-LEX-C336-GURUTTO336-05, BN-LEX-C337-PROMAN337-01, BN-LEX-C337-PROMAN337-02, BN-LEX-C337-PROMAN337-03, BN-LEX-C337-PROMAN337-04, BN-LEX-C337-PROMAN337-05] -->
+
+[PAUSE 3s] A source? (**উৎস**, *utsô*.) To create? (**সৃষ্টি করা**, *srishṭi kôrā*.) An influence? (**প্রভাব**, *prôbhāb*.) A reaction? (**প্রতিক্রিয়া**, *prôtikriyā*.) An inspiration? (**প্রেরণা**, *preronā*.) A purpose? (**উদ্দেশ্য**, *uddeshyô*.) A good turn? (**উপকার**, *upôkār*.) A profit? (**লাভ**, *lābh*.) A financial loss? (**লোকসান**, *loksān*.) Useful? (**উপযোগী**, *upôjogī*.) Therefore? (**সুতরাং**, *sutôrāng*.) Besides? (**তাছাড়া**, *tāchhāṛā*.) And yet? (**অথচ**, *ôthôch*.) Mind you? (**অবশ্য**, *ôbôshyô*.) To hold good? (**খাটা**, *khāṭā*.) An argument? (**যুক্তি**, *jukti*.) A statement? (**বক্তব্য**, *bôktôbyô*.) A side in a dispute? (**পক্ষ**, *pôkkhô*.) Against? (**বিরুদ্ধে**, *biruddhe*.) To back? (**সমর্থন করা**, *sômôrthôn kôrā*.) An objection? (**আপত্তি**, *āpôtti*.) A debate? (**বিতর্ক**, *bitôrkô*.) Views? (**মতামত**, *môtāmôt*.) To oppose? (**বিরোধিতা করা**, *birodhitā kôrā*.) To disregard? (**উপেক্ষা করা**, *upekkhā kôrā*.) To deny? (**অস্বীকার করা**, *ôsvīkār kôrā*.) To criticise? (**সমালোচনা করা**, *sômālochônā kôrā*.) An outlook? (**দৃষ্টিভঙ্গি**, *drishṭibhônggi*.) An example? (**উদাহরণ**, *udāhôrôn*.) A topic of talk? (**প্রসঙ্গ**, *prôsônggô*.) Importance? (**গুরুত্ব**, *gurutvô*.) Special? (**বিশেষ**, *bishesh*.) Main? (**মূল**, *mūl*.) To interpret? (**ব্যাখ্যা করা**, *bækhyā kôrā*.) Briefly? (**সংক্ষেপে**, *sôngkkhepe*.) Proof? (**প্রমাণ**, *prômān*.) Sure? (**নিশ্চিত**, *nishchitô*.) A basis? (**ভিত্তি**, *bhitti*.) To identify? (**শনাক্ত করা**, *shônāktô kôrā*.) To uncover? (**উদ্ঘাটন করা**, *udghāṭôn kôrā*.)
+`;export{t};

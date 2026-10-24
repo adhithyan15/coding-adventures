@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R507-review-500-507
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 30810
+chapter: 507
+type: review
+headword: (dialogue)
+gloss: a review of the words from Orders and Departments to Cracks and Repairs
+concept_tag: REVIEW
+prerequisites: [BN-C500-bibhag, BN-C500-hukum, BN-C500-kormosthol, BN-C500-sara, BN-C500-todarok-kora, BN-C501-bisheshogyo, BN-C501-upodeshta, BN-C501-onubadok, BN-C501-sthopoti, BN-C501-nirnoy-kora, BN-C502-kompiutar, BN-C502-mobail, BN-C502-selphi, BN-C502-ghata, BN-C502-charj-deoya, BN-C503-oyebsait, BN-C503-lingk, BN-C503-onlain, BN-C503-skrin, BN-C503-daunlod-kora, BN-C504-robot, BN-C504-svoyongkriyo, BN-C504-jenaretor, BN-C504-jong-dhora, BN-C504-motor, BN-C505-ondhokar, BN-C505-ujjvol, BN-C505-jharbati, BN-C505-timtim-kora, BN-C505-nebha, BN-C506-tengk, BN-C506-phuto, BN-C506-upoche-pora, BN-C506-secha, BN-C506-chuiye-pora, BN-C507-chhidro, BN-C507-plastar, BN-C507-atha, BN-C507-lepa, BN-C507-thoka]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C500-BIBHAG500-01, BN-LEX-C500-BIBHAG500-02, BN-LEX-C500-BIBHAG500-03, BN-LEX-C500-BIBHAG500-04, BN-LEX-C500-BIBHAG500-05, BN-LEX-C501-BISHESHOGGO501-01, BN-LEX-C501-BISHESHOGGO501-02, BN-LEX-C501-BISHESHOGGO501-03, BN-LEX-C501-BISHESHOGGO501-04, BN-LEX-C501-BISHESHOGGO501-05, BN-LEX-C502-KOMPIUTAR502-01, BN-LEX-C502-KOMPIUTAR502-02, BN-LEX-C502-KOMPIUTAR502-03, BN-LEX-C502-KOMPIUTAR502-04, BN-LEX-C502-KOMPIUTAR502-05, BN-LEX-C503-ONLINE503-01, BN-LEX-C503-ONLINE503-02, BN-LEX-C503-ONLINE503-03, BN-LEX-C503-ONLINE503-04, BN-LEX-C503-ONLINE503-05, BN-LEX-C504-JONTRO504-01, BN-LEX-C504-JONTRO504-02, BN-LEX-C504-JONTRO504-03, BN-LEX-C504-JONTRO504-04, BN-LEX-C504-JONTRO504-05, BN-LEX-C505-ALO505-01, BN-LEX-C505-ALO505-02, BN-LEX-C505-ALO505-03, BN-LEX-C505-ALO505-04, BN-LEX-C505-ALO505-05, BN-LEX-C506-TANK506-01, BN-LEX-C506-TANK506-02, BN-LEX-C506-TANK506-03, BN-LEX-C506-TANK506-04, BN-LEX-C506-TANK506-05, BN-LEX-C507-PHATOL507-01, BN-LEX-C507-PHATOL507-02, BN-LEX-C507-PHATOL507-03, BN-LEX-C507-PHATOL507-04, BN-LEX-C507-PHATOL507-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C500-BIBHAG500-01, BN-LEX-C500-BIBHAG500-02, BN-LEX-C500-BIBHAG500-03, BN-LEX-C500-BIBHAG500-04, BN-LEX-C500-BIBHAG500-05, BN-LEX-C501-BISHESHOGGO501-01, BN-LEX-C501-BISHESHOGGO501-02, BN-LEX-C501-BISHESHOGGO501-03, BN-LEX-C501-BISHESHOGGO501-04, BN-LEX-C501-BISHESHOGGO501-05, BN-LEX-C502-KOMPIUTAR502-01, BN-LEX-C502-KOMPIUTAR502-02, BN-LEX-C502-KOMPIUTAR502-03, BN-LEX-C502-KOMPIUTAR502-04, BN-LEX-C502-KOMPIUTAR502-05, BN-LEX-C503-ONLINE503-01, BN-LEX-C503-ONLINE503-02, BN-LEX-C503-ONLINE503-03, BN-LEX-C503-ONLINE503-04, BN-LEX-C503-ONLINE503-05, BN-LEX-C504-JONTRO504-01, BN-LEX-C504-JONTRO504-02, BN-LEX-C504-JONTRO504-03, BN-LEX-C504-JONTRO504-04, BN-LEX-C504-JONTRO504-05, BN-LEX-C505-ALO505-01, BN-LEX-C505-ALO505-02, BN-LEX-C505-ALO505-03, BN-LEX-C505-ALO505-04, BN-LEX-C505-ALO505-05, BN-LEX-C506-TANK506-01, BN-LEX-C506-TANK506-02, BN-LEX-C506-TANK506-03, BN-LEX-C506-TANK506-04, BN-LEX-C506-TANK506-05, BN-LEX-C507-PHATOL507-01, BN-LEX-C507-PHATOL507-02, BN-LEX-C507-PHATOL507-03, BN-LEX-C507-PHATOL507-04, BN-LEX-C507-PHATOL507-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C500-bibhag, BN-C500-hukum, BN-C500-kormosthol, BN-C500-sara, BN-C500-todarok-kora, BN-C501-bisheshogyo, BN-C501-upodeshta, BN-C501-onubadok, BN-C501-sthopoti, BN-C501-nirnoy-kora, BN-C502-kompiutar, BN-C502-mobail, BN-C502-selphi, BN-C502-ghata, BN-C502-charj-deoya, BN-C503-oyebsait, BN-C503-lingk, BN-C503-onlain, BN-C503-skrin, BN-C503-daunlod-kora, BN-C504-robot, BN-C504-svoyongkriyo, BN-C504-jenaretor, BN-C504-jong-dhora, BN-C504-motor, BN-C505-ondhokar, BN-C505-ujjvol, BN-C505-jharbati, BN-C505-timtim-kora, BN-C505-nebha, BN-C506-tengk, BN-C506-phuto, BN-C506-upoche-pora, BN-C506-secha, BN-C506-chuiye-pora, BN-C507-chhidro, BN-C507-plastar, BN-C507-atha, BN-C507-lepa, BN-C507-thoka]
+---
+
+# Looking back: from Orders and Departments to Cracks and Repairs
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C500-BIBHAG500-01, BN-LEX-C500-BIBHAG500-02] -->
+
+[PAUSE 3s] Say the Bengali for a department and a command.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C500-BIBHAG500-01, BN-LEX-C500-BIBHAG500-02, BN-LEX-C500-BIBHAG500-03, BN-LEX-C500-BIBHAG500-04, BN-LEX-C500-BIBHAG500-05, BN-LEX-C501-BISHESHOGGO501-01, BN-LEX-C501-BISHESHOGGO501-02, BN-LEX-C501-BISHESHOGGO501-03, BN-LEX-C501-BISHESHOGGO501-04, BN-LEX-C501-BISHESHOGGO501-05, BN-LEX-C502-KOMPIUTAR502-01, BN-LEX-C502-KOMPIUTAR502-02, BN-LEX-C502-KOMPIUTAR502-03, BN-LEX-C502-KOMPIUTAR502-04, BN-LEX-C502-KOMPIUTAR502-05, BN-LEX-C503-ONLINE503-01, BN-LEX-C503-ONLINE503-02, BN-LEX-C503-ONLINE503-03, BN-LEX-C503-ONLINE503-04, BN-LEX-C503-ONLINE503-05, BN-LEX-C504-JONTRO504-01, BN-LEX-C504-JONTRO504-02, BN-LEX-C504-JONTRO504-03, BN-LEX-C504-JONTRO504-04, BN-LEX-C504-JONTRO504-05, BN-LEX-C505-ALO505-01, BN-LEX-C505-ALO505-02, BN-LEX-C505-ALO505-03, BN-LEX-C505-ALO505-04, BN-LEX-C505-ALO505-05, BN-LEX-C506-TANK506-01, BN-LEX-C506-TANK506-02, BN-LEX-C506-TANK506-03, BN-LEX-C506-TANK506-04, BN-LEX-C506-TANK506-05, BN-LEX-C507-PHATOL507-01, BN-LEX-C507-PHATOL507-02, BN-LEX-C507-PHATOL507-03, BN-LEX-C507-PHATOL507-04, BN-LEX-C507-PHATOL507-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a department, a command, a workplace, to get done, to supervise]
+- [YOU SAY: a specialist, an adviser, a translator, an architect, to diagnose]
+- [YOU SAY: a computer, a mobile phone, a selfie, to rummage, to charge a phone]
+- [YOU SAY: a website, a link online, online, a screen, to download]
+- [YOU SAY: a robot, automatic, a generator, to rust, a motor]
+- [YOU SAY: darkness, bright, a chandelier, to flicker, to go out (of a light)]
+- [YOU SAY: a water tank, a hole right through, to overflow, to bail out water, to seep]
+- [YOU SAY: a small opening, wall plaster, glue, to plaster, to hammer in]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C500-BIBHAG500-01, BN-LEX-C500-BIBHAG500-02, BN-LEX-C500-BIBHAG500-03, BN-LEX-C500-BIBHAG500-04, BN-LEX-C500-BIBHAG500-05, BN-LEX-C501-BISHESHOGGO501-01, BN-LEX-C501-BISHESHOGGO501-02, BN-LEX-C501-BISHESHOGGO501-03, BN-LEX-C501-BISHESHOGGO501-04, BN-LEX-C501-BISHESHOGGO501-05, BN-LEX-C502-KOMPIUTAR502-01, BN-LEX-C502-KOMPIUTAR502-02, BN-LEX-C502-KOMPIUTAR502-03, BN-LEX-C502-KOMPIUTAR502-04, BN-LEX-C502-KOMPIUTAR502-05, BN-LEX-C503-ONLINE503-01, BN-LEX-C503-ONLINE503-02, BN-LEX-C503-ONLINE503-03, BN-LEX-C503-ONLINE503-04, BN-LEX-C503-ONLINE503-05, BN-LEX-C504-JONTRO504-01, BN-LEX-C504-JONTRO504-02, BN-LEX-C504-JONTRO504-03, BN-LEX-C504-JONTRO504-04, BN-LEX-C504-JONTRO504-05, BN-LEX-C505-ALO505-01, BN-LEX-C505-ALO505-02, BN-LEX-C505-ALO505-03, BN-LEX-C505-ALO505-04, BN-LEX-C505-ALO505-05, BN-LEX-C506-TANK506-01, BN-LEX-C506-TANK506-02, BN-LEX-C506-TANK506-03, BN-LEX-C506-TANK506-04, BN-LEX-C506-TANK506-05, BN-LEX-C507-PHATOL507-01, BN-LEX-C507-PHATOL507-02, BN-LEX-C507-PHATOL507-03, BN-LEX-C507-PHATOL507-04, BN-LEX-C507-PHATOL507-05] -->
+
+[PAUSE 3s] A department? (**বিভাগ**, *bibhāg*.) A command? (**হুকুম**, *hukum*.) A workplace? (**কর্মস্থল**, *kôrmôsthôl*.) To get done? (**সারা**, *sārā*.) To supervise? (**তদারক করা**, *tôdārôk kôrā*.) A specialist? (**বিশেষজ্ঞ**, *bisheshôgyô*.) An adviser? (**উপদেষ্টা**, *upôdeshṭā*.) A translator? (**অনুবাদক**, *ônubādôk*.) An architect? (**স্থপতি**, *sthôpôti*.) To diagnose? (**নির্ণয় করা**, *nirnôy kôrā*.) A computer? (**কম্পিউটার**, *kômpiuṭār*.) A mobile phone? (**মোবাইল**, *mobāil*.) A selfie? (**সেলফি**, *selphi*.) To rummage? (**ঘাঁটা**, *ghā̃ṭā*.) To charge a phone? (**চার্জ দেওয়া**, *chārj deoyā*.) A website? (**ওয়েবসাইট**, *oyebsāiṭ*.) A link online? (**লিংক**, *lingk*.) Online? (**অনলাইন**, *ônlāin*.) A screen? (**স্ক্রিন**, *skrin*.) To download? (**ডাউনলোড করা**, *ḍāunloḍ kôrā*.) A robot? (**রোবট**, *robôṭ*.) Automatic? (**স্বয়ংক্রিয়**, *svôyôngkriyô*.) A generator? (**জেনারেটর**, *jenāreṭôr*.) To rust? (**জং ধরা**, *jông dhôrā*.) A motor? (**মোটর**, *moṭôr*.) Darkness? (**অন্ধকার**, *ôndhôkār*.) Bright? (**উজ্জ্বল**, *ujjvôl*.) A chandelier? (**ঝাড়বাতি**, *jhāṛbāti*.) To flicker? (**টিমটিম করা**, *ṭimṭim kôrā*.) To go out (of a light)? (**নেভা**, *nebhā*.) A water tank? (**ট্যাংক**, *ṭængk*.) A hole right through? (**ফুটো**, *phuṭo*.) To overflow? (**উপচে পড়া**, *upôche pôṛā*.) To bail out water? (**সেঁচা**, *sẽchā*.) To seep? (**চুঁইয়ে পড়া**, *chũiye pôṛā*.) A small opening? (**ছিদ্র**, *chhidrô*.) Wall plaster? (**প্লাস্টার**, *plāsṭār*.) Glue? (**আঠা**, *āṭhā*.) To plaster? (**লেপা**, *lepā*.) To hammer in? (**ঠোকা**, *ṭhokā*.)
+`;export{t};

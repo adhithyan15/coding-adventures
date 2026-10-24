@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R484-review-478-484
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 29400
+chapter: 484
+type: review
+headword: (dialogue)
+gloss: a review of the words from At the Sickbed to Children and Lineage
+concept_tag: REVIEW
+prerequisites: [BN-C478-jotno, BN-C478-seba, BN-C478-tharmomitar, BN-C478-jolpotti, BN-C478-shushrusha-kora, BN-C479-ghum, BN-C479-onidra, BN-C479-tondra, BN-C479-jhimano, BN-C479-armora-bhanga, BN-C480-pushti, BN-C480-dhen, BN-C480-nesha, BN-C480-dhumpan, BN-C480-jhorano, BN-C481-ma, BN-C481-dada, BN-C481-didi, BN-C481-boudi, BN-C481-thakuma, BN-C482-jetha, BN-C482-meso, BN-C482-bhagne, BN-C482-bhaijhi, BN-C482-beyai, BN-C483-jamai, BN-C483-bouma, BN-C483-nonod, BN-C483-deor, BN-C483-bhashur, BN-C484-sontan, BN-C484-jomoj, BN-C484-bongsho, BN-C484-projonmo, BN-C484-purbopurush]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C478-JOTNO478-01, BN-LEX-C478-JOTNO478-02, BN-LEX-C478-JOTNO478-03, BN-LEX-C478-JOTNO478-04, BN-LEX-C478-JOTNO478-05, BN-LEX-C479-GHUM479-01, BN-LEX-C479-GHUM479-02, BN-LEX-C479-GHUM479-03, BN-LEX-C479-GHUM479-04, BN-LEX-C479-GHUM479-05, BN-LEX-C480-PUSHTI480-01, BN-LEX-C480-PUSHTI480-02, BN-LEX-C480-PUSHTI480-03, BN-LEX-C480-PUSHTI480-04, BN-LEX-C480-PUSHTI480-05, BN-LEX-C481-MA481-01, BN-LEX-C481-MA481-02, BN-LEX-C481-MA481-03, BN-LEX-C481-MA481-04, BN-LEX-C481-MA481-05, BN-LEX-C482-JETHA482-01, BN-LEX-C482-JETHA482-02, BN-LEX-C482-JETHA482-03, BN-LEX-C482-JETHA482-04, BN-LEX-C482-JETHA482-05, BN-LEX-C483-JAMAI483-01, BN-LEX-C483-JAMAI483-02, BN-LEX-C483-JAMAI483-03, BN-LEX-C483-JAMAI483-04, BN-LEX-C483-JAMAI483-05, BN-LEX-C484-SONTAN484-01, BN-LEX-C484-SONTAN484-02, BN-LEX-C484-SONTAN484-03, BN-LEX-C484-SONTAN484-04, BN-LEX-C484-SONTAN484-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C478-JOTNO478-01, BN-LEX-C478-JOTNO478-02, BN-LEX-C478-JOTNO478-03, BN-LEX-C478-JOTNO478-04, BN-LEX-C478-JOTNO478-05, BN-LEX-C479-GHUM479-01, BN-LEX-C479-GHUM479-02, BN-LEX-C479-GHUM479-03, BN-LEX-C479-GHUM479-04, BN-LEX-C479-GHUM479-05, BN-LEX-C480-PUSHTI480-01, BN-LEX-C480-PUSHTI480-02, BN-LEX-C480-PUSHTI480-03, BN-LEX-C480-PUSHTI480-04, BN-LEX-C480-PUSHTI480-05, BN-LEX-C481-MA481-01, BN-LEX-C481-MA481-02, BN-LEX-C481-MA481-03, BN-LEX-C481-MA481-04, BN-LEX-C481-MA481-05, BN-LEX-C482-JETHA482-01, BN-LEX-C482-JETHA482-02, BN-LEX-C482-JETHA482-03, BN-LEX-C482-JETHA482-04, BN-LEX-C482-JETHA482-05, BN-LEX-C483-JAMAI483-01, BN-LEX-C483-JAMAI483-02, BN-LEX-C483-JAMAI483-03, BN-LEX-C483-JAMAI483-04, BN-LEX-C483-JAMAI483-05, BN-LEX-C484-SONTAN484-01, BN-LEX-C484-SONTAN484-02, BN-LEX-C484-SONTAN484-03, BN-LEX-C484-SONTAN484-04, BN-LEX-C484-SONTAN484-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C478-jotno, BN-C478-seba, BN-C478-tharmomitar, BN-C478-jolpotti, BN-C478-shushrusha-kora, BN-C479-ghum, BN-C479-onidra, BN-C479-tondra, BN-C479-jhimano, BN-C479-armora-bhanga, BN-C480-pushti, BN-C480-dhen, BN-C480-nesha, BN-C480-dhumpan, BN-C480-jhorano, BN-C481-ma, BN-C481-dada, BN-C481-didi, BN-C481-boudi, BN-C481-thakuma, BN-C482-jetha, BN-C482-meso, BN-C482-bhagne, BN-C482-bhaijhi, BN-C482-beyai, BN-C483-jamai, BN-C483-bouma, BN-C483-nonod, BN-C483-deor, BN-C483-bhashur, BN-C484-sontan, BN-C484-jomoj, BN-C484-bongsho, BN-C484-projonmo, BN-C484-purbopurush]
+---
+
+# Looking back: from At the Sickbed to Children and Lineage
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C478-JOTNO478-01, BN-LEX-C478-JOTNO478-02] -->
+
+[PAUSE 3s] Say the Bengali for care and nursing.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C478-JOTNO478-01, BN-LEX-C478-JOTNO478-02, BN-LEX-C478-JOTNO478-03, BN-LEX-C478-JOTNO478-04, BN-LEX-C478-JOTNO478-05, BN-LEX-C479-GHUM479-01, BN-LEX-C479-GHUM479-02, BN-LEX-C479-GHUM479-03, BN-LEX-C479-GHUM479-04, BN-LEX-C479-GHUM479-05, BN-LEX-C480-PUSHTI480-01, BN-LEX-C480-PUSHTI480-02, BN-LEX-C480-PUSHTI480-03, BN-LEX-C480-PUSHTI480-04, BN-LEX-C480-PUSHTI480-05, BN-LEX-C481-MA481-01, BN-LEX-C481-MA481-02, BN-LEX-C481-MA481-03, BN-LEX-C481-MA481-04, BN-LEX-C481-MA481-05, BN-LEX-C482-JETHA482-01, BN-LEX-C482-JETHA482-02, BN-LEX-C482-JETHA482-03, BN-LEX-C482-JETHA482-04, BN-LEX-C482-JETHA482-05, BN-LEX-C483-JAMAI483-01, BN-LEX-C483-JAMAI483-02, BN-LEX-C483-JAMAI483-03, BN-LEX-C483-JAMAI483-04, BN-LEX-C483-JAMAI483-05, BN-LEX-C484-SONTAN484-01, BN-LEX-C484-SONTAN484-02, BN-LEX-C484-SONTAN484-03, BN-LEX-C484-SONTAN484-04, BN-LEX-C484-SONTAN484-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: care, nursing, a thermometer, a cold compress, to nurse]
+- [YOU SAY: sleep, insomnia, drowsiness, to nod off, to stretch on waking]
+- [YOU SAY: nutrition, meditation, an addiction, smoking, to shed]
+- [YOU SAY: a mother, an elder brother, an elder sister, an elder brother's wife, a paternal grandmother]
+- [YOU SAY: a father's elder brother, a maternal aunt's husband, a sister's son, a brother's daughter, a child's father-in-law]
+- [YOU SAY: a son-in-law, a daughter-in-law, a husband's sister, a husband's younger brother, a husband's elder brother]
+- [YOU SAY: offspring, twins, lineage, a generation, an ancestor]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C478-JOTNO478-01, BN-LEX-C478-JOTNO478-02, BN-LEX-C478-JOTNO478-03, BN-LEX-C478-JOTNO478-04, BN-LEX-C478-JOTNO478-05, BN-LEX-C479-GHUM479-01, BN-LEX-C479-GHUM479-02, BN-LEX-C479-GHUM479-03, BN-LEX-C479-GHUM479-04, BN-LEX-C479-GHUM479-05, BN-LEX-C480-PUSHTI480-01, BN-LEX-C480-PUSHTI480-02, BN-LEX-C480-PUSHTI480-03, BN-LEX-C480-PUSHTI480-04, BN-LEX-C480-PUSHTI480-05, BN-LEX-C481-MA481-01, BN-LEX-C481-MA481-02, BN-LEX-C481-MA481-03, BN-LEX-C481-MA481-04, BN-LEX-C481-MA481-05, BN-LEX-C482-JETHA482-01, BN-LEX-C482-JETHA482-02, BN-LEX-C482-JETHA482-03, BN-LEX-C482-JETHA482-04, BN-LEX-C482-JETHA482-05, BN-LEX-C483-JAMAI483-01, BN-LEX-C483-JAMAI483-02, BN-LEX-C483-JAMAI483-03, BN-LEX-C483-JAMAI483-04, BN-LEX-C483-JAMAI483-05, BN-LEX-C484-SONTAN484-01, BN-LEX-C484-SONTAN484-02, BN-LEX-C484-SONTAN484-03, BN-LEX-C484-SONTAN484-04, BN-LEX-C484-SONTAN484-05] -->
+
+[PAUSE 3s] Care? (**যত্ন**, *jôtnô*.) Nursing? (**সেবা**, *sebā*.) A thermometer? (**থার্মোমিটার**, *thārmomiṭār*.) A cold compress? (**জলপট্টি**, *jôlpôṭṭi*.) To nurse? (**শুশ্রূষা করা**, *shushrūshā kôrā*.) Sleep? (**ঘুম**, *ghum*.) Insomnia? (**অনিদ্রা**, *ônidrā*.) Drowsiness? (**তন্দ্রা**, *tôndrā*.) To nod off? (**ঝিমানো**, *jhimāno*.) To stretch on waking? (**আড়মোড়া ভাঙা**, *āṛmoṛā bhāngā*.) Nutrition? (**পুষ্টি**, *pushṭi*.) Meditation? (**ধ্যান**, *dhæn*.) An addiction? (**নেশা**, *neshā*.) Smoking? (**ধূমপান**, *dhūmpān*.) To shed? (**ঝরানো**, *jhôrāno*.) A mother? (**মা**, *mā*.) An elder brother? (**দাদা**, *dādā*.) An elder sister? (**দিদি**, *didi*.) An elder brother's wife? (**বউদি**, *boudi*.) A paternal grandmother? (**ঠাকুমা**, *ṭhākumā*.) A father's elder brother? (**জেঠা**, *jeṭhā*.) A maternal aunt's husband? (**মেসো**, *meso*.) A sister's son? (**ভাগ্নে**, *bhāgne*.) A brother's daughter? (**ভাইঝি**, *bhāijhi*.) A child's father-in-law? (**বেয়াই**, *beyāi*.) A son-in-law? (**জামাই**, *jāmāi*.) A daughter-in-law? (**বউমা**, *boumā*.) A husband's sister? (**ননদ**, *nônôd*.) A husband's younger brother? (**দেওর**, *deor*.) A husband's elder brother? (**ভাশুর**, *bhāshur*.) Offspring? (**সন্তান**, *sôntān*.) Twins? (**যমজ**, *jômôj*.) Lineage? (**বংশ**, *bôngshô*.) A generation? (**প্রজন্ম**, *prôjônmô*.) An ancestor? (**পূর্বপুরুষ**, *pūrbôpurush*.)
+`;export{t};

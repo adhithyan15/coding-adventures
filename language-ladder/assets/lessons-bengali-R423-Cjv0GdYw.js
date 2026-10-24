@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R423-review-416-423
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 26040
+chapter: 423
+type: review
+headword: (dialogue)
+gloss: a review of the words from Debts and Instalments to Bags, Wrappers and Sizes
+concept_tag: REVIEW
+prerequisites: [BN-C416-kisti, BN-C416-dena, BN-C416-paona, BN-C416-shodh-kora, BN-C416-metano, BN-C417-not, BN-C417-etiem, BN-C417-belans, BN-C417-transphar-kora, BN-C417-chada, BN-C418-munapha, BN-C418-shulko, BN-C418-khajna, BN-C418-mohajon, BN-C418-baki, BN-C419-obhab, BN-C419-opochoy, BN-C419-kipte, BN-C419-bondhok, BN-C419-sombol, BN-C420-bikri, BN-C420-pherioyala, BN-C420-dalal, BN-C420-hat, BN-C420-bikono, BN-C421-mal, BN-C421-gudam, BN-C421-ordar, BN-C421-paikari, BN-C421-mojut-kora, BN-C422-daripalla, BN-C422-khati, BN-C422-phordo, BN-C422-grahok, BN-C422-porokh-kora, BN-C423-thonga, BN-C423-morok, BN-C423-keribyag, BN-C423-saij, BN-C423-gochhano]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C416-KISTI416-01, BN-LEX-C416-KISTI416-02, BN-LEX-C416-KISTI416-03, BN-LEX-C416-KISTI416-04, BN-LEX-C416-KISTI416-05, BN-LEX-C417-NOT417-01, BN-LEX-C417-NOT417-02, BN-LEX-C417-NOT417-03, BN-LEX-C417-NOT417-04, BN-LEX-C417-NOT417-05, BN-LEX-C418-MUNAFA418-01, BN-LEX-C418-MUNAFA418-02, BN-LEX-C418-MUNAFA418-03, BN-LEX-C418-MUNAFA418-04, BN-LEX-C418-MUNAFA418-05, BN-LEX-C419-ABHAB419-01, BN-LEX-C419-ABHAB419-02, BN-LEX-C419-ABHAB419-03, BN-LEX-C419-ABHAB419-04, BN-LEX-C419-ABHAB419-05, BN-LEX-C420-HAT420-01, BN-LEX-C420-HAT420-02, BN-LEX-C420-HAT420-03, BN-LEX-C420-HAT420-04, BN-LEX-C420-HAT420-05, BN-LEX-C421-GUDAM421-01, BN-LEX-C421-GUDAM421-02, BN-LEX-C421-GUDAM421-03, BN-LEX-C421-GUDAM421-04, BN-LEX-C421-GUDAM421-05, BN-LEX-C422-PORAKH422-01, BN-LEX-C422-PORAKH422-02, BN-LEX-C422-PORAKH422-03, BN-LEX-C422-PORAKH422-04, BN-LEX-C422-PORAKH422-05, BN-LEX-C423-THONGA423-01, BN-LEX-C423-THONGA423-02, BN-LEX-C423-THONGA423-03, BN-LEX-C423-THONGA423-04, BN-LEX-C423-THONGA423-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C416-KISTI416-01, BN-LEX-C416-KISTI416-02, BN-LEX-C416-KISTI416-03, BN-LEX-C416-KISTI416-04, BN-LEX-C416-KISTI416-05, BN-LEX-C417-NOT417-01, BN-LEX-C417-NOT417-02, BN-LEX-C417-NOT417-03, BN-LEX-C417-NOT417-04, BN-LEX-C417-NOT417-05, BN-LEX-C418-MUNAFA418-01, BN-LEX-C418-MUNAFA418-02, BN-LEX-C418-MUNAFA418-03, BN-LEX-C418-MUNAFA418-04, BN-LEX-C418-MUNAFA418-05, BN-LEX-C419-ABHAB419-01, BN-LEX-C419-ABHAB419-02, BN-LEX-C419-ABHAB419-03, BN-LEX-C419-ABHAB419-04, BN-LEX-C419-ABHAB419-05, BN-LEX-C420-HAT420-01, BN-LEX-C420-HAT420-02, BN-LEX-C420-HAT420-03, BN-LEX-C420-HAT420-04, BN-LEX-C420-HAT420-05, BN-LEX-C421-GUDAM421-01, BN-LEX-C421-GUDAM421-02, BN-LEX-C421-GUDAM421-03, BN-LEX-C421-GUDAM421-04, BN-LEX-C421-GUDAM421-05, BN-LEX-C422-PORAKH422-01, BN-LEX-C422-PORAKH422-02, BN-LEX-C422-PORAKH422-03, BN-LEX-C422-PORAKH422-04, BN-LEX-C422-PORAKH422-05, BN-LEX-C423-THONGA423-01, BN-LEX-C423-THONGA423-02, BN-LEX-C423-THONGA423-03, BN-LEX-C423-THONGA423-04, BN-LEX-C423-THONGA423-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C416-kisti, BN-C416-dena, BN-C416-paona, BN-C416-shodh-kora, BN-C416-metano, BN-C417-not, BN-C417-etiem, BN-C417-belans, BN-C417-transphar-kora, BN-C417-chada, BN-C418-munapha, BN-C418-shulko, BN-C418-khajna, BN-C418-mohajon, BN-C418-baki, BN-C419-obhab, BN-C419-opochoy, BN-C419-kipte, BN-C419-bondhok, BN-C419-sombol, BN-C420-bikri, BN-C420-pherioyala, BN-C420-dalal, BN-C420-hat, BN-C420-bikono, BN-C421-mal, BN-C421-gudam, BN-C421-ordar, BN-C421-paikari, BN-C421-mojut-kora, BN-C422-daripalla, BN-C422-khati, BN-C422-phordo, BN-C422-grahok, BN-C422-porokh-kora, BN-C423-thonga, BN-C423-morok, BN-C423-keribyag, BN-C423-saij, BN-C423-gochhano]
+---
+
+# Looking back: from Debts and Instalments to Bags, Wrappers and Sizes
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C416-KISTI416-01, BN-LEX-C416-KISTI416-02] -->
+
+[PAUSE 3s] Say the Bengali for an instalment and a debt (owed).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C416-KISTI416-01, BN-LEX-C416-KISTI416-02, BN-LEX-C416-KISTI416-03, BN-LEX-C416-KISTI416-04, BN-LEX-C416-KISTI416-05, BN-LEX-C417-NOT417-01, BN-LEX-C417-NOT417-02, BN-LEX-C417-NOT417-03, BN-LEX-C417-NOT417-04, BN-LEX-C417-NOT417-05, BN-LEX-C418-MUNAFA418-01, BN-LEX-C418-MUNAFA418-02, BN-LEX-C418-MUNAFA418-03, BN-LEX-C418-MUNAFA418-04, BN-LEX-C418-MUNAFA418-05, BN-LEX-C419-ABHAB419-01, BN-LEX-C419-ABHAB419-02, BN-LEX-C419-ABHAB419-03, BN-LEX-C419-ABHAB419-04, BN-LEX-C419-ABHAB419-05, BN-LEX-C420-HAT420-01, BN-LEX-C420-HAT420-02, BN-LEX-C420-HAT420-03, BN-LEX-C420-HAT420-04, BN-LEX-C420-HAT420-05, BN-LEX-C421-GUDAM421-01, BN-LEX-C421-GUDAM421-02, BN-LEX-C421-GUDAM421-03, BN-LEX-C421-GUDAM421-04, BN-LEX-C421-GUDAM421-05, BN-LEX-C422-PORAKH422-01, BN-LEX-C422-PORAKH422-02, BN-LEX-C422-PORAKH422-03, BN-LEX-C422-PORAKH422-04, BN-LEX-C422-PORAKH422-05, BN-LEX-C423-THONGA423-01, BN-LEX-C423-THONGA423-02, BN-LEX-C423-THONGA423-03, BN-LEX-C423-THONGA423-04, BN-LEX-C423-THONGA423-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an instalment, a debt (owed), money owed to one, to pay off, to settle (a bill)]
+- [YOU SAY: a banknote, a cash machine, a (bank) balance, to transfer (money), a contribution (to a fund)]
+- [YOU SAY: profit (in trade), a duty (tax), land tax, a moneylender, the rest (remaining)]
+- [YOU SAY: want (lack), waste (of something useful), stingy, a pledge (for a loan), one's means]
+- [YOU SAY: a sale (selling), a hawker, a broker, a village market, to be sold]
+- [YOU SAY: goods, a warehouse, an order (for goods or food), wholesale, to stock up]
+- [YOU SAY: a pair of scales, pure (unmixed), a shopping list, a customer (formal), to test (by trying)]
+- [YOU SAY: a paper bag, a wrapper, a carrier bag, a size (of clothes or shoes), to palm off]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C416-KISTI416-01, BN-LEX-C416-KISTI416-02, BN-LEX-C416-KISTI416-03, BN-LEX-C416-KISTI416-04, BN-LEX-C416-KISTI416-05, BN-LEX-C417-NOT417-01, BN-LEX-C417-NOT417-02, BN-LEX-C417-NOT417-03, BN-LEX-C417-NOT417-04, BN-LEX-C417-NOT417-05, BN-LEX-C418-MUNAFA418-01, BN-LEX-C418-MUNAFA418-02, BN-LEX-C418-MUNAFA418-03, BN-LEX-C418-MUNAFA418-04, BN-LEX-C418-MUNAFA418-05, BN-LEX-C419-ABHAB419-01, BN-LEX-C419-ABHAB419-02, BN-LEX-C419-ABHAB419-03, BN-LEX-C419-ABHAB419-04, BN-LEX-C419-ABHAB419-05, BN-LEX-C420-HAT420-01, BN-LEX-C420-HAT420-02, BN-LEX-C420-HAT420-03, BN-LEX-C420-HAT420-04, BN-LEX-C420-HAT420-05, BN-LEX-C421-GUDAM421-01, BN-LEX-C421-GUDAM421-02, BN-LEX-C421-GUDAM421-03, BN-LEX-C421-GUDAM421-04, BN-LEX-C421-GUDAM421-05, BN-LEX-C422-PORAKH422-01, BN-LEX-C422-PORAKH422-02, BN-LEX-C422-PORAKH422-03, BN-LEX-C422-PORAKH422-04, BN-LEX-C422-PORAKH422-05, BN-LEX-C423-THONGA423-01, BN-LEX-C423-THONGA423-02, BN-LEX-C423-THONGA423-03, BN-LEX-C423-THONGA423-04, BN-LEX-C423-THONGA423-05] -->
+
+[PAUSE 3s] An instalment? (**কিস্তি**, *kisti*.) A debt (owed)? (**দেনা**, *denā*.) Money owed to one? (**পাওনা**, *pāonā*.) To pay off? (**শোধ করা**, *shodh kôrā*.) To settle (a bill)? (**মেটানো**, *meṭāno*.) A banknote? (**নোট**, *noṭ*.) A cash machine? (**এটিএম**, *eṭiem*.) A (bank) balance? (**ব্যালান্স**, *bælāns*.) To transfer (money)? (**ট্রান্সফার করা**, *ṭrānsphār kôrā*.) A contribution (to a fund)? (**চাঁদা**, *chā̃dā*.) Profit (in trade)? (**মুনাফা**, *munāphā*.) A duty (tax)? (**শুল্ক**, *shulkô*.) Land tax? (**খাজনা**, *khājnā*.) A moneylender? (**মহাজন**, *môhājôn*.) The rest (remaining)? (**বাকি**, *bāki*.) Want (lack)? (**অভাব**, *ôbhāb*.) Waste (of something useful)? (**অপচয়**, *ôpôchôy*.) Stingy? (**কিপটে**, *kipṭe*.) A pledge (for a loan)? (**বন্ধক**, *bôndhôk*.) One's means? (**সম্বল**, *sômbôl*.) A sale (selling)? (**বিক্রি**, *bikri*.) A hawker? (**ফেরিওয়ালা**, *pherioyālā*.) A broker? (**দালাল**, *dālāl*.) A village market? (**হাট**, *hāṭ*.) To be sold? (**বিকোনো**, *bikono*.) Goods? (**মাল**, *māl*.) A warehouse? (**গুদাম**, *gudām*.) An order (for goods or food)? (**অর্ডার**, *ôrḍār*.) Wholesale? (**পাইকারি**, *pāikāri*.) To stock up? (**মজুত করা**, *môjut kôrā*.) A pair of scales? (**দাঁড়িপাল্লা**, *dā̃ṛipāllā*.) Pure (unmixed)? (**খাঁটি**, *khā̃ṭi*.) A shopping list? (**ফর্দ**, *phôrdô*.) A customer (formal)? (**গ্রাহক**, *grāhôk*.) To test (by trying)? (**পরখ করা**, *pôrôkh kôrā*.) A paper bag? (**ঠোঙা**, *ṭhongā*.) A wrapper? (**মোড়ক**, *moṛôk*.) A carrier bag? (**ক্যারিব্যাগ**, *kæribyāg*.) A size (of clothes or shoes)? (**সাইজ**, *sāij*.) To palm off? (**গছানো**, *gôchhāno*.)
+`;export{t};

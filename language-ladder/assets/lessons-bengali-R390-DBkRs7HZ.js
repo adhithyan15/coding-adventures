@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R391-review-384-391
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 24400
+chapter: 391
+type: review
+headword: (dialogue)
+gloss: a review of the words from Rails and Carriages to Collisions and Close Calls
+concept_tag: REVIEW
+prerequisites: [BN-C384-rel, BN-C384-kamra, BN-C384-barth, BN-C384-lokal, BN-C384-huisol-deoya, BN-C385-ghonta, BN-C385-ghori, BN-C385-tiktik-kora, BN-C385-opekkha-kora, BN-C385-bench, BN-C386-kuli, BN-C386-sutkes, BN-C386-troli, BN-C386-namano, BN-C386-bohon-kora, BN-C387-poth, BN-C387-gontobyo, BN-C387-sophor, BN-C387-jatayat-kora, BN-C387-phirti, BN-C388-tram, BN-C388-metro, BN-C388-oto, BN-C388-bhen, BN-C388-dourano, BN-C389-chalok, BN-C389-kondaktor, BN-C389-helmet, BN-C389-ishara-kora, BN-C389-haka, BN-C390-sorok, BN-C390-bak, BN-C390-gorto, BN-C390-pich, BN-C390-gorano, BN-C391-songghorsho, BN-C391-tola, BN-C391-nora, BN-C391-chharano, BN-C391-kosha]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C384-REL384-01, BN-LEX-C384-REL384-02, BN-LEX-C384-REL384-03, BN-LEX-C384-REL384-04, BN-LEX-C384-REL384-05, BN-LEX-C385-GHONTA385-01, BN-LEX-C385-GHONTA385-02, BN-LEX-C385-GHONTA385-03, BN-LEX-C385-GHONTA385-04, BN-LEX-C385-GHONTA385-05, BN-LEX-C386-KULI386-01, BN-LEX-C386-KULI386-02, BN-LEX-C386-KULI386-03, BN-LEX-C386-KULI386-04, BN-LEX-C386-KULI386-05, BN-LEX-C387-POTH387-01, BN-LEX-C387-POTH387-02, BN-LEX-C387-POTH387-03, BN-LEX-C387-POTH387-04, BN-LEX-C387-POTH387-05, BN-LEX-C388-TRAM388-01, BN-LEX-C388-TRAM388-02, BN-LEX-C388-TRAM388-03, BN-LEX-C388-TRAM388-04, BN-LEX-C388-TRAM388-05, BN-LEX-C389-CHALOK389-01, BN-LEX-C389-CHALOK389-02, BN-LEX-C389-CHALOK389-03, BN-LEX-C389-CHALOK389-04, BN-LEX-C389-CHALOK389-05, BN-LEX-C390-SOROK390-01, BN-LEX-C390-SOROK390-02, BN-LEX-C390-SOROK390-03, BN-LEX-C390-SOROK390-04, BN-LEX-C390-SOROK390-05, BN-LEX-C391-SONGHORSHO391-01, BN-LEX-C391-SONGHORSHO391-02, BN-LEX-C391-SONGHORSHO391-03, BN-LEX-C391-SONGHORSHO391-04, BN-LEX-C391-SONGHORSHO391-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C384-REL384-01, BN-LEX-C384-REL384-02, BN-LEX-C384-REL384-03, BN-LEX-C384-REL384-04, BN-LEX-C384-REL384-05, BN-LEX-C385-GHONTA385-01, BN-LEX-C385-GHONTA385-02, BN-LEX-C385-GHONTA385-03, BN-LEX-C385-GHONTA385-04, BN-LEX-C385-GHONTA385-05, BN-LEX-C386-KULI386-01, BN-LEX-C386-KULI386-02, BN-LEX-C386-KULI386-03, BN-LEX-C386-KULI386-04, BN-LEX-C386-KULI386-05, BN-LEX-C387-POTH387-01, BN-LEX-C387-POTH387-02, BN-LEX-C387-POTH387-03, BN-LEX-C387-POTH387-04, BN-LEX-C387-POTH387-05, BN-LEX-C388-TRAM388-01, BN-LEX-C388-TRAM388-02, BN-LEX-C388-TRAM388-03, BN-LEX-C388-TRAM388-04, BN-LEX-C388-TRAM388-05, BN-LEX-C389-CHALOK389-01, BN-LEX-C389-CHALOK389-02, BN-LEX-C389-CHALOK389-03, BN-LEX-C389-CHALOK389-04, BN-LEX-C389-CHALOK389-05, BN-LEX-C390-SOROK390-01, BN-LEX-C390-SOROK390-02, BN-LEX-C390-SOROK390-03, BN-LEX-C390-SOROK390-04, BN-LEX-C390-SOROK390-05, BN-LEX-C391-SONGHORSHO391-01, BN-LEX-C391-SONGHORSHO391-02, BN-LEX-C391-SONGHORSHO391-03, BN-LEX-C391-SONGHORSHO391-04, BN-LEX-C391-SONGHORSHO391-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C384-rel, BN-C384-kamra, BN-C384-barth, BN-C384-lokal, BN-C384-huisol-deoya, BN-C385-ghonta, BN-C385-ghori, BN-C385-tiktik-kora, BN-C385-opekkha-kora, BN-C385-bench, BN-C386-kuli, BN-C386-sutkes, BN-C386-troli, BN-C386-namano, BN-C386-bohon-kora, BN-C387-poth, BN-C387-gontobyo, BN-C387-sophor, BN-C387-jatayat-kora, BN-C387-phirti, BN-C388-tram, BN-C388-metro, BN-C388-oto, BN-C388-bhen, BN-C388-dourano, BN-C389-chalok, BN-C389-kondaktor, BN-C389-helmet, BN-C389-ishara-kora, BN-C389-haka, BN-C390-sorok, BN-C390-bak, BN-C390-gorto, BN-C390-pich, BN-C390-gorano, BN-C391-songghorsho, BN-C391-tola, BN-C391-nora, BN-C391-chharano, BN-C391-kosha]
+---
+
+# Looking back: from Rails and Carriages to Collisions and Close Calls
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C384-REL384-01, BN-LEX-C384-REL384-02] -->
+
+[PAUSE 3s] Say the Bengali for a railway and a compartment.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C384-REL384-01, BN-LEX-C384-REL384-02, BN-LEX-C384-REL384-03, BN-LEX-C384-REL384-04, BN-LEX-C384-REL384-05, BN-LEX-C385-GHONTA385-01, BN-LEX-C385-GHONTA385-02, BN-LEX-C385-GHONTA385-03, BN-LEX-C385-GHONTA385-04, BN-LEX-C385-GHONTA385-05, BN-LEX-C386-KULI386-01, BN-LEX-C386-KULI386-02, BN-LEX-C386-KULI386-03, BN-LEX-C386-KULI386-04, BN-LEX-C386-KULI386-05, BN-LEX-C387-POTH387-01, BN-LEX-C387-POTH387-02, BN-LEX-C387-POTH387-03, BN-LEX-C387-POTH387-04, BN-LEX-C387-POTH387-05, BN-LEX-C388-TRAM388-01, BN-LEX-C388-TRAM388-02, BN-LEX-C388-TRAM388-03, BN-LEX-C388-TRAM388-04, BN-LEX-C388-TRAM388-05, BN-LEX-C389-CHALOK389-01, BN-LEX-C389-CHALOK389-02, BN-LEX-C389-CHALOK389-03, BN-LEX-C389-CHALOK389-04, BN-LEX-C389-CHALOK389-05, BN-LEX-C390-SOROK390-01, BN-LEX-C390-SOROK390-02, BN-LEX-C390-SOROK390-03, BN-LEX-C390-SOROK390-04, BN-LEX-C390-SOROK390-05, BN-LEX-C391-SONGHORSHO391-01, BN-LEX-C391-SONGHORSHO391-02, BN-LEX-C391-SONGHORSHO391-03, BN-LEX-C391-SONGHORSHO391-04, BN-LEX-C391-SONGHORSHO391-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a railway, a compartment, a berth, a local train, to blow a whistle]
+- [YOU SAY: an hour, a clock, to tick (of a clock), to wait, a bench]
+- [YOU SAY: a porter, a suitcase, a trolley, to unload, to carry (a load)]
+- [YOU SAY: a path, a destination, a trip, to commute, return (of a journey)]
+- [YOU SAY: a tram, the metro, an autorickshaw, a van, to race]
+- [YOU SAY: a driver, a bus conductor, a helmet, to signal, to call out]
+- [YOU SAY: a highway, a bend, a pothole, tar, to roll]
+- [YOU SAY: a collision, to totter, to budge, to overtake, to apply (the brakes)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C384-REL384-01, BN-LEX-C384-REL384-02, BN-LEX-C384-REL384-03, BN-LEX-C384-REL384-04, BN-LEX-C384-REL384-05, BN-LEX-C385-GHONTA385-01, BN-LEX-C385-GHONTA385-02, BN-LEX-C385-GHONTA385-03, BN-LEX-C385-GHONTA385-04, BN-LEX-C385-GHONTA385-05, BN-LEX-C386-KULI386-01, BN-LEX-C386-KULI386-02, BN-LEX-C386-KULI386-03, BN-LEX-C386-KULI386-04, BN-LEX-C386-KULI386-05, BN-LEX-C387-POTH387-01, BN-LEX-C387-POTH387-02, BN-LEX-C387-POTH387-03, BN-LEX-C387-POTH387-04, BN-LEX-C387-POTH387-05, BN-LEX-C388-TRAM388-01, BN-LEX-C388-TRAM388-02, BN-LEX-C388-TRAM388-03, BN-LEX-C388-TRAM388-04, BN-LEX-C388-TRAM388-05, BN-LEX-C389-CHALOK389-01, BN-LEX-C389-CHALOK389-02, BN-LEX-C389-CHALOK389-03, BN-LEX-C389-CHALOK389-04, BN-LEX-C389-CHALOK389-05, BN-LEX-C390-SOROK390-01, BN-LEX-C390-SOROK390-02, BN-LEX-C390-SOROK390-03, BN-LEX-C390-SOROK390-04, BN-LEX-C390-SOROK390-05, BN-LEX-C391-SONGHORSHO391-01, BN-LEX-C391-SONGHORSHO391-02, BN-LEX-C391-SONGHORSHO391-03, BN-LEX-C391-SONGHORSHO391-04, BN-LEX-C391-SONGHORSHO391-05] -->
+
+[PAUSE 3s] A railway? (**রেল**, *rel*.) A compartment? (**কামরা**, *kāmrā*.) A berth? (**বার্থ**, *bārth*.) A local train? (**লোকাল**, *lokāl*.) To blow a whistle? (**হুইসল দেওয়া**, *huisôl deoyā*.) An hour? (**ঘণ্টা**, *ghônṭā*.) A clock? (**ঘড়ি**, *ghôṛi*.) To tick (of a clock)? (**টিকটিক করা**, *ṭikṭik kôrā*.) To wait? (**অপেক্ষা করা**, *ôpekkhā kôrā*.) A bench? (**বেঞ্চ**, *bench*.) A porter? (**কুলি**, *kuli*.) A suitcase? (**সুটকেস**, *suṭkes*.) A trolley? (**ট্রলি**, *ṭrôli*.) To unload? (**নামানো**, *nāmāno*.) To carry (a load)? (**বহন করা**, *bôhôn kôrā*.) A path? (**পথ**, *pôth*.) A destination? (**গন্তব্য**, *gôntôbyô*.) A trip? (**সফর**, *sôphôr*.) To commute? (**যাতায়াত করা**, *jātāyāt kôrā*.) Return (of a journey)? (**ফিরতি**, *phirti*.) A tram? (**ট্রাম**, *ṭrām*.) The metro? (**মেট্রো**, *meṭro*.) An autorickshaw? (**অটো**, *ôṭo*.) A van? (**ভ্যান**, *bhæn*.) To race? (**দৌড়ানো**, *douṛāno*.) A driver? (**চালক**, *chālôk*.) A bus conductor? (**কন্ডাক্টর**, *kônḍākṭôr*.) A helmet? (**হেলমেট**, *helmeṭ*.) To signal? (**ইশারা করা**, *ishārā kôrā*.) To call out? (**হাঁকা**, *hā̃kā*.) A highway? (**সড়ক**, *sôṛôk*.) A bend? (**বাঁক**, *bā̃k*.) A pothole? (**গর্ত**, *gôrtô*.) Tar? (**পিচ**, *pich*.) To roll? (**গড়ানো**, *gôṛāno*.) A collision? (**সংঘর্ষ**, *sôngghôrshô*.) To totter? (**টলা**, *ṭôlā*.) To budge? (**নড়া**, *nôṛā*.) To overtake? (**ছাড়ানো**, *chhāṛāno*.) To apply (the brakes)? (**কষা**, *kôshā*.)
+`;export{t};

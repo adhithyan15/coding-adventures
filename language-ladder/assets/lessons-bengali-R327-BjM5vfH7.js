@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R329-review-323-329
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 20760
+chapter: 329
+type: review
+headword: (dialogue)
+gloss: a review of the words from Heroes and Villains to The Last Page
+concept_tag: REVIEW
+prerequisites: [BN-C323-nayok, BN-C323-kholnayok, BN-C323-bhumika, BN-C323-sonnyasi, BN-C323-chhodmobesh, BN-C324-dhadha, BN-C324-koushol, BN-C324-phad, BN-C324-bholano, BN-C324-par-paoya, BN-C325-upodesh, BN-C325-porinam, BN-C325-pap, BN-C325-shodhrano, BN-C325-badhyo-hooya, BN-C326-ashchoryo, BN-C326-oloukik, BN-C326-kolpona-kora, BN-C326-guptodhon, BN-C326-miliye-jaoya, BN-C327-uponyas, BN-C327-jiboni, BN-C327-grontho, BN-C327-odhyay, BN-C327-prokashok, BN-C328-prishtha, BN-C328-onubad-kora, BN-C328-pandulipi, BN-C328-sarangsho, BN-C328-rochona-kora, BN-C329-arombho, BN-C329-somapti, BN-C329-chirokal, BN-C329-obismoroniyo, BN-C329-utsorgo-kora]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C323-NAYOK323-01, BN-LEX-C323-NAYOK323-02, BN-LEX-C323-NAYOK323-03, BN-LEX-C323-NAYOK323-04, BN-LEX-C323-NAYOK323-05, BN-LEX-C324-KOUSHOL324-01, BN-LEX-C324-KOUSHOL324-02, BN-LEX-C324-KOUSHOL324-03, BN-LEX-C324-KOUSHOL324-04, BN-LEX-C324-KOUSHOL324-05, BN-LEX-C325-UPODESH325-01, BN-LEX-C325-UPODESH325-02, BN-LEX-C325-UPODESH325-03, BN-LEX-C325-UPODESH325-04, BN-LEX-C325-UPODESH325-05, BN-LEX-C326-ASHCHORJO326-01, BN-LEX-C326-ASHCHORJO326-02, BN-LEX-C326-ASHCHORJO326-03, BN-LEX-C326-ASHCHORJO326-04, BN-LEX-C326-ASHCHORJO326-05, BN-LEX-C327-UPONNAS327-01, BN-LEX-C327-UPONNAS327-02, BN-LEX-C327-UPONNAS327-03, BN-LEX-C327-UPONNAS327-04, BN-LEX-C327-UPONNAS327-05, BN-LEX-C328-PRISHTHA328-01, BN-LEX-C328-PRISHTHA328-02, BN-LEX-C328-PRISHTHA328-03, BN-LEX-C328-PRISHTHA328-04, BN-LEX-C328-PRISHTHA328-05, BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C323-NAYOK323-01, BN-LEX-C323-NAYOK323-02, BN-LEX-C323-NAYOK323-03, BN-LEX-C323-NAYOK323-04, BN-LEX-C323-NAYOK323-05, BN-LEX-C324-KOUSHOL324-01, BN-LEX-C324-KOUSHOL324-02, BN-LEX-C324-KOUSHOL324-03, BN-LEX-C324-KOUSHOL324-04, BN-LEX-C324-KOUSHOL324-05, BN-LEX-C325-UPODESH325-01, BN-LEX-C325-UPODESH325-02, BN-LEX-C325-UPODESH325-03, BN-LEX-C325-UPODESH325-04, BN-LEX-C325-UPODESH325-05, BN-LEX-C326-ASHCHORJO326-01, BN-LEX-C326-ASHCHORJO326-02, BN-LEX-C326-ASHCHORJO326-03, BN-LEX-C326-ASHCHORJO326-04, BN-LEX-C326-ASHCHORJO326-05, BN-LEX-C327-UPONNAS327-01, BN-LEX-C327-UPONNAS327-02, BN-LEX-C327-UPONNAS327-03, BN-LEX-C327-UPONNAS327-04, BN-LEX-C327-UPONNAS327-05, BN-LEX-C328-PRISHTHA328-01, BN-LEX-C328-PRISHTHA328-02, BN-LEX-C328-PRISHTHA328-03, BN-LEX-C328-PRISHTHA328-04, BN-LEX-C328-PRISHTHA328-05, BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C323-nayok, BN-C323-kholnayok, BN-C323-bhumika, BN-C323-sonnyasi, BN-C323-chhodmobesh, BN-C324-dhadha, BN-C324-koushol, BN-C324-phad, BN-C324-bholano, BN-C324-par-paoya, BN-C325-upodesh, BN-C325-porinam, BN-C325-pap, BN-C325-shodhrano, BN-C325-badhyo-hooya, BN-C326-ashchoryo, BN-C326-oloukik, BN-C326-kolpona-kora, BN-C326-guptodhon, BN-C326-miliye-jaoya, BN-C327-uponyas, BN-C327-jiboni, BN-C327-grontho, BN-C327-odhyay, BN-C327-prokashok, BN-C328-prishtha, BN-C328-onubad-kora, BN-C328-pandulipi, BN-C328-sarangsho, BN-C328-rochona-kora, BN-C329-arombho, BN-C329-somapti, BN-C329-chirokal, BN-C329-obismoroniyo, BN-C329-utsorgo-kora]
+---
+
+# Looking back: from Heroes and Villains to The Last Page
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C323-NAYOK323-01, BN-LEX-C323-NAYOK323-02] -->
+
+[PAUSE 3s] Say the Bengali for the hero of a story and a villain.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C323-NAYOK323-01, BN-LEX-C323-NAYOK323-02, BN-LEX-C323-NAYOK323-03, BN-LEX-C323-NAYOK323-04, BN-LEX-C323-NAYOK323-05, BN-LEX-C324-KOUSHOL324-01, BN-LEX-C324-KOUSHOL324-02, BN-LEX-C324-KOUSHOL324-03, BN-LEX-C324-KOUSHOL324-04, BN-LEX-C324-KOUSHOL324-05, BN-LEX-C325-UPODESH325-01, BN-LEX-C325-UPODESH325-02, BN-LEX-C325-UPODESH325-03, BN-LEX-C325-UPODESH325-04, BN-LEX-C325-UPODESH325-05, BN-LEX-C326-ASHCHORJO326-01, BN-LEX-C326-ASHCHORJO326-02, BN-LEX-C326-ASHCHORJO326-03, BN-LEX-C326-ASHCHORJO326-04, BN-LEX-C326-ASHCHORJO326-05, BN-LEX-C327-UPONNAS327-01, BN-LEX-C327-UPONNAS327-02, BN-LEX-C327-UPONNAS327-03, BN-LEX-C327-UPONNAS327-04, BN-LEX-C327-UPONNAS327-05, BN-LEX-C328-PRISHTHA328-01, BN-LEX-C328-PRISHTHA328-02, BN-LEX-C328-PRISHTHA328-03, BN-LEX-C328-PRISHTHA328-04, BN-LEX-C328-PRISHTHA328-05, BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the hero of a story, a villain, a role, a holy man, a disguise]
+- [YOU SAY: a riddle, a trick, a trap, to coax, to get away with it]
+- [YOU SAY: a moral lesson, an outcome, a sin, to mend one's ways, to be forced]
+- [YOU SAY: amazing, supernatural, to imagine, a hidden treasure, to vanish]
+- [YOU SAY: a novel, a biography, a volume, a chapter of a book, a publisher]
+- [YOU SAY: a page, to translate, a manuscript, a summary, to compose]
+- [YOU SAY: a start, a close, forever, unforgettable, to dedicate]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C323-NAYOK323-01, BN-LEX-C323-NAYOK323-02, BN-LEX-C323-NAYOK323-03, BN-LEX-C323-NAYOK323-04, BN-LEX-C323-NAYOK323-05, BN-LEX-C324-KOUSHOL324-01, BN-LEX-C324-KOUSHOL324-02, BN-LEX-C324-KOUSHOL324-03, BN-LEX-C324-KOUSHOL324-04, BN-LEX-C324-KOUSHOL324-05, BN-LEX-C325-UPODESH325-01, BN-LEX-C325-UPODESH325-02, BN-LEX-C325-UPODESH325-03, BN-LEX-C325-UPODESH325-04, BN-LEX-C325-UPODESH325-05, BN-LEX-C326-ASHCHORJO326-01, BN-LEX-C326-ASHCHORJO326-02, BN-LEX-C326-ASHCHORJO326-03, BN-LEX-C326-ASHCHORJO326-04, BN-LEX-C326-ASHCHORJO326-05, BN-LEX-C327-UPONNAS327-01, BN-LEX-C327-UPONNAS327-02, BN-LEX-C327-UPONNAS327-03, BN-LEX-C327-UPONNAS327-04, BN-LEX-C327-UPONNAS327-05, BN-LEX-C328-PRISHTHA328-01, BN-LEX-C328-PRISHTHA328-02, BN-LEX-C328-PRISHTHA328-03, BN-LEX-C328-PRISHTHA328-04, BN-LEX-C328-PRISHTHA328-05, BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05] -->
+
+[PAUSE 3s] The hero of a story? (**নায়ক**, *nāyôk*.) A villain? (**খলনায়ক**, *khôlnāyôk*.) A role? (**ভূমিকা**, *bhūmikā*.) A holy man? (**সন্ন্যাসী**, *sônnyāsī*.) A disguise? (**ছদ্মবেশ**, *chhôdmôbesh*.) A riddle? (**ধাঁধা**, *dhā̃dhā*.) A trick? (**কৌশল**, *koushôl*.) A trap? (**ফাঁদ**, *phā̃d*.) To coax? (**ভোলানো**, *bholāno*.) To get away with it? (**পার পাওয়া**, *pār pāoyā*.) A moral lesson? (**উপদেশ**, *upôdesh*.) An outcome? (**পরিণাম**, *pôrinām*.) A sin? (**পাপ**, *pāp*.) To mend one's ways? (**শোধরানো**, *shodhrāno*.) To be forced? (**বাধ্য হওয়া**, *bādhyô hôoyā*.) Amazing? (**আশ্চর্য**, *āshchôryô*.) Supernatural? (**অলৌকিক**, *ôloukik*.) To imagine? (**কল্পনা করা**, *kôlpônā kôrā*.) A hidden treasure? (**গুপ্তধন**, *guptôdhôn*.) To vanish? (**মিলিয়ে যাওয়া**, *miliye jāoyā*.) A novel? (**উপন্যাস**, *upônyās*.) A biography? (**জীবনী**, *jībônī*.) A volume? (**গ্রন্থ**, *grônthô*.) A chapter of a book? (**অধ্যায়**, *ôdhyāy*.) A publisher? (**প্রকাশক**, *prôkāshôk*.) A page? (**পৃষ্ঠা**, *prishṭhā*.) To translate? (**অনুবাদ করা**, *ônubād kôrā*.) A manuscript? (**পাণ্ডুলিপি**, *pānḍulipi*.) A summary? (**সারাংশ**, *sārāngshô*.) To compose? (**রচনা করা**, *rôchônā kôrā*.) A start? (**আরম্ভ**, *ārômbhô*.) A close? (**সমাপ্তি**, *sômāpti*.) Forever? (**চিরকাল**, *chirôkāl*.) Unforgettable? (**অবিস্মরণীয়**, *ôbismôrônīyô*.) To dedicate? (**উৎসর্গ করা**, *utsôrgô kôrā*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R329-review-final-329
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 20770
+chapter: 329
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [BN-C329-arombho, BN-C329-somapti, BN-C329-chirokal, BN-C329-obismoroniyo, BN-C329-utsorgo-kora]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C329-arombho, BN-C329-somapti, BN-C329-chirokal, BN-C329-obismoroniyo, BN-C329-utsorgo-kora]
+---
+
+# The Last Page — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02] -->
+
+[PAUSE 3s] Say the Bengali for a start and a close.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a start, a close, forever, unforgettable, to dedicate]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C329-SHESHPATA329-01, BN-LEX-C329-SHESHPATA329-02, BN-LEX-C329-SHESHPATA329-03, BN-LEX-C329-SHESHPATA329-04, BN-LEX-C329-SHESHPATA329-05] -->
+
+[PAUSE 3s] A start? (**আরম্ভ**, *ārômbhô*.) A close? (**সমাপ্তি**, *sômāpti*.) Forever? (**চিরকাল**, *chirôkāl*.) Unforgettable? (**অবিস্মরণীয়**, *ôbismôrônīyô*.) To dedicate? (**উৎসর্গ করা**, *utsôrgô kôrā*.)
+`;export{t as n,r as t};

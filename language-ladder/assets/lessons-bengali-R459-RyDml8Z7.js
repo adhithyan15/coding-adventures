@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R461-review-454-461
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 28220
+chapter: 461
+type: review
+headword: (dialogue)
+gloss: a review of the words from Shyness and Hesitation to Stubborn and Restless
+concept_tag: REVIEW
+prerequisites: [BN-C454-songkoch, BN-C454-dvidha, BN-C454-aroshto, BN-C454-jorosoro, BN-C454-itostoto-kora, BN-C455-dhoirjo, BN-C455-utsaho, BN-C455-agroho, BN-C455-utsuk, BN-C455-tor-sooya, BN-C456-choritro, BN-C456-gun, BN-C456-obhyas, BN-C456-achoron, BN-C456-ropto-kora, BN-C457-udar, BN-C457-kripon, BN-C457-antorik, BN-C457-poropokari, BN-C457-mohot, BN-C458-sot, BN-C458-kopot, BN-C458-bishvosto, BN-C458-dhurto, BN-C458-thokano, BN-C459-binoyi, BN-C459-nomro, BN-C459-uddhoto, BN-C459-beyadob, BN-C459-toshamod-kora, BN-C460-nishthur, BN-C460-kothor, BN-C460-ugro, BN-C460-svarthopor, BN-C460-otyachar-kora, BN-C461-jedi, BN-C461-ekguye, BN-C461-chonchol, BN-C461-khamkheyali, BN-C461-go-dhora]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C454-SONGKOCH454-01, BN-LEX-C454-SONGKOCH454-02, BN-LEX-C454-SONGKOCH454-03, BN-LEX-C454-SONGKOCH454-04, BN-LEX-C454-SONGKOCH454-05, BN-LEX-C455-DHOIRJO455-01, BN-LEX-C455-DHOIRJO455-02, BN-LEX-C455-DHOIRJO455-03, BN-LEX-C455-DHOIRJO455-04, BN-LEX-C455-DHOIRJO455-05, BN-LEX-C456-CHORITRO456-01, BN-LEX-C456-CHORITRO456-02, BN-LEX-C456-CHORITRO456-03, BN-LEX-C456-CHORITRO456-04, BN-LEX-C456-CHORITRO456-05, BN-LEX-C457-UDAR457-01, BN-LEX-C457-UDAR457-02, BN-LEX-C457-UDAR457-03, BN-LEX-C457-UDAR457-04, BN-LEX-C457-UDAR457-05, BN-LEX-C458-SOT458-01, BN-LEX-C458-SOT458-02, BN-LEX-C458-SOT458-03, BN-LEX-C458-SOT458-04, BN-LEX-C458-SOT458-05, BN-LEX-C459-BINOYI459-01, BN-LEX-C459-BINOYI459-02, BN-LEX-C459-BINOYI459-03, BN-LEX-C459-BINOYI459-04, BN-LEX-C459-BINOYI459-05, BN-LEX-C460-NISHTHUR460-01, BN-LEX-C460-NISHTHUR460-02, BN-LEX-C460-NISHTHUR460-03, BN-LEX-C460-NISHTHUR460-04, BN-LEX-C460-NISHTHUR460-05, BN-LEX-C461-JEDI461-01, BN-LEX-C461-JEDI461-02, BN-LEX-C461-JEDI461-03, BN-LEX-C461-JEDI461-04, BN-LEX-C461-JEDI461-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C454-SONGKOCH454-01, BN-LEX-C454-SONGKOCH454-02, BN-LEX-C454-SONGKOCH454-03, BN-LEX-C454-SONGKOCH454-04, BN-LEX-C454-SONGKOCH454-05, BN-LEX-C455-DHOIRJO455-01, BN-LEX-C455-DHOIRJO455-02, BN-LEX-C455-DHOIRJO455-03, BN-LEX-C455-DHOIRJO455-04, BN-LEX-C455-DHOIRJO455-05, BN-LEX-C456-CHORITRO456-01, BN-LEX-C456-CHORITRO456-02, BN-LEX-C456-CHORITRO456-03, BN-LEX-C456-CHORITRO456-04, BN-LEX-C456-CHORITRO456-05, BN-LEX-C457-UDAR457-01, BN-LEX-C457-UDAR457-02, BN-LEX-C457-UDAR457-03, BN-LEX-C457-UDAR457-04, BN-LEX-C457-UDAR457-05, BN-LEX-C458-SOT458-01, BN-LEX-C458-SOT458-02, BN-LEX-C458-SOT458-03, BN-LEX-C458-SOT458-04, BN-LEX-C458-SOT458-05, BN-LEX-C459-BINOYI459-01, BN-LEX-C459-BINOYI459-02, BN-LEX-C459-BINOYI459-03, BN-LEX-C459-BINOYI459-04, BN-LEX-C459-BINOYI459-05, BN-LEX-C460-NISHTHUR460-01, BN-LEX-C460-NISHTHUR460-02, BN-LEX-C460-NISHTHUR460-03, BN-LEX-C460-NISHTHUR460-04, BN-LEX-C460-NISHTHUR460-05, BN-LEX-C461-JEDI461-01, BN-LEX-C461-JEDI461-02, BN-LEX-C461-JEDI461-03, BN-LEX-C461-JEDI461-04, BN-LEX-C461-JEDI461-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C454-songkoch, BN-C454-dvidha, BN-C454-aroshto, BN-C454-jorosoro, BN-C454-itostoto-kora, BN-C455-dhoirjo, BN-C455-utsaho, BN-C455-agroho, BN-C455-utsuk, BN-C455-tor-sooya, BN-C456-choritro, BN-C456-gun, BN-C456-obhyas, BN-C456-achoron, BN-C456-ropto-kora, BN-C457-udar, BN-C457-kripon, BN-C457-antorik, BN-C457-poropokari, BN-C457-mohot, BN-C458-sot, BN-C458-kopot, BN-C458-bishvosto, BN-C458-dhurto, BN-C458-thokano, BN-C459-binoyi, BN-C459-nomro, BN-C459-uddhoto, BN-C459-beyadob, BN-C459-toshamod-kora, BN-C460-nishthur, BN-C460-kothor, BN-C460-ugro, BN-C460-svarthopor, BN-C460-otyachar-kora, BN-C461-jedi, BN-C461-ekguye, BN-C461-chonchol, BN-C461-khamkheyali, BN-C461-go-dhora]
+---
+
+# Looking back: from Shyness and Hesitation to Stubborn and Restless
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C454-SONGKOCH454-01, BN-LEX-C454-SONGKOCH454-02] -->
+
+[PAUSE 3s] Say the Bengali for reluctance and being in two minds.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C454-SONGKOCH454-01, BN-LEX-C454-SONGKOCH454-02, BN-LEX-C454-SONGKOCH454-03, BN-LEX-C454-SONGKOCH454-04, BN-LEX-C454-SONGKOCH454-05, BN-LEX-C455-DHOIRJO455-01, BN-LEX-C455-DHOIRJO455-02, BN-LEX-C455-DHOIRJO455-03, BN-LEX-C455-DHOIRJO455-04, BN-LEX-C455-DHOIRJO455-05, BN-LEX-C456-CHORITRO456-01, BN-LEX-C456-CHORITRO456-02, BN-LEX-C456-CHORITRO456-03, BN-LEX-C456-CHORITRO456-04, BN-LEX-C456-CHORITRO456-05, BN-LEX-C457-UDAR457-01, BN-LEX-C457-UDAR457-02, BN-LEX-C457-UDAR457-03, BN-LEX-C457-UDAR457-04, BN-LEX-C457-UDAR457-05, BN-LEX-C458-SOT458-01, BN-LEX-C458-SOT458-02, BN-LEX-C458-SOT458-03, BN-LEX-C458-SOT458-04, BN-LEX-C458-SOT458-05, BN-LEX-C459-BINOYI459-01, BN-LEX-C459-BINOYI459-02, BN-LEX-C459-BINOYI459-03, BN-LEX-C459-BINOYI459-04, BN-LEX-C459-BINOYI459-05, BN-LEX-C460-NISHTHUR460-01, BN-LEX-C460-NISHTHUR460-02, BN-LEX-C460-NISHTHUR460-03, BN-LEX-C460-NISHTHUR460-04, BN-LEX-C460-NISHTHUR460-05, BN-LEX-C461-JEDI461-01, BN-LEX-C461-JEDI461-02, BN-LEX-C461-JEDI461-03, BN-LEX-C461-JEDI461-04, BN-LEX-C461-JEDI461-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: reluctance, being in two minds, stiff and awkward, huddled up, to hesitate]
+- [YOU SAY: patience, enthusiasm, keen interest, eager, to be able to wait]
+- [YOU SAY: character, a good quality, a habit, conduct, to master]
+- [YOU SAY: generous, miserly, sincere, helpful to others, noble]
+- [YOU SAY: honest, two-faced, trustworthy, cunning, to cheat]
+- [YOU SAY: modest, soft-spoken, insolent, ill-mannered, to flatter]
+- [YOU SAY: cruel, stern, aggressive, selfish, to oppress]
+- [YOU SAY: headstrong, obstinate, never still, whimsical, to dig one's heels in]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C454-SONGKOCH454-01, BN-LEX-C454-SONGKOCH454-02, BN-LEX-C454-SONGKOCH454-03, BN-LEX-C454-SONGKOCH454-04, BN-LEX-C454-SONGKOCH454-05, BN-LEX-C455-DHOIRJO455-01, BN-LEX-C455-DHOIRJO455-02, BN-LEX-C455-DHOIRJO455-03, BN-LEX-C455-DHOIRJO455-04, BN-LEX-C455-DHOIRJO455-05, BN-LEX-C456-CHORITRO456-01, BN-LEX-C456-CHORITRO456-02, BN-LEX-C456-CHORITRO456-03, BN-LEX-C456-CHORITRO456-04, BN-LEX-C456-CHORITRO456-05, BN-LEX-C457-UDAR457-01, BN-LEX-C457-UDAR457-02, BN-LEX-C457-UDAR457-03, BN-LEX-C457-UDAR457-04, BN-LEX-C457-UDAR457-05, BN-LEX-C458-SOT458-01, BN-LEX-C458-SOT458-02, BN-LEX-C458-SOT458-03, BN-LEX-C458-SOT458-04, BN-LEX-C458-SOT458-05, BN-LEX-C459-BINOYI459-01, BN-LEX-C459-BINOYI459-02, BN-LEX-C459-BINOYI459-03, BN-LEX-C459-BINOYI459-04, BN-LEX-C459-BINOYI459-05, BN-LEX-C460-NISHTHUR460-01, BN-LEX-C460-NISHTHUR460-02, BN-LEX-C460-NISHTHUR460-03, BN-LEX-C460-NISHTHUR460-04, BN-LEX-C460-NISHTHUR460-05, BN-LEX-C461-JEDI461-01, BN-LEX-C461-JEDI461-02, BN-LEX-C461-JEDI461-03, BN-LEX-C461-JEDI461-04, BN-LEX-C461-JEDI461-05] -->
+
+[PAUSE 3s] Reluctance? (**সংকোচ**, *sôngkoch*.) Being in two minds? (**দ্বিধা**, *dvidhā*.) Stiff and awkward? (**আড়ষ্ট**, *āṛôshṭô*.) Huddled up? (**জড়সড়**, *jôṛôsôṛô*.) To hesitate? (**ইতস্তত করা**, *itôstôtô kôrā*.) Patience? (**ধৈর্য**, *dhoirjô*.) Enthusiasm? (**উৎসাহ**, *utsāhô*.) Keen interest? (**আগ্রহ**, *āgrôhô*.) Eager? (**উৎসুক**, *utsuk*.) To be able to wait? (**তর সওয়া**, *tôr sôoyā*.) Character? (**চরিত্র**, *chôritrô*.) A good quality? (**গুণ**, *gun*.) A habit? (**অভ্যাস**, *ôbhyās*.) Conduct? (**আচরণ**, *āchôrôn*.) To master? (**রপ্ত করা**, *rôptô kôrā*.) Generous? (**উদার**, *udār*.) Miserly? (**কৃপণ**, *kripôn*.) Sincere? (**আন্তরিক**, *āntôrik*.) Helpful to others? (**পরোপকারী**, *pôropôkārī*.) Noble? (**মহৎ**, *môhôt*.) Honest? (**সৎ**, *sôt*.) Two-faced? (**কপট**, *kôpôṭ*.) Trustworthy? (**বিশ্বস্ত**, *bishvôstô*.) Cunning? (**ধূর্ত**, *dhūrtô*.) To cheat? (**ঠকানো**, *ṭhôkāno*.) Modest? (**বিনয়ী**, *binôyī*.) Soft-spoken? (**নম্র**, *nômrô*.) Insolent? (**উদ্ধত**, *uddhôtô*.) Ill-mannered? (**বেয়াদব**, *beyādôb*.) To flatter? (**তোষামোদ করা**, *toshāmod kôrā*.) Cruel? (**নিষ্ঠুর**, *nishṭhur*.) Stern? (**কঠোর**, *kôṭhor*.) Aggressive? (**উগ্র**, *ugrô*.) Selfish? (**স্বার্থপর**, *svārthôpôr*.) To oppress? (**অত্যাচার করা**, *ôtyāchār kôrā*.) Headstrong? (**জেদি**, *jedi*.) Obstinate? (**একগুঁয়ে**, *ekgũye*.) Never still? (**চঞ্চল**, *chônchôl*.) Whimsical? (**খামখেয়ালি**, *khāmkheyāli*.) To dig one's heels in? (**গোঁ ধরা**, *gõ dhôrā*.)
+`;export{t};

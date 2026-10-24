@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R283-review-276-283
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 18400
+chapter: 283
+type: review
+headword: (dialogue)
+gloss: a review of the words from Something Happened to Crime and the Police
+concept_tag: REVIEW
+prerequisites: [BN-C276-ghotona, BN-C276-kichhu, BN-C276-onek, BN-C276-manush, BN-C276-durghotona, BN-C277-sakkhi, BN-C277-keu, BN-C277-sobai, BN-C277-bhir, BN-C277-hajir-hooya, BN-C278-dhakka, BN-C278-chola, BN-C278-bhanga, BN-C278-ultano, BN-C278-ahoto, BN-C279-jvola, BN-C279-shikha, BN-C279-sphulinggo, BN-C279-pure-jaoya, BN-C279-bisphoron, BN-C280-pouchhano, BN-C280-uddhar-kora, BN-C280-moi, BN-C280-sairen, BN-C280-ashroy, BN-C281-bhagyokrome, BN-C281-nikhoj, BN-C281-rokkha-paoya, BN-C281-chhota, BN-C281-obosheshe, BN-C282-churi-kora, BN-C282-goyna, BN-C282-pakrano, BN-C282-thela, BN-C282-poketmar, BN-C283-oporadh, BN-C283-obhijog, BN-C283-grephtar-kora, BN-C283-todonto, BN-C283-daroga]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C276-GHOTONA276-01, BN-LEX-C276-GHOTONA276-02, BN-LEX-C276-GHOTONA276-03, BN-LEX-C276-GHOTONA276-04, BN-LEX-C276-GHOTONA276-05, BN-LEX-C277-SAKSHI277-01, BN-LEX-C277-SAKSHI277-02, BN-LEX-C277-SAKSHI277-03, BN-LEX-C277-SAKSHI277-04, BN-LEX-C277-SAKSHI277-05, BN-LEX-C278-DHAKKA278-01, BN-LEX-C278-DHAKKA278-02, BN-LEX-C278-DHAKKA278-03, BN-LEX-C278-DHAKKA278-04, BN-LEX-C278-DHAKKA278-05, BN-LEX-C279-SHIKHA279-01, BN-LEX-C279-SHIKHA279-02, BN-LEX-C279-SHIKHA279-03, BN-LEX-C279-SHIKHA279-04, BN-LEX-C279-SHIKHA279-05, BN-LEX-C280-UDDHAR280-01, BN-LEX-C280-UDDHAR280-02, BN-LEX-C280-UDDHAR280-03, BN-LEX-C280-UDDHAR280-04, BN-LEX-C280-UDDHAR280-05, BN-LEX-C281-BHAGYO281-01, BN-LEX-C281-BHAGYO281-02, BN-LEX-C281-BHAGYO281-03, BN-LEX-C281-BHAGYO281-04, BN-LEX-C281-BHAGYO281-05, BN-LEX-C282-CHURI282-01, BN-LEX-C282-CHURI282-02, BN-LEX-C282-CHURI282-03, BN-LEX-C282-CHURI282-04, BN-LEX-C282-CHURI282-05, BN-LEX-C283-OPORADH283-01, BN-LEX-C283-OPORADH283-02, BN-LEX-C283-OPORADH283-03, BN-LEX-C283-OPORADH283-04, BN-LEX-C283-OPORADH283-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C276-GHOTONA276-01, BN-LEX-C276-GHOTONA276-02, BN-LEX-C276-GHOTONA276-03, BN-LEX-C276-GHOTONA276-04, BN-LEX-C276-GHOTONA276-05, BN-LEX-C277-SAKSHI277-01, BN-LEX-C277-SAKSHI277-02, BN-LEX-C277-SAKSHI277-03, BN-LEX-C277-SAKSHI277-04, BN-LEX-C277-SAKSHI277-05, BN-LEX-C278-DHAKKA278-01, BN-LEX-C278-DHAKKA278-02, BN-LEX-C278-DHAKKA278-03, BN-LEX-C278-DHAKKA278-04, BN-LEX-C278-DHAKKA278-05, BN-LEX-C279-SHIKHA279-01, BN-LEX-C279-SHIKHA279-02, BN-LEX-C279-SHIKHA279-03, BN-LEX-C279-SHIKHA279-04, BN-LEX-C279-SHIKHA279-05, BN-LEX-C280-UDDHAR280-01, BN-LEX-C280-UDDHAR280-02, BN-LEX-C280-UDDHAR280-03, BN-LEX-C280-UDDHAR280-04, BN-LEX-C280-UDDHAR280-05, BN-LEX-C281-BHAGYO281-01, BN-LEX-C281-BHAGYO281-02, BN-LEX-C281-BHAGYO281-03, BN-LEX-C281-BHAGYO281-04, BN-LEX-C281-BHAGYO281-05, BN-LEX-C282-CHURI282-01, BN-LEX-C282-CHURI282-02, BN-LEX-C282-CHURI282-03, BN-LEX-C282-CHURI282-04, BN-LEX-C282-CHURI282-05, BN-LEX-C283-OPORADH283-01, BN-LEX-C283-OPORADH283-02, BN-LEX-C283-OPORADH283-03, BN-LEX-C283-OPORADH283-04, BN-LEX-C283-OPORADH283-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C276-ghotona, BN-C276-kichhu, BN-C276-onek, BN-C276-manush, BN-C276-durghotona, BN-C277-sakkhi, BN-C277-keu, BN-C277-sobai, BN-C277-bhir, BN-C277-hajir-hooya, BN-C278-dhakka, BN-C278-chola, BN-C278-bhanga, BN-C278-ultano, BN-C278-ahoto, BN-C279-jvola, BN-C279-shikha, BN-C279-sphulinggo, BN-C279-pure-jaoya, BN-C279-bisphoron, BN-C280-pouchhano, BN-C280-uddhar-kora, BN-C280-moi, BN-C280-sairen, BN-C280-ashroy, BN-C281-bhagyokrome, BN-C281-nikhoj, BN-C281-rokkha-paoya, BN-C281-chhota, BN-C281-obosheshe, BN-C282-churi-kora, BN-C282-goyna, BN-C282-pakrano, BN-C282-thela, BN-C282-poketmar, BN-C283-oporadh, BN-C283-obhijog, BN-C283-grephtar-kora, BN-C283-todonto, BN-C283-daroga]
+---
+
+# Looking back: from Something Happened to Crime and the Police
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C276-GHOTONA276-01, BN-LEX-C276-GHOTONA276-02] -->
+
+[PAUSE 3s] Say the Bengali for an event and something.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C276-GHOTONA276-01, BN-LEX-C276-GHOTONA276-02, BN-LEX-C276-GHOTONA276-03, BN-LEX-C276-GHOTONA276-04, BN-LEX-C276-GHOTONA276-05, BN-LEX-C277-SAKSHI277-01, BN-LEX-C277-SAKSHI277-02, BN-LEX-C277-SAKSHI277-03, BN-LEX-C277-SAKSHI277-04, BN-LEX-C277-SAKSHI277-05, BN-LEX-C278-DHAKKA278-01, BN-LEX-C278-DHAKKA278-02, BN-LEX-C278-DHAKKA278-03, BN-LEX-C278-DHAKKA278-04, BN-LEX-C278-DHAKKA278-05, BN-LEX-C279-SHIKHA279-01, BN-LEX-C279-SHIKHA279-02, BN-LEX-C279-SHIKHA279-03, BN-LEX-C279-SHIKHA279-04, BN-LEX-C279-SHIKHA279-05, BN-LEX-C280-UDDHAR280-01, BN-LEX-C280-UDDHAR280-02, BN-LEX-C280-UDDHAR280-03, BN-LEX-C280-UDDHAR280-04, BN-LEX-C280-UDDHAR280-05, BN-LEX-C281-BHAGYO281-01, BN-LEX-C281-BHAGYO281-02, BN-LEX-C281-BHAGYO281-03, BN-LEX-C281-BHAGYO281-04, BN-LEX-C281-BHAGYO281-05, BN-LEX-C282-CHURI282-01, BN-LEX-C282-CHURI282-02, BN-LEX-C282-CHURI282-03, BN-LEX-C282-CHURI282-04, BN-LEX-C282-CHURI282-05, BN-LEX-C283-OPORADH283-01, BN-LEX-C283-OPORADH283-02, BN-LEX-C283-OPORADH283-03, BN-LEX-C283-OPORADH283-04, BN-LEX-C283-OPORADH283-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: an event, something, many, a human being, an accident]
+- [YOU SAY: a witness, someone, everyone, a crowd, to turn up]
+- [YOU SAY: a jolt, to move, to break, to overturn, injured]
+- [YOU SAY: to be alight, a flame, a spark, to burn down, an explosion]
+- [YOU SAY: to arrive, to rescue, a ladder, a siren, refuge]
+- [YOU SAY: luckily, missing, to be spared, to rush, at last]
+- [YOU SAY: to steal, jewellery, to grab, to push, a pickpocket]
+- [YOU SAY: a crime, a complaint, to arrest, an investigation, a police inspector]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C276-GHOTONA276-01, BN-LEX-C276-GHOTONA276-02, BN-LEX-C276-GHOTONA276-03, BN-LEX-C276-GHOTONA276-04, BN-LEX-C276-GHOTONA276-05, BN-LEX-C277-SAKSHI277-01, BN-LEX-C277-SAKSHI277-02, BN-LEX-C277-SAKSHI277-03, BN-LEX-C277-SAKSHI277-04, BN-LEX-C277-SAKSHI277-05, BN-LEX-C278-DHAKKA278-01, BN-LEX-C278-DHAKKA278-02, BN-LEX-C278-DHAKKA278-03, BN-LEX-C278-DHAKKA278-04, BN-LEX-C278-DHAKKA278-05, BN-LEX-C279-SHIKHA279-01, BN-LEX-C279-SHIKHA279-02, BN-LEX-C279-SHIKHA279-03, BN-LEX-C279-SHIKHA279-04, BN-LEX-C279-SHIKHA279-05, BN-LEX-C280-UDDHAR280-01, BN-LEX-C280-UDDHAR280-02, BN-LEX-C280-UDDHAR280-03, BN-LEX-C280-UDDHAR280-04, BN-LEX-C280-UDDHAR280-05, BN-LEX-C281-BHAGYO281-01, BN-LEX-C281-BHAGYO281-02, BN-LEX-C281-BHAGYO281-03, BN-LEX-C281-BHAGYO281-04, BN-LEX-C281-BHAGYO281-05, BN-LEX-C282-CHURI282-01, BN-LEX-C282-CHURI282-02, BN-LEX-C282-CHURI282-03, BN-LEX-C282-CHURI282-04, BN-LEX-C282-CHURI282-05, BN-LEX-C283-OPORADH283-01, BN-LEX-C283-OPORADH283-02, BN-LEX-C283-OPORADH283-03, BN-LEX-C283-OPORADH283-04, BN-LEX-C283-OPORADH283-05] -->
+
+[PAUSE 3s] An event? (**ঘটনা**, *ghôṭônā*.) Something? (**কিছু**, *kichhu*.) Many? (**অনেক**, *ônek*.) A human being? (**মানুষ**, *mānush*.) An accident? (**দুর্ঘটনা**, *durghôṭônā*.) A witness? (**সাক্ষী**, *sākkhī*.) Someone? (**কেউ**, *keu*.) Everyone? (**সবাই**, *sôbāi*.) A crowd? (**ভিড়**, *bhiṛ*.) To turn up? (**হাজির হওয়া**, *hājir hôoyā*.) A jolt? (**ধাক্কা**, *dhākkā*.) To move? (**চলা**, *chôlā*.) To break? (**ভাঙা**, *bhāngā*.) To overturn? (**উল্টানো**, *ulṭāno*.) Injured? (**আহত**, *āhôtô*.) To be alight? (**জ্বলা**, *jvôlā*.) A flame? (**শিখা**, *shikhā*.) A spark? (**স্ফুলিঙ্গ**, *sphulinggô*.) To burn down? (**পুড়ে যাওয়া**, *puṛe jāoyā*.) An explosion? (**বিস্ফোরণ**, *bisphorôn*.) To arrive? (**পৌঁছানো**, *poũchhāno*.) To rescue? (**উদ্ধার করা**, *uddhār kôrā*.) A ladder? (**মই**, *môi*.) A siren? (**সাইরেন**, *sāiren*.) Refuge? (**আশ্রয়**, *āshrôy*.) Luckily? (**ভাগ্যক্রমে**, *bhāgyôkrôme*.) Missing? (**নিখোঁজ**, *nikhõj*.) To be spared? (**রক্ষা পাওয়া**, *rôkkhā pāoyā*.) To rush? (**ছোটা**, *chhoṭā*.) At last? (**অবশেষে**, *ôbôsheshe*.) To steal? (**চুরি করা**, *churi kôrā*.) Jewellery? (**গয়না**, *gôynā*.) To grab? (**পাকড়ানো**, *pākṛāno*.) To push? (**ঠেলা**, *ṭhelā*.) A pickpocket? (**পকেটমার**, *pôkeṭmār*.) A crime? (**অপরাধ**, *ôpôrādh*.) A complaint? (**অভিযোগ**, *ôbhijog*.) To arrest? (**গ্রেফতার করা**, *grephtār kôrā*.) An investigation? (**তদন্ত**, *tôdôntô*.) A police inspector? (**দারোগা**, *dārogā*.)
+`;export{t};

@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R345-review-338-345
+spine_node: SPINE-GIVE-REASONS
+sequence: 21810
+chapter: 345
+type: review
+headword: (dialogue)
+gloss: a review of the words from Documents and Facts to Making Laws
+concept_tag: REVIEW
+prerequisites: [BN-C338-sonod, BN-C338-tothyo, BN-C338-sakkhyo, BN-C338-melano, BN-C338-khondon-kora, BN-C339-odhikar, BN-C339-dayitvo, BN-C339-svartho, BN-C339-rokkha-kora, BN-C339-bhog-kora, BN-C340-boidho, BN-C340-nishiddho, BN-C340-dhara, BN-C340-palon-kora, BN-C340-proyog-kora, BN-C341-longghon-kora, BN-C341-omanyo-kora, BN-C341-jaliyati, BN-C341-durniti, BN-C341-onyay, BN-C342-ukil, BN-C342-bichar-kora, BN-C342-ray, BN-C342-nalish, BN-C342-mimangsa-kora, BN-C343-dosh, BN-C343-dayi, BN-C343-khotipuron, BN-C343-jobabdihi-kora, BN-C343-rehai-deoya, BN-C344-rashtro, BN-C344-porichalona-kora, BN-C344-proshason, BN-C344-khomota, BN-C344-jonogon, BN-C345-songsod, BN-C345-songbidhan, BN-C345-prostab, BN-C345-onumodon-kora, BN-C345-batil-kora]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C338-DOLIL338-01, BN-LEX-C338-DOLIL338-02, BN-LEX-C338-DOLIL338-03, BN-LEX-C338-DOLIL338-04, BN-LEX-C338-DOLIL338-05, BN-LEX-C339-ODHIKAR339-01, BN-LEX-C339-ODHIKAR339-02, BN-LEX-C339-ODHIKAR339-03, BN-LEX-C339-ODHIKAR339-04, BN-LEX-C339-ODHIKAR339-05, BN-LEX-C340-BOIDHO340-01, BN-LEX-C340-BOIDHO340-02, BN-LEX-C340-BOIDHO340-03, BN-LEX-C340-BOIDHO340-04, BN-LEX-C340-BOIDHO340-05, BN-LEX-C341-ONYAY341-01, BN-LEX-C341-ONYAY341-02, BN-LEX-C341-ONYAY341-03, BN-LEX-C341-ONYAY341-04, BN-LEX-C341-ONYAY341-05, BN-LEX-C342-BICHAR342-01, BN-LEX-C342-BICHAR342-02, BN-LEX-C342-BICHAR342-03, BN-LEX-C342-BICHAR342-04, BN-LEX-C342-BICHAR342-05, BN-LEX-C343-DOSH343-01, BN-LEX-C343-DOSH343-02, BN-LEX-C343-DOSH343-03, BN-LEX-C343-DOSH343-04, BN-LEX-C343-DOSH343-05, BN-LEX-C344-RASHTRO344-01, BN-LEX-C344-RASHTRO344-02, BN-LEX-C344-RASHTRO344-03, BN-LEX-C344-RASHTRO344-04, BN-LEX-C344-RASHTRO344-05, BN-LEX-C345-SONGSOD345-01, BN-LEX-C345-SONGSOD345-02, BN-LEX-C345-SONGSOD345-03, BN-LEX-C345-SONGSOD345-04, BN-LEX-C345-SONGSOD345-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C338-DOLIL338-01, BN-LEX-C338-DOLIL338-02, BN-LEX-C338-DOLIL338-03, BN-LEX-C338-DOLIL338-04, BN-LEX-C338-DOLIL338-05, BN-LEX-C339-ODHIKAR339-01, BN-LEX-C339-ODHIKAR339-02, BN-LEX-C339-ODHIKAR339-03, BN-LEX-C339-ODHIKAR339-04, BN-LEX-C339-ODHIKAR339-05, BN-LEX-C340-BOIDHO340-01, BN-LEX-C340-BOIDHO340-02, BN-LEX-C340-BOIDHO340-03, BN-LEX-C340-BOIDHO340-04, BN-LEX-C340-BOIDHO340-05, BN-LEX-C341-ONYAY341-01, BN-LEX-C341-ONYAY341-02, BN-LEX-C341-ONYAY341-03, BN-LEX-C341-ONYAY341-04, BN-LEX-C341-ONYAY341-05, BN-LEX-C342-BICHAR342-01, BN-LEX-C342-BICHAR342-02, BN-LEX-C342-BICHAR342-03, BN-LEX-C342-BICHAR342-04, BN-LEX-C342-BICHAR342-05, BN-LEX-C343-DOSH343-01, BN-LEX-C343-DOSH343-02, BN-LEX-C343-DOSH343-03, BN-LEX-C343-DOSH343-04, BN-LEX-C343-DOSH343-05, BN-LEX-C344-RASHTRO344-01, BN-LEX-C344-RASHTRO344-02, BN-LEX-C344-RASHTRO344-03, BN-LEX-C344-RASHTRO344-04, BN-LEX-C344-RASHTRO344-05, BN-LEX-C345-SONGSOD345-01, BN-LEX-C345-SONGSOD345-02, BN-LEX-C345-SONGSOD345-03, BN-LEX-C345-SONGSOD345-04, BN-LEX-C345-SONGSOD345-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C338-sonod, BN-C338-tothyo, BN-C338-sakkhyo, BN-C338-melano, BN-C338-khondon-kora, BN-C339-odhikar, BN-C339-dayitvo, BN-C339-svartho, BN-C339-rokkha-kora, BN-C339-bhog-kora, BN-C340-boidho, BN-C340-nishiddho, BN-C340-dhara, BN-C340-palon-kora, BN-C340-proyog-kora, BN-C341-longghon-kora, BN-C341-omanyo-kora, BN-C341-jaliyati, BN-C341-durniti, BN-C341-onyay, BN-C342-ukil, BN-C342-bichar-kora, BN-C342-ray, BN-C342-nalish, BN-C342-mimangsa-kora, BN-C343-dosh, BN-C343-dayi, BN-C343-khotipuron, BN-C343-jobabdihi-kora, BN-C343-rehai-deoya, BN-C344-rashtro, BN-C344-porichalona-kora, BN-C344-proshason, BN-C344-khomota, BN-C344-jonogon, BN-C345-songsod, BN-C345-songbidhan, BN-C345-prostab, BN-C345-onumodon-kora, BN-C345-batil-kora]
+---
+
+# Looking back: from Documents and Facts to Making Laws
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C338-DOLIL338-01, BN-LEX-C338-DOLIL338-02] -->
+
+[PAUSE 3s] Say the Bengali for a certificate and information.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C338-DOLIL338-01, BN-LEX-C338-DOLIL338-02, BN-LEX-C338-DOLIL338-03, BN-LEX-C338-DOLIL338-04, BN-LEX-C338-DOLIL338-05, BN-LEX-C339-ODHIKAR339-01, BN-LEX-C339-ODHIKAR339-02, BN-LEX-C339-ODHIKAR339-03, BN-LEX-C339-ODHIKAR339-04, BN-LEX-C339-ODHIKAR339-05, BN-LEX-C340-BOIDHO340-01, BN-LEX-C340-BOIDHO340-02, BN-LEX-C340-BOIDHO340-03, BN-LEX-C340-BOIDHO340-04, BN-LEX-C340-BOIDHO340-05, BN-LEX-C341-ONYAY341-01, BN-LEX-C341-ONYAY341-02, BN-LEX-C341-ONYAY341-03, BN-LEX-C341-ONYAY341-04, BN-LEX-C341-ONYAY341-05, BN-LEX-C342-BICHAR342-01, BN-LEX-C342-BICHAR342-02, BN-LEX-C342-BICHAR342-03, BN-LEX-C342-BICHAR342-04, BN-LEX-C342-BICHAR342-05, BN-LEX-C343-DOSH343-01, BN-LEX-C343-DOSH343-02, BN-LEX-C343-DOSH343-03, BN-LEX-C343-DOSH343-04, BN-LEX-C343-DOSH343-05, BN-LEX-C344-RASHTRO344-01, BN-LEX-C344-RASHTRO344-02, BN-LEX-C344-RASHTRO344-03, BN-LEX-C344-RASHTRO344-04, BN-LEX-C344-RASHTRO344-05, BN-LEX-C345-SONGSOD345-01, BN-LEX-C345-SONGSOD345-02, BN-LEX-C345-SONGSOD345-03, BN-LEX-C345-SONGSOD345-04, BN-LEX-C345-SONGSOD345-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a certificate, information, testimony, to check against, to refute]
+- [YOU SAY: a right, a responsibility, self-interest, to defend, to enjoy a right]
+- [YOU SAY: lawful, banned, a clause, to carry out, to enforce]
+- [YOU SAY: to violate, to disobey, forgery, corruption, an injustice]
+- [YOU SAY: a lawyer, to try a case, a verdict, a formal complaint, to settle a dispute]
+- [YOU SAY: blame, responsible for a fault, compensation, to answer for, to let off]
+- [YOU SAY: a nation-state, to run an organisation, an administration, power, the people]
+- [YOU SAY: a parliament, a constitution, a proposal, to approve, to repeal]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C338-DOLIL338-01, BN-LEX-C338-DOLIL338-02, BN-LEX-C338-DOLIL338-03, BN-LEX-C338-DOLIL338-04, BN-LEX-C338-DOLIL338-05, BN-LEX-C339-ODHIKAR339-01, BN-LEX-C339-ODHIKAR339-02, BN-LEX-C339-ODHIKAR339-03, BN-LEX-C339-ODHIKAR339-04, BN-LEX-C339-ODHIKAR339-05, BN-LEX-C340-BOIDHO340-01, BN-LEX-C340-BOIDHO340-02, BN-LEX-C340-BOIDHO340-03, BN-LEX-C340-BOIDHO340-04, BN-LEX-C340-BOIDHO340-05, BN-LEX-C341-ONYAY341-01, BN-LEX-C341-ONYAY341-02, BN-LEX-C341-ONYAY341-03, BN-LEX-C341-ONYAY341-04, BN-LEX-C341-ONYAY341-05, BN-LEX-C342-BICHAR342-01, BN-LEX-C342-BICHAR342-02, BN-LEX-C342-BICHAR342-03, BN-LEX-C342-BICHAR342-04, BN-LEX-C342-BICHAR342-05, BN-LEX-C343-DOSH343-01, BN-LEX-C343-DOSH343-02, BN-LEX-C343-DOSH343-03, BN-LEX-C343-DOSH343-04, BN-LEX-C343-DOSH343-05, BN-LEX-C344-RASHTRO344-01, BN-LEX-C344-RASHTRO344-02, BN-LEX-C344-RASHTRO344-03, BN-LEX-C344-RASHTRO344-04, BN-LEX-C344-RASHTRO344-05, BN-LEX-C345-SONGSOD345-01, BN-LEX-C345-SONGSOD345-02, BN-LEX-C345-SONGSOD345-03, BN-LEX-C345-SONGSOD345-04, BN-LEX-C345-SONGSOD345-05] -->
+
+[PAUSE 3s] A certificate? (**সনদ**, *sônôd*.) Information? (**তথ্য**, *tôthyô*.) Testimony? (**সাক্ষ্য**, *sākkhyô*.) To check against? (**মেলানো**, *melāno*.) To refute? (**খণ্ডন করা**, *khônḍôn kôrā*.) A right? (**অধিকার**, *ôdhikār*.) A responsibility? (**দায়িত্ব**, *dāyitvô*.) Self-interest? (**স্বার্থ**, *svārthô*.) To defend? (**রক্ষা করা**, *rôkkhā kôrā*.) To enjoy a right? (**ভোগ করা**, *bhog kôrā*.) Lawful? (**বৈধ**, *boidhô*.) Banned? (**নিষিদ্ধ**, *nishiddhô*.) A clause? (**ধারা**, *dhārā*.) To carry out? (**পালন করা**, *pālôn kôrā*.) To enforce? (**প্রয়োগ করা**, *prôyog kôrā*.) To violate? (**লঙ্ঘন করা**, *lôngghôn kôrā*.) To disobey? (**অমান্য করা**, *ômānyô kôrā*.) Forgery? (**জালিয়াতি**, *jāliyāti*.) Corruption? (**দুর্নীতি**, *durnīti*.) An injustice? (**অন্যায়**, *ônyāy*.) A lawyer? (**উকিল**, *ukil*.) To try a case? (**বিচার করা**, *bichār kôrā*.) A verdict? (**রায়**, *rāy*.) A formal complaint? (**নালিশ**, *nālish*.) To settle a dispute? (**মীমাংসা করা**, *mīmāngsā kôrā*.) Blame? (**দোষ**, *dosh*.) Responsible for a fault? (**দায়ী**, *dāyī*.) Compensation? (**ক্ষতিপূরণ**, *khôtipūrôn*.) To answer for? (**জবাবদিহি করা**, *jôbābdihi kôrā*.) To let off? (**রেহাই দেওয়া**, *rehāi deoyā*.) A nation-state? (**রাষ্ট্র**, *rāshṭrô*.) To run an organisation? (**পরিচালনা করা**, *pôrichālônā kôrā*.) An administration? (**প্রশাসন**, *prôshāsôn*.) Power? (**ক্ষমতা**, *khômôtā*.) The people? (**জনগণ**, *jônôgôn*.) A parliament? (**সংসদ**, *sôngsôd*.) A constitution? (**সংবিধান**, *sôngbidhān*.) A proposal? (**প্রস্তাব**, *prôstāb*.) To approve? (**অনুমোদন করা**, *ônumodôn kôrā*.) To repeal? (**বাতিল করা**, *bātil kôrā*.)
+`;export{t};

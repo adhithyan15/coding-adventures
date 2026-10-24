@@ -1,0 +1,57 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R415-review-408-415
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 25630
+chapter: 415
+type: review
+headword: (dialogue)
+gloss: a review of the words from Rented Rooms to Interest and Investment
+concept_tag: REVIEW
+prerequisites: [BN-C408-basa, BN-C408-bharate, BN-C408-ogrim, BN-C408-jamanot, BN-C408-bosbas-kora, BN-C409-elaka, BN-C409-bosti, BN-C409-koloni, BN-C409-basinda, BN-C409-adda-deoya, BN-C410-math, BN-C410-park, BN-C410-uthon, BN-C410-chotvor, BN-C410-paychari-kora, BN-C411-dakghor, BN-C411-ophis, BN-C411-chithi, BN-C411-piyon, BN-C411-pathano, BN-C412-pachil, BN-C412-get, BN-C412-dalan, BN-C412-lemppost, BN-C412-topkano, BN-C413-nordoma, BN-C413-paip, BN-C413-dastbin, BN-C413-moyla, BN-C413-jonjal, BN-C414-bengk, BN-C414-kauntar, BN-C414-keshiyar, BN-C414-chek, BN-C414-nogod, BN-C415-sud, BN-C415-pasboi, BN-C415-lenden, BN-C415-biniyog-kora, BN-C415-khoyano]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C408-BASA408-01, BN-LEX-C408-BASA408-02, BN-LEX-C408-BASA408-03, BN-LEX-C408-BASA408-04, BN-LEX-C408-BASA408-05, BN-LEX-C409-ELAKA409-01, BN-LEX-C409-ELAKA409-02, BN-LEX-C409-ELAKA409-03, BN-LEX-C409-ELAKA409-04, BN-LEX-C409-ELAKA409-05, BN-LEX-C410-MATH410-01, BN-LEX-C410-MATH410-02, BN-LEX-C410-MATH410-03, BN-LEX-C410-MATH410-04, BN-LEX-C410-MATH410-05, BN-LEX-C411-DAKGHOR411-01, BN-LEX-C411-DAKGHOR411-02, BN-LEX-C411-DAKGHOR411-03, BN-LEX-C411-DAKGHOR411-04, BN-LEX-C411-DAKGHOR411-05, BN-LEX-C412-PANCHIL412-01, BN-LEX-C412-PANCHIL412-02, BN-LEX-C412-PANCHIL412-03, BN-LEX-C412-PANCHIL412-04, BN-LEX-C412-PANCHIL412-05, BN-LEX-C413-NORDOMA413-01, BN-LEX-C413-NORDOMA413-02, BN-LEX-C413-NORDOMA413-03, BN-LEX-C413-NORDOMA413-04, BN-LEX-C413-NORDOMA413-05, BN-LEX-C414-BANK414-01, BN-LEX-C414-BANK414-02, BN-LEX-C414-BANK414-03, BN-LEX-C414-BANK414-04, BN-LEX-C414-BANK414-05, BN-LEX-C415-SUD415-01, BN-LEX-C415-SUD415-02, BN-LEX-C415-SUD415-03, BN-LEX-C415-SUD415-04, BN-LEX-C415-SUD415-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C408-BASA408-01, BN-LEX-C408-BASA408-02, BN-LEX-C408-BASA408-03, BN-LEX-C408-BASA408-04, BN-LEX-C408-BASA408-05, BN-LEX-C409-ELAKA409-01, BN-LEX-C409-ELAKA409-02, BN-LEX-C409-ELAKA409-03, BN-LEX-C409-ELAKA409-04, BN-LEX-C409-ELAKA409-05, BN-LEX-C410-MATH410-01, BN-LEX-C410-MATH410-02, BN-LEX-C410-MATH410-03, BN-LEX-C410-MATH410-04, BN-LEX-C410-MATH410-05, BN-LEX-C411-DAKGHOR411-01, BN-LEX-C411-DAKGHOR411-02, BN-LEX-C411-DAKGHOR411-03, BN-LEX-C411-DAKGHOR411-04, BN-LEX-C411-DAKGHOR411-05, BN-LEX-C412-PANCHIL412-01, BN-LEX-C412-PANCHIL412-02, BN-LEX-C412-PANCHIL412-03, BN-LEX-C412-PANCHIL412-04, BN-LEX-C412-PANCHIL412-05, BN-LEX-C413-NORDOMA413-01, BN-LEX-C413-NORDOMA413-02, BN-LEX-C413-NORDOMA413-03, BN-LEX-C413-NORDOMA413-04, BN-LEX-C413-NORDOMA413-05, BN-LEX-C414-BANK414-01, BN-LEX-C414-BANK414-02, BN-LEX-C414-BANK414-03, BN-LEX-C414-BANK414-04, BN-LEX-C414-BANK414-05, BN-LEX-C415-SUD415-01, BN-LEX-C415-SUD415-02, BN-LEX-C415-SUD415-03, BN-LEX-C415-SUD415-04, BN-LEX-C415-SUD415-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C408-basa, BN-C408-bharate, BN-C408-ogrim, BN-C408-jamanot, BN-C408-bosbas-kora, BN-C409-elaka, BN-C409-bosti, BN-C409-koloni, BN-C409-basinda, BN-C409-adda-deoya, BN-C410-math, BN-C410-park, BN-C410-uthon, BN-C410-chotvor, BN-C410-paychari-kora, BN-C411-dakghor, BN-C411-ophis, BN-C411-chithi, BN-C411-piyon, BN-C411-pathano, BN-C412-pachil, BN-C412-get, BN-C412-dalan, BN-C412-lemppost, BN-C412-topkano, BN-C413-nordoma, BN-C413-paip, BN-C413-dastbin, BN-C413-moyla, BN-C413-jonjal, BN-C414-bengk, BN-C414-kauntar, BN-C414-keshiyar, BN-C414-chek, BN-C414-nogod, BN-C415-sud, BN-C415-pasboi, BN-C415-lenden, BN-C415-biniyog-kora, BN-C415-khoyano]
+---
+
+# Looking back: from Rented Rooms to Interest and Investment
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C408-BASA408-01, BN-LEX-C408-BASA408-02] -->
+
+[PAUSE 3s] Say the Bengali for a rented home and a tenant.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C408-BASA408-01, BN-LEX-C408-BASA408-02, BN-LEX-C408-BASA408-03, BN-LEX-C408-BASA408-04, BN-LEX-C408-BASA408-05, BN-LEX-C409-ELAKA409-01, BN-LEX-C409-ELAKA409-02, BN-LEX-C409-ELAKA409-03, BN-LEX-C409-ELAKA409-04, BN-LEX-C409-ELAKA409-05, BN-LEX-C410-MATH410-01, BN-LEX-C410-MATH410-02, BN-LEX-C410-MATH410-03, BN-LEX-C410-MATH410-04, BN-LEX-C410-MATH410-05, BN-LEX-C411-DAKGHOR411-01, BN-LEX-C411-DAKGHOR411-02, BN-LEX-C411-DAKGHOR411-03, BN-LEX-C411-DAKGHOR411-04, BN-LEX-C411-DAKGHOR411-05, BN-LEX-C412-PANCHIL412-01, BN-LEX-C412-PANCHIL412-02, BN-LEX-C412-PANCHIL412-03, BN-LEX-C412-PANCHIL412-04, BN-LEX-C412-PANCHIL412-05, BN-LEX-C413-NORDOMA413-01, BN-LEX-C413-NORDOMA413-02, BN-LEX-C413-NORDOMA413-03, BN-LEX-C413-NORDOMA413-04, BN-LEX-C413-NORDOMA413-05, BN-LEX-C414-BANK414-01, BN-LEX-C414-BANK414-02, BN-LEX-C414-BANK414-03, BN-LEX-C414-BANK414-04, BN-LEX-C414-BANK414-05, BN-LEX-C415-SUD415-01, BN-LEX-C415-SUD415-02, BN-LEX-C415-SUD415-03, BN-LEX-C415-SUD415-04, BN-LEX-C415-SUD415-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a rented home, a tenant, an advance (payment), a security deposit, to reside]
+- [YOU SAY: an area, a slum, a housing colony, a resident, to hang out (chatting)]
+- [YOU SAY: an open ground, a park, a courtyard, a square (open place), to pace up and down]
+- [YOU SAY: a post office, an office, a letter (sent by post), a postman, to send]
+- [YOU SAY: a boundary wall, a gate, a brick building, a lamp post, to climb over]
+- [YOU SAY: a drain, a pipe, a dustbin, dirt, junk]
+- [YOU SAY: a bank (for money), a counter, a cashier, a cheque, cash]
+- [YOU SAY: interest (on money), a passbook, transactions, to invest, to lose (money or property)]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C408-BASA408-01, BN-LEX-C408-BASA408-02, BN-LEX-C408-BASA408-03, BN-LEX-C408-BASA408-04, BN-LEX-C408-BASA408-05, BN-LEX-C409-ELAKA409-01, BN-LEX-C409-ELAKA409-02, BN-LEX-C409-ELAKA409-03, BN-LEX-C409-ELAKA409-04, BN-LEX-C409-ELAKA409-05, BN-LEX-C410-MATH410-01, BN-LEX-C410-MATH410-02, BN-LEX-C410-MATH410-03, BN-LEX-C410-MATH410-04, BN-LEX-C410-MATH410-05, BN-LEX-C411-DAKGHOR411-01, BN-LEX-C411-DAKGHOR411-02, BN-LEX-C411-DAKGHOR411-03, BN-LEX-C411-DAKGHOR411-04, BN-LEX-C411-DAKGHOR411-05, BN-LEX-C412-PANCHIL412-01, BN-LEX-C412-PANCHIL412-02, BN-LEX-C412-PANCHIL412-03, BN-LEX-C412-PANCHIL412-04, BN-LEX-C412-PANCHIL412-05, BN-LEX-C413-NORDOMA413-01, BN-LEX-C413-NORDOMA413-02, BN-LEX-C413-NORDOMA413-03, BN-LEX-C413-NORDOMA413-04, BN-LEX-C413-NORDOMA413-05, BN-LEX-C414-BANK414-01, BN-LEX-C414-BANK414-02, BN-LEX-C414-BANK414-03, BN-LEX-C414-BANK414-04, BN-LEX-C414-BANK414-05, BN-LEX-C415-SUD415-01, BN-LEX-C415-SUD415-02, BN-LEX-C415-SUD415-03, BN-LEX-C415-SUD415-04, BN-LEX-C415-SUD415-05] -->
+
+[PAUSE 3s] A rented home? (**বাসা**, *bāsā*.) A tenant? (**ভাড়াটে**, *bhāṛāṭe*.) An advance (payment)? (**অগ্রিম**, *ôgrim*.) A security deposit? (**জামানত**, *jāmānôt*.) To reside? (**বসবাস করা**, *bôsbās kôrā*.) An area? (**এলাকা**, *elākā*.) A slum? (**বস্তি**, *bôsti*.) A housing colony? (**কলোনি**, *kôloni*.) A resident? (**বাসিন্দা**, *bāsindā*.) To hang out (chatting)? (**আড্ডা দেওয়া**, *āḍḍā deoyā*.) An open ground? (**মাঠ**, *māṭh*.) A park? (**পার্ক**, *pārk*.) A courtyard? (**উঠোন**, *uṭhon*.) A square (open place)? (**চত্বর**, *chôtvôr*.) To pace up and down? (**পায়চারি করা**, *pāychāri kôrā*.) A post office? (**ডাকঘর**, *ḍākghôr*.) An office? (**অফিস**, *ôphis*.) A letter (sent by post)? (**চিঠি**, *chiṭhi*.) A postman? (**পিয়ন**, *piyôn*.) To send? (**পাঠানো**, *pāṭhāno*.) A boundary wall? (**পাঁচিল**, *pā̃chil*.) A gate? (**গেট**, *geṭ*.) A brick building? (**দালান**, *dālān*.) A lamp post? (**ল্যাম্পপোস্ট**, *læmpposṭ*.) To climb over? (**টপকানো**, *ṭôpkāno*.) A drain? (**নর্দমা**, *nôrdômā*.) A pipe? (**পাইপ**, *pāip*.) A dustbin? (**ডাস্টবিন**, *ḍāsṭbin*.) Dirt? (**ময়লা**, *môylā*.) Junk? (**জঞ্জাল**, *jônjāl*.) A bank (for money)? (**ব্যাংক**, *bængk*.) A counter? (**কাউন্টার**, *kāunṭār*.) A cashier? (**ক্যাশিয়ার**, *kæshiyār*.) A cheque? (**চেক**, *chek*.) Cash? (**নগদ**, *nôgôd*.) Interest (on money)? (**সুদ**, *sud*.) A passbook? (**পাসবই**, *pāsbôi*.) Transactions? (**লেনদেন**, *lenden*.) To invest? (**বিনিয়োগ করা**, *biniyog kôrā*.) To lose (money or property)? (**খোয়ানো**, *khoyāno*.)
+`;export{t};

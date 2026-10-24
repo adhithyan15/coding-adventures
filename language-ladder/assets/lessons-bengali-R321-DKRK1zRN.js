@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: BN-R322-review-316-322
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 20400
+chapter: 322
+type: review
+headword: (dialogue)
+gloss: a review of the words from The Siege to Ogres, Fairies and Ghosts
+concept_tag: REVIEW
+prerequisites: [BN-C316-ghera, BN-C316-prachir, BN-C316-porikha, BN-C316-teka, BN-C316-pichhono, BN-C317-bir, BN-C317-atmotyag, BN-C317-shohid, BN-C317-atmosomorpon-kora, BN-C317-porajoy, BN-C318-biplob, BN-C318-andolon, BN-C318-songgram, BN-C318-protishtha-kora, BN-C318-mukti, BN-C319-dhvongsaboshesh, BN-C319-murti, BN-C319-khonon-kora, BN-C319-shilalipi, BN-C319-mudra, BN-C320-smritistombho, BN-C320-nirman-kora, BN-C320-somadhi, BN-C320-gombuj, BN-C320-sthapotyo, BN-C321-kingbodonti, BN-C321-rupkotha, BN-C321-doityo, BN-C321-jadu, BN-C321-ghumano, BN-C322-rakkhos, BN-C322-pori, BN-C322-daini, BN-C322-obhishap, BN-C322-bhut]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-LEX-C316-GHERA316-01, BN-LEX-C316-GHERA316-02, BN-LEX-C316-GHERA316-03, BN-LEX-C316-GHERA316-04, BN-LEX-C316-GHERA316-05, BN-LEX-C317-BIR317-01, BN-LEX-C317-BIR317-02, BN-LEX-C317-BIR317-03, BN-LEX-C317-BIR317-04, BN-LEX-C317-BIR317-05, BN-LEX-C318-BIPLOB318-01, BN-LEX-C318-BIPLOB318-02, BN-LEX-C318-BIPLOB318-03, BN-LEX-C318-BIPLOB318-04, BN-LEX-C318-BIPLOB318-05, BN-LEX-C319-PURATON319-01, BN-LEX-C319-PURATON319-02, BN-LEX-C319-PURATON319-03, BN-LEX-C319-PURATON319-04, BN-LEX-C319-PURATON319-05, BN-LEX-C320-SMRITI320-01, BN-LEX-C320-SMRITI320-02, BN-LEX-C320-SMRITI320-03, BN-LEX-C320-SMRITI320-04, BN-LEX-C320-SMRITI320-05, BN-LEX-C321-KINGBODONTI321-01, BN-LEX-C321-KINGBODONTI321-02, BN-LEX-C321-KINGBODONTI321-03, BN-LEX-C321-KINGBODONTI321-04, BN-LEX-C321-KINGBODONTI321-05, BN-LEX-C322-RAKKHOSH322-01, BN-LEX-C322-RAKKHOSH322-02, BN-LEX-C322-RAKKHOSH322-03, BN-LEX-C322-RAKKHOSH322-04, BN-LEX-C322-RAKKHOSH322-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [BN-LEX-C316-GHERA316-01, BN-LEX-C316-GHERA316-02, BN-LEX-C316-GHERA316-03, BN-LEX-C316-GHERA316-04, BN-LEX-C316-GHERA316-05, BN-LEX-C317-BIR317-01, BN-LEX-C317-BIR317-02, BN-LEX-C317-BIR317-03, BN-LEX-C317-BIR317-04, BN-LEX-C317-BIR317-05, BN-LEX-C318-BIPLOB318-01, BN-LEX-C318-BIPLOB318-02, BN-LEX-C318-BIPLOB318-03, BN-LEX-C318-BIPLOB318-04, BN-LEX-C318-BIPLOB318-05, BN-LEX-C319-PURATON319-01, BN-LEX-C319-PURATON319-02, BN-LEX-C319-PURATON319-03, BN-LEX-C319-PURATON319-04, BN-LEX-C319-PURATON319-05, BN-LEX-C320-SMRITI320-01, BN-LEX-C320-SMRITI320-02, BN-LEX-C320-SMRITI320-03, BN-LEX-C320-SMRITI320-04, BN-LEX-C320-SMRITI320-05, BN-LEX-C321-KINGBODONTI321-01, BN-LEX-C321-KINGBODONTI321-02, BN-LEX-C321-KINGBODONTI321-03, BN-LEX-C321-KINGBODONTI321-04, BN-LEX-C321-KINGBODONTI321-05, BN-LEX-C322-RAKKHOSH322-01, BN-LEX-C322-RAKKHOSH322-02, BN-LEX-C322-RAKKHOSH322-03, BN-LEX-C322-RAKKHOSH322-04, BN-LEX-C322-RAKKHOSH322-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [BN-C316-ghera, BN-C316-prachir, BN-C316-porikha, BN-C316-teka, BN-C316-pichhono, BN-C317-bir, BN-C317-atmotyag, BN-C317-shohid, BN-C317-atmosomorpon-kora, BN-C317-porajoy, BN-C318-biplob, BN-C318-andolon, BN-C318-songgram, BN-C318-protishtha-kora, BN-C318-mukti, BN-C319-dhvongsaboshesh, BN-C319-murti, BN-C319-khonon-kora, BN-C319-shilalipi, BN-C319-mudra, BN-C320-smritistombho, BN-C320-nirman-kora, BN-C320-somadhi, BN-C320-gombuj, BN-C320-sthapotyo, BN-C321-kingbodonti, BN-C321-rupkotha, BN-C321-doityo, BN-C321-jadu, BN-C321-ghumano, BN-C322-rakkhos, BN-C322-pori, BN-C322-daini, BN-C322-obhishap, BN-C322-bhut]
+---
+
+# Looking back: from The Siege to Ogres, Fairies and Ghosts
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C316-GHERA316-01, BN-LEX-C316-GHERA316-02] -->
+
+[PAUSE 3s] Say the Bengali for to surround and a rampart.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C316-GHERA316-01, BN-LEX-C316-GHERA316-02, BN-LEX-C316-GHERA316-03, BN-LEX-C316-GHERA316-04, BN-LEX-C316-GHERA316-05, BN-LEX-C317-BIR317-01, BN-LEX-C317-BIR317-02, BN-LEX-C317-BIR317-03, BN-LEX-C317-BIR317-04, BN-LEX-C317-BIR317-05, BN-LEX-C318-BIPLOB318-01, BN-LEX-C318-BIPLOB318-02, BN-LEX-C318-BIPLOB318-03, BN-LEX-C318-BIPLOB318-04, BN-LEX-C318-BIPLOB318-05, BN-LEX-C319-PURATON319-01, BN-LEX-C319-PURATON319-02, BN-LEX-C319-PURATON319-03, BN-LEX-C319-PURATON319-04, BN-LEX-C319-PURATON319-05, BN-LEX-C320-SMRITI320-01, BN-LEX-C320-SMRITI320-02, BN-LEX-C320-SMRITI320-03, BN-LEX-C320-SMRITI320-04, BN-LEX-C320-SMRITI320-05, BN-LEX-C321-KINGBODONTI321-01, BN-LEX-C321-KINGBODONTI321-02, BN-LEX-C321-KINGBODONTI321-03, BN-LEX-C321-KINGBODONTI321-04, BN-LEX-C321-KINGBODONTI321-05, BN-LEX-C322-RAKKHOSH322-01, BN-LEX-C322-RAKKHOSH322-02, BN-LEX-C322-RAKKHOSH322-03, BN-LEX-C322-RAKKHOSH322-04, BN-LEX-C322-RAKKHOSH322-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to surround, a rampart, a moat, to hold out, to fall back]
+- [YOU SAY: a warrior, self-sacrifice, a martyr, to surrender, defeat]
+- [YOU SAY: a revolution, a movement, a struggle, to found, liberation]
+- [YOU SAY: ruins, a statue, to excavate, an inscription, currency]
+- [YOU SAY: a memorial, to construct, a tomb, a dome, architecture]
+- [YOU SAY: a legend, a fairy tale, a giant, magic, to sleep]
+- [YOU SAY: an ogre, a fairy, a witch, a curse, a ghost]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C316-GHERA316-01, BN-LEX-C316-GHERA316-02, BN-LEX-C316-GHERA316-03, BN-LEX-C316-GHERA316-04, BN-LEX-C316-GHERA316-05, BN-LEX-C317-BIR317-01, BN-LEX-C317-BIR317-02, BN-LEX-C317-BIR317-03, BN-LEX-C317-BIR317-04, BN-LEX-C317-BIR317-05, BN-LEX-C318-BIPLOB318-01, BN-LEX-C318-BIPLOB318-02, BN-LEX-C318-BIPLOB318-03, BN-LEX-C318-BIPLOB318-04, BN-LEX-C318-BIPLOB318-05, BN-LEX-C319-PURATON319-01, BN-LEX-C319-PURATON319-02, BN-LEX-C319-PURATON319-03, BN-LEX-C319-PURATON319-04, BN-LEX-C319-PURATON319-05, BN-LEX-C320-SMRITI320-01, BN-LEX-C320-SMRITI320-02, BN-LEX-C320-SMRITI320-03, BN-LEX-C320-SMRITI320-04, BN-LEX-C320-SMRITI320-05, BN-LEX-C321-KINGBODONTI321-01, BN-LEX-C321-KINGBODONTI321-02, BN-LEX-C321-KINGBODONTI321-03, BN-LEX-C321-KINGBODONTI321-04, BN-LEX-C321-KINGBODONTI321-05, BN-LEX-C322-RAKKHOSH322-01, BN-LEX-C322-RAKKHOSH322-02, BN-LEX-C322-RAKKHOSH322-03, BN-LEX-C322-RAKKHOSH322-04, BN-LEX-C322-RAKKHOSH322-05] -->
+
+[PAUSE 3s] To surround? (**ঘেরা**, *gherā*.) A rampart? (**প্রাচীর**, *prāchīr*.) A moat? (**পরিখা**, *pôrikhā*.) To hold out? (**টেকা**, *ṭekā*.) To fall back? (**পিছোনো**, *pichhono*.) A warrior? (**বীর**, *bīr*.) Self-sacrifice? (**আত্মত্যাগ**, *ātmôtyāg*.) A martyr? (**শহিদ**, *shôhid*.) To surrender? (**আত্মসমর্পণ করা**, *ātmôsômôrpôn kôrā*.) Defeat? (**পরাজয়**, *pôrājôy*.) A revolution? (**বিপ্লব**, *biplôb*.) A movement? (**আন্দোলন**, *āndolôn*.) A struggle? (**সংগ্রাম**, *sônggrām*.) To found? (**প্রতিষ্ঠা করা**, *prôtishṭhā kôrā*.) Liberation? (**মুক্তি**, *mukti*.) Ruins? (**ধ্বংসাবশেষ**, *dhvôngsābôshesh*.) A statue? (**মূর্তি**, *mūrti*.) To excavate? (**খনন করা**, *khônôn kôrā*.) An inscription? (**শিলালিপি**, *shilālipi*.) Currency? (**মুদ্রা**, *mudrā*.) A memorial? (**স্মৃতিস্তম্ভ**, *smritistômbhô*.) To construct? (**নির্মাণ করা**, *nirmān kôrā*.) A tomb? (**সমাধি**, *sômādhi*.) A dome? (**গম্বুজ**, *gômbuj*.) Architecture? (**স্থাপত্য**, *sthāpôtyô*.) A legend? (**কিংবদন্তি**, *kingbôdônti*.) A fairy tale? (**রূপকথা**, *rūpkôthā*.) A giant? (**দৈত্য**, *doityô*.) Magic? (**জাদু**, *jādu*.) To sleep? (**ঘুমানো**, *ghumāno*.) An ogre? (**রাক্ষস**, *rākkhôs*.) A fairy? (**পরী**, *pôrī*.) A witch? (**ডাইনি**, *ḍāini*.) A curse? (**অভিশাপ**, *ôbhishāp*.) A ghost? (**ভূত**, *bhūt*.)
+`;export{t};
