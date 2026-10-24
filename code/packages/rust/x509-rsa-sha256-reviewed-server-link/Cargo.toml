@@ -16,6 +16,7 @@ x509-subject-alt-name = { path = "../x509-subject-alt-name" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 tls-server-identity = { path = "../tls-server-identity" }
 x509-certificate-issuer-candidate-selection = { path = "../x509-certificate-issuer-candidate-selection" }
+x509-certificate-path-construction = { path = "../x509-certificate-path-construction" }
 x509-certificate-path-length-policy = { path = "../x509-certificate-path-length-policy" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-intermediate-certificate-policy = { path = "../x509-intermediate-certificate-policy" }
