@@ -5061,6 +5061,14 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             upper.as_str(),
             "COMMENT"
                 | "LINE_COMMENT"
+                // #18137: a `#!` hashbang line is a comment too. Kept as a
+                // token, it lost the line break after it (WHITESPACE_ONLY
+                // drops newlines), so `#!/usr/bin/env node⏎f()` printed as
+                // `#!/usr/bin/env nodef();`: the whole program became part
+                // of the comment and nothing ran. Upstream v20260915 drops
+                // the hashbang at every level, and so does closurec's
+                // SIMPLE/ADVANCED path; WHITESPACE_ONLY now does the same.
+                | "HASHBANG"
                 | "BLOCK_COMMENT"
                 | "WHITESPACE"
                 | "WS"
@@ -10770,5 +10778,15 @@ mod tests {
             minify("var{a}=tag`hi`;"),
             "var {a}=tag`hi`;"
         );
+    }
+
+    // ---- #18137: a hashbang is dropped, like a comment -----------------
+
+    #[test]
+    fn issue18137_hashbang_is_dropped() {
+        assert_eq!(minify("#!/usr/bin/env node\nconsole.log(1)"), "console.log(1);");
+        assert_eq!(minify("#!/x\r\nvar a=1;\nf(a)"), "var a=1;f(a);");
+        // A `#!` line followed only by a comment and blank lines.
+        assert_eq!(minify("#!/x\n\n// c\nvar x = 1;"), "var x=1;");
     }
 }
