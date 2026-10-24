@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - ADVANCED no longer inlines a function that reads `this` (#18115)
+
+`function t(){return this}var o={m:function(){return t()}};console.log(o.m()===o)`
+prints `false`. ADVANCED spliced `t` into `m`, and the output printed
+`true`. The fix is in `closure-pass-inline` 0.31.0: its capture guards now
+see `this`, `super` and `new.target`, the bodies of arrows (which inherit
+`this`), and template substitutions.
+
+`tests/regression_inline_this.rs` checks with `node` that seven programs
+print the same after SIMPLE and ADVANCED as before.
+
 ### Changed - WHITESPACE_ONLY unwraps a single-statement labeled block (CCR-087, #15924)
 
 `lbl:{a()}` now prints as `lbl:a();`, matching upstream. The rule:
@@ -78,6 +89,18 @@ The fix is in the ECMAScript `.tokens` files and javascript-lexer.
 `tests/regression_token_patterns.rs` compiles the repros at SIMPLE and
 ADVANCED and, when `node` is installed, checks that each prints what the
 source prints.
+
+### Fixed - WHITESPACE_ONLY keeps the block around a lone `let`/`const` (#18124)
+
+`if(a){let x=1;}` printed as `if(a)let x=1;` and `while(o){let x=1;}` as
+`while(o)let x=1;`. A body slot takes a statement, and a lexical declaration
+isn't one, so neither output parsed. The body flatten passes (gap-032,
+gap-074/076/079, gap-080 and the `do` body) now keep the braces when the
+body starts with `const`, `let` + binding, `using` + binding or
+`await using`, as upstream does.
+
+`tests/regression_ws_lexical_body.rs` pins 15 shapes to the jar's bytes and
+checks with `node` that each output parses. Two unit tests cover the rule.
 
 ### Fixed - switch cases keep shared `var`/`function`/`class` declarations (#17879)
 
