@@ -123,16 +123,7 @@ fn layout_keeps_the_specs_promises() {
 
 #[test]
 fn builds_on_every_backend() {
-    for backend in [
-        Backend::React,
-        Backend::WebComponent,
-        Backend::Html,
-        Backend::SwiftUI,
-        Backend::Compose,
-        Backend::Flutter,
-        Backend::Qt,
-        Backend::Xaml,
-    ] {
+    for backend in Backend::ALL {
         let out = tempfile::TempDir::new().unwrap();
         build_package(&BuildOptions {
             package_root: package_root(),

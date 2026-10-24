@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically. The artifact test covers all nine backends (it listed six and tolerated a "HostDialog not yet lowered" error that no backend raises any more; Flutter, Compose and Electron were never built here).
+
 All notable changes to `mosaic-pkg-dialog` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
