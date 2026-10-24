@@ -21,6 +21,13 @@ assert!(core::ptr::eq(
 # Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
+When reviewed-terminal evidence already owns the non-copyable construction,
+`bind_reviewed_constructed_x509_certificate_path_to_server_policy` consumes
+that complete evidence instead. It requires the server policy to retain the
+same exact target object and returns one non-copyable result retaining the
+constructed path, reviewed root selection, and complete target policy. A
+byte-equal target from an independent decode is rejected.
+
 The crate performs no certificate parsing, issuer-link authentication,
 algorithm routing, trust-anchor validation, path-length or name-constraint
 processing, revocation, TLS, HTTP, OAuth transport, or network access. It is
