@@ -782,6 +782,7 @@ members = [
     "x509-time",
     "x509-validity",
     "x509-revocation-policy",
+    "x509-ocsp-basic-response",
     "x509-ocsp-cert-id",
     "x509-ocsp-cert-status",
     "x509-ocsp-response-data",
