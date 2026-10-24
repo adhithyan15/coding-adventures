@@ -128,6 +128,8 @@ The new renderer root requires normal NuGet metadata, `README.md`,
 `BUILD_windows` fronts. The build fronts run native .NET tests with production
 line coverage above the repository's 80% floor. The renderer declares only
 `document-ast`; test-only dependencies remain in the test project.
+The Windows front must still execute native tests and coverage when its setup
+directories already exist; a successful directory check is not build evidence.
 
 ### Discovered Parser And Facade Sequence
 
