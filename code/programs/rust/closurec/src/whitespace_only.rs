@@ -2610,6 +2610,9 @@ pub fn whitespace_only_minify(
     // literal `"{"`/`")"` can never be mistaken for a delimiter.
     {
         let mut drops: Vec<usize> = Vec::new();
+        // #18123: a keyword directly in a class body or object literal is a
+        // method name, not a statement head (`x={while(a){c=a;}}`).
+        let in_member_list = member_list_positions(&kept);
         let mut i = 0;
         while i + 1 < kept.len() {
             // gap-076: `with` joins the anchor set. A `with(o){…}`
@@ -2623,9 +2626,10 @@ pub fn whitespace_only_minify(
             let is_property = i >= 1
                 && (is_structural_punct(kept[i - 1], ".")
                     || is_structural_punct(kept[i - 1], "?."));
-            if !(is_loop_kw
-                && !is_property
-                && is_structural_punct(kept[i + 1], "("))
+            if !is_loop_kw
+                || is_property
+                || in_member_list[i]
+                || !is_structural_punct(kept[i + 1], "(")
             {
                 i += 1;
                 continue;
@@ -3133,6 +3137,9 @@ pub fn whitespace_only_minify(
     let mut brace_is_member_body: Vec<bool> = Vec::new();
     // `)` index in `kept` → its `(` index, computed once (the emit loop never
     // mutates `kept`), so the member-body test is O(1) per brace.
+    // #18123: which tokens sit directly in a class body or object literal.
+    // There a keyword can only be a member name (`class C{if(){}}`).
+    let in_member_list = member_list_positions(&kept);
     let kept_open_paren: Vec<usize> = {
         let mut table = vec![usize::MAX; kept.len()];
         let mut stack = Vec::new();
@@ -4092,6 +4099,7 @@ pub fn whitespace_only_minify(
             }
             at_stmt_boundary = false;
         } else if matches!(val, "if" | "while" | "for")
+            && !in_member_list[idx]
             && opens_control_flow_head(&kept, idx, prev_before_this_emit)
         {
             // The next `(` is a control-flow head.
@@ -6336,6 +6344,131 @@ fn is_label_body(kept: &[&lexer::token::Token], idx: usize) -> bool {
                 .any(|p| is_structural_punct(before, p))
                 || (!is_string_literal(before) && matches!(before.value.as_str(), "else" | "do"))
         }
+    }
+}
+
+/// #18123: for each token of `kept`, is its innermost open bracket a class
+/// body or an object literal (a *member list*)?
+///
+/// A member list holds only member definitions, so a keyword there is a
+/// member name: `class C{if(){}}`, `x={while(a){c=a}}`. The body-slot rules
+/// used to fire on such a method and broke it:
+///
+/// | Source                        | Before (invalid)           | Now (= upstream)            |
+/// |-------------------------------|----------------------------|-----------------------------|
+/// | `class C{with(a){return a}}`  | `class C{with(a)return a};`| `class C{with(a){return a}};`|
+/// | `class C{if(){}}`             | `class C{if();};`          | `class C{if(){}};`          |
+/// | `x={while(a){c=a;}}`          | `x={while(a)c=a};`         | `x={while(a){c=a}};`        |
+///
+/// One stack pass classifies each `{`:
+///
+/// - **Class body:** the first `{` at the same bracket depth after a `class`
+///   keyword (not a property, `x.class` or `{class:1}`), past any
+///   `extends` expression.
+/// - **Object literal:** a `{` whose previous token puts it in expression
+///   position. That is an operator or punctuator other than `)` `]` `}` `;`
+///   `{` `:` `=>` `++` `--`, or one of `return typeof void delete in of
+///   instanceof new throw case yield await default extends`. A `{` after
+///   `:` counts only when that `:` sits directly in an object literal (a
+///   property value) or inside parens or brackets (a ternary in an
+///   expression). A label (`l:{`) and a `case x:{` stay blocks.
+/// - **Everything else is a block.**
+///
+/// Misclassifying a block as a member list would disarm a real `if`, so
+/// every rule above errs towards "block": a missed member list only keeps
+/// the old behaviour for that method.
+fn member_list_positions(kept: &[&lexer::token::Token]) -> Vec<bool> {
+    #[derive(Clone, Copy, PartialEq)]
+    enum Open {
+        Paren,
+        Bracket,
+        Brace { member_list: bool },
+    }
+    let mut out = vec![false; kept.len()];
+    let mut stack: Vec<Open> = Vec::new();
+    let mut pending_class: Option<usize> = None;
+    let after_dot = |k: usize| {
+        k.checked_sub(1)
+            .is_some_and(|p| matches!(kept[p].value.as_str(), "." | "?."))
+    };
+    for (k, t) in kept.iter().enumerate() {
+        out[k] = matches!(stack.last(), Some(Open::Brace { member_list: true }));
+        if is_word_like(t) && t.value == "class" && !after_dot(k) {
+            let next = kept.get(k + 1).map(|n| n.value.as_str());
+            if !matches!(next, Some(":" | "(" | "=" | "," | ";" | "}" | ")")) {
+                pending_class = Some(stack.len());
+            }
+        }
+        if is_structural_punct(t, "{") {
+            let class_body = pending_class == Some(stack.len());
+            if class_body {
+                pending_class = None;
+            }
+            let member_list = class_body || opens_object_literal(kept, k, stack.last().map(|o| match o {
+                Open::Brace { member_list } => Some(*member_list),
+                _ => None,
+            }));
+            stack.push(Open::Brace { member_list });
+        } else if is_structural_punct(t, "(") {
+            stack.push(Open::Paren);
+        } else if is_structural_punct(t, "[") {
+            stack.push(Open::Bracket);
+        } else if is_structural_punct(t, "}")
+            || is_structural_punct(t, ")")
+            || is_structural_punct(t, "]")
+        {
+            stack.pop();
+            if pending_class.is_some_and(|d| stack.len() < d) {
+                pending_class = None;
+            }
+        }
+    }
+    out
+}
+
+/// Is the `{` at `k` an object literal, judged by the token before it?
+/// `enclosing` describes the innermost open bracket: `None` at top level,
+/// `Some(None)` for a paren or bracket, and `Some(Some(member_list))` for a
+/// brace. See [`member_list_positions`] for the rules.
+fn opens_object_literal(
+    kept: &[&lexer::token::Token],
+    k: usize,
+    enclosing: Option<Option<bool>>,
+) -> bool {
+    let Some(prev) = k.checked_sub(1).map(|p| kept[p]) else {
+        return false;
+    };
+    if is_string_literal(prev) {
+        return false;
+    }
+    if is_word_like(prev) {
+        let member_name = k >= 2 && matches!(kept[k - 2].value.as_str(), "." | "?.");
+        return !member_name
+            && matches!(
+                prev.value.as_str(),
+                "return"
+                    | "typeof"
+                    | "void"
+                    | "delete"
+                    | "in"
+                    | "of"
+                    | "instanceof"
+                    | "new"
+                    | "throw"
+                    | "case"
+                    | "yield"
+                    | "await"
+                    | "default"
+                    | "extends"
+            );
+    }
+    match prev.value.as_str() {
+        ")" | "]" | "}" | ";" | "{" | "=>" | "++" | "--" => false,
+        // A property value inside an object literal, or a ternary branch
+        // inside parens/brackets. At statement level a `:` is a label or a
+        // `case`, and a block follows.
+        ":" => matches!(enclosing, Some(Some(true)) | Some(None)),
+        _ => true,
     }
 }
 
@@ -11036,5 +11169,52 @@ mod tests {
             minify("async function f(){for await(x of y){}}"),
             "async function f(){for await(x of y);};"
         );
+    }
+
+    // ---- #18123: a keyword method name is not a statement head ---------
+
+    #[test]
+    fn issue18123_keyword_methods_keep_their_bodies() {
+        // Upstream v20260915 bytes.
+        assert_eq!(minify("class C{with(a){return a}}"), "class C{with(a){return a}};");
+        assert_eq!(minify("class C{if(){}}"), "class C{if(){}};");
+        assert_eq!(minify("x={while(a){c=a;}}"), "x={while(a){c=a}};");
+        assert_eq!(minify("x={a:{if(b){c()}}}"), "x={a:{if(b){c()}}};");
+        assert_eq!(minify("class A extends f({}){if(){}}"), "class A extends f({}){if(){}};");
+    }
+
+    #[test]
+    fn issue18123_real_statements_still_flatten() {
+        assert_eq!(minify("{if(a){b()}}"), "{if(a)b()};");
+        assert_eq!(minify("x={m(){if(a){b()}}}"), "x={m(){if(a)b()}};");
+        assert_eq!(minify("switch(x){case 1:{if(a){b()}}}"), "switch(x){case 1:{if(a)b()}};");
+        assert_eq!(minify("x={m(){if(a);}}"), "x={m(){if(a);}};");
+    }
+
+    #[test]
+    fn issue18123_member_list_classification() {
+        let toks = |src: &str| {
+            tokenize_javascript_typed(src, EsVersion::Es2025).expect("lex")
+        };
+        // Which `if` tokens are member names.
+        let marks = |src: &str| {
+            let t = toks(src);
+            let kept: Vec<&lexer::token::Token> =
+                t.iter().filter(|t| !is_trivia(t) && !is_eof(t)).collect();
+            let m = member_list_positions(&kept);
+            kept.iter()
+                .zip(m)
+                .filter(|(t, _)| t.value == "if")
+                .map(|(_, m)| m)
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(marks("class C{if(){}}"), vec![true]);
+        assert_eq!(marks("x={if(){}}"), vec![true]);
+        assert_eq!(marks("x=a?{if(){}}:0"), vec![true]);
+        assert_eq!(marks("{if(a){}}"), vec![false]);
+        assert_eq!(marks("l:{if(a){}}"), vec![false]);
+        assert_eq!(marks("x=()=>{if(a){}}"), vec![false]);
+        assert_eq!(marks("x={m(){if(a){}}}"), vec![false]);
+        assert_eq!(marks("class C{m(){if(a){}}}"), vec![false]);
     }
 }
