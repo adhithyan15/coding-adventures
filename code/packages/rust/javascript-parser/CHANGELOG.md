@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## 0.65.0 - Unreleased - LANG84 phase 6a: `parse_javascript_cst_bounded`
+
+### Removed (breaking)
+
+- `parse_javascript_program_division_only` and
+  `parse_javascript_cst_division_only`. Both lexed with
+  `tokenize_javascript_division_only`, which deleted `REGEX` from the compiled
+  grammar (removed from `javascript-lexer` 0.10.0; LANG84 C2 forbids grammar
+  surgery). The IIR compiler was their only caller outside this crate's
+  tests.
+
+### Added
+
+- `parse_javascript_cst_bounded(source, EsVersion) -> GrammarASTNode`, the IIR
+  path's parse. It is the old CST entry with the ordinary moded lexer in
+  place of the division-only one: `tokenize_javascript_typed`, rejection of
+  `**`/`**=` tokens before parsing, the ASI parse, and the flat-spine bound
+  of 512. A `/re/` in expression position is now one `REGEX` leaf (a valid
+  parse the IIR subset check rejects) instead of three tokens and a parse
+  error; division chains parse exactly as before.
+- The two bound messages lose the word "division-only": "JavaScript
+  exponentiation is unsupported in the bounded CST parser" and "JavaScript
+  expression chain exceeds the bounded CST spine limit". Both keep the
+  substrings ("exponentiation is unsupported", "spine limit") callers match.
+
 ## 0.64.0 - Unreleased - quote-only string literals no longer panic the bridge
 
 ### Fixed

@@ -9,8 +9,8 @@ to execute programs.
 ## Pipeline: the compiler walks the parse tree
 
 ```text
-source ──javascript-lexer (GrammarLexer, es2020.tokens, REGEX off)──▶ tokens
-       ──javascript-parser::parse_javascript_cst_division_only──────▶ GrammarASTNode (CST)
+source ──javascript-lexer (GrammarLexer, es2020.tokens + F10 modes)──▶ tokens
+       ──javascript-parser::parse_javascript_cst_bounded─────────────▶ GrammarASTNode (CST)
              (GrammarParser over es2020.grammar + ASI + spine bound)        │
                                                                            │ compile_ast
                                               javascript-iir-compiler      ▼
@@ -61,11 +61,12 @@ containing the output from earlier completed `console.log` calls and the error
 message. A number-display failure appends none of the failing call's text,
 even when it occurs in the last argument. The `jsvm` command flushes that output
 to stdout before reporting the error on stderr and exiting unsuccessfully.
-A compile error has empty output. The native numeric source path selects an
-explicit division-only tokenizer/parser entry, so repeated divisions and
-`console.log(-0, 1 / 0, 0 / 0)` execute correctly. Regex literals remain
-unsupported. General JavaScript parser callers retain their existing regex
-rules; full context-sensitive regex/division disambiguation remains open.
+A compile error has empty output. es2020.tokens carries the F10 mode table, so
+the ordinary lexer reads a `/` after a value as division: repeated divisions
+and `console.log(-0, 1 / 0, 0 / 0)` execute correctly, and a real regex
+literal lexes as one `REGEX` token that the subset check rejects (regex
+literals remain unsupported). The table approximates JavaScript's
+context-sensitive lexical goals; full goal-directed lexing is LANG84 E7.
 Source files are limited to 64 KiB; direct CST compilation has node and depth
 limits (declarators and their initializers included), and the runner caps
 instructions and captured output. A caller may hand `compile_ast` a tree it
@@ -113,6 +114,6 @@ See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).
 - `compile_source(src, module_name) -> Result<IIRModule, String>`
 - `compile_ast(&GrammarASTNode, module_name) -> Result<IIRModule, String>` —
   for a `program` tree you already hold, from
-  `parse_javascript_cst_division_only` or `parse_javascript_typed`
+  `parse_javascript_cst_bounded` or `parse_javascript_typed`
   (changed in 0.3.0: it used to take `&javascript_ast::Program`)
 - `run_source(src) -> Result<String, JavaScriptRunError>`

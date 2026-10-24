@@ -69,7 +69,10 @@ chain, that is the chain's first token. Its message reads:
 JavaScript expression chain at L:C is nested too deeply to compile (spine limit N)
 ```
 
-The division-only entry keeps limit 512 and its existing message.
+The division-only entry keeps limit 512 and its existing message. (Since
+LANG84 phase 6a that entry is `parse_javascript_cst_bounded`, still limit
+512; its message is "JavaScript expression chain exceeds the bounded CST
+spine limit".)
 
 ### 2. closurec bounds every typed parse
 
