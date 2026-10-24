@@ -506,10 +506,13 @@ itself. The typed `der-asn1` layer is now shipped above that framing primitive:
 it provides allocation-free canonical BOOLEAN, INTEGER, ENUMERATED, BIT STRING,
 OCTET STRING, NULL, and OBJECT IDENTIFIER decoding plus exact SEQUENCE, SET, and
 explicit context-wrapper traversal under one shared depth and total-element
-budget. It also validates universal IA5String and schema-selected implicit BIT
-STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
+budget. It also validates universal IA5String and schema-selected implicit NULL,
+BIT STRING, OCTET STRING, IA5String, and OBJECT IDENTIFIER values under exact
 primitive context-specific tags, providing typed value prerequisites for
-later X.509 schemas without claiming their semantics. The generic ENUMERATED
+later X.509 schemas without claiming their semantics. The implicit NULL helper
+requires the exact caller-selected primitive context-specific tag and empty
+contents; it does not select a schema tag or grant CertStatus, OCSP, revocation,
+freshness, or authentication semantics. The generic ENUMERATED
 decoder requires the exact primitive universal tag and canonical non-empty
 two's-complement contents, preserves signed values as borrowed bytes, and
 offers checked conversion to `u64`; it does not define an enum registry or

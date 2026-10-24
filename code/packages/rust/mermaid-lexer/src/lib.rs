@@ -1675,6 +1675,15 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_recursive_relationships() {
+        let tokens = tokenize_mermaid_er("erDiagram\nNODE ||--o{ NODE : \"leads to\"\n");
+        let node_ids = tokens.iter().filter(|token| token.value == "NODE").count();
+
+        assert_eq!(node_ids, 2);
+        assert!(tokens.iter().any(|token| token.value == "leads to"));
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
