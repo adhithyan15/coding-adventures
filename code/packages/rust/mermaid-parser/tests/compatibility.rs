@@ -181,6 +181,14 @@ const ER_PROTOTYPE_IDENTIFIERS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-prototype-identifiers-11.16.1-visual-corpus.json"
 ));
+const ER_EMPTY_RELATIONSHIP_ROLE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-corpus.json"
+));
+const ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-empty-relationship-role-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2582,6 +2590,25 @@ fn pinned_er_prototype_safe_identifiers_reach_semantic_ir() {
         Some("#dcfce7")
     );
     assert_eq!(diagram.relationships.len(), 2);
+}
+
+#[test]
+fn pinned_er_empty_relationship_role_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_CORPUS)
+        .expect("ER empty relationship role corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_EMPTY_RELATIONSHIP_ROLE_VISUAL_CORPUS)
+        .expect("ER empty relationship role visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_er_diagram(
+        syntax["fixtures"][0]["source"]
+            .as_str()
+            .expect("ER empty relationship role source"),
+    )
+    .expect("ER empty relationship role fixture must parse");
+
+    assert_eq!(diagram.relationships.len(), 1);
+    assert_eq!(diagram.relationships[0].label.as_deref(), Some(""));
 }
 
 #[test]

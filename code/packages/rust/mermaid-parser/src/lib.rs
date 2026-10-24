@@ -13659,7 +13659,7 @@ pub fn parse_er_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 routing: StructuralRouting::Direct,
                 from_mult: Some(from_mult),
                 to_mult: Some(to_mult),
-                label: (!label.is_empty()).then_some(label),
+                label: Some(label),
             });
         } else {
             let mut fields = Vec::new();
