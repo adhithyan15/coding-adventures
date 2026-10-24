@@ -34,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rerunning Name policy, then retains both path order and the validated issuer
   key in distinct non-copyable evidence.
 - Added a stronger construction-bound composition that also consumes and
-  retains complete intermediate policy for the exact projected issuer.
+  retains complete intermediate policy for the exact projected non-terminal
+  issuer, rejecting terminal adjacency and object mismatch before RSA work.
 
 ### Security
 

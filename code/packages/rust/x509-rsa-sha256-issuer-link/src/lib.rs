@@ -15,13 +15,16 @@
 //! point can instead consume one exact adjacent-link projection and retain its
 //! path order while authenticating only that projected pair. A stronger
 //! construction-bound entry point also retains complete intermediate policy
-//! for the identical projected issuer. Recognition is not semantic validation
-//! of other critical extensions, and an algorithm profile neither chooses nor
-//! enables this crate's fixed verifier. No result establishes path length,
-//! name constraints, revocation, trust anchors, complete path validation, TLS,
-//! HTTP, or network effects. A bounded follow-up can apply the existing
-//! path-length transition while retaining the selection-bound authenticated
-//! intermediate, but it still proves only one caller-ordered step.
+//! for the identical projected non-terminal issuer. It rejects the terminal
+//! adjacency before RSA work so terminal trust-anchor semantics cannot be
+//! represented as intermediate-policy evidence. Recognition is not semantic
+//! validation of other critical extensions, and an algorithm profile neither
+//! chooses nor enables this crate's fixed verifier. No result establishes path
+//! length, name constraints, revocation, trust anchors, complete path
+//! validation, TLS, HTTP, or network effects. A bounded follow-up can apply the
+//! existing path-length transition while retaining the selection-bound
+//! authenticated intermediate, but it still proves only one caller-ordered
+//! step.
 
 #![deny(unsafe_code)]
 
@@ -166,6 +169,8 @@ impl std::error::Error for X509RsaSha256ConstructedPathAdjacentLinkError {}
 /// Stable construction-and-intermediate-policy failures with no certificate bytes.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind {
+    /// The projected issuer is the construction's terminal certificate.
+    TerminalIssuer,
     /// The complete intermediate policy is not for the exact projected issuer.
     EvidenceMismatch,
     /// The exact construction-bound pair failed existing link authentication.
@@ -411,13 +416,13 @@ impl fmt::Debug for VerifiedX509RsaSha256ConstructedPathAdjacentLink<'_, '_, '_,
     }
 }
 
-/// Non-copyable evidence binding constructed-path authentication to complete issuer policy.
+/// Non-copyable evidence binding non-terminal constructed-path authentication to complete policy.
 ///
 /// The retained complete intermediate policy applies caller-owned critical-
 /// extension recognition, issuing-CA role, data-driven algorithm,
 /// self-issued, and explicit-time validity policy to the exact projected
-/// issuer that authenticated the retained child. It neither advances path-
-/// length state nor authenticates any other path adjacency.
+/// non-terminal issuer that authenticated the retained child. It neither
+/// advances path-length state nor authenticates any other path adjacency.
 pub struct VerifiedX509RsaSha256ConstructedPathIntermediateIssuerPolicyLink<
     'path,
     'target,
@@ -458,7 +463,7 @@ impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
         &self.verified_link
     }
 
-    /// Return complete policy for the exact projected issuer.
+    /// Return complete policy for the exact projected non-terminal issuer.
     pub const fn intermediate_policy(
         &self,
     ) -> &ValidatedX509IntermediateCertificatePolicy<'candidates, 'candidate_encoded> {
@@ -826,15 +831,16 @@ pub fn verify_constructed_x509_rsa_sha256_issuer_link<
     })
 }
 
-/// Authenticate one constructed adjacency with complete policy for its exact issuer.
+/// Authenticate one non-terminal constructed adjacency with complete policy for its issuer.
 ///
-/// The intermediate-policy certificate must be the identical decoded object
-/// projected as issuer by `adjacent_link`. That object-identity check happens
-/// before the existing RSA key and signature work, so policy for a detached or
-/// byte-equal re-decode cannot authorize cryptography for the retained path.
-/// Success retains both complete proof objects without advancing path length,
-/// authenticating another adjacency, establishing trust, or granting transport
-/// authority.
+/// The projected issuer must not be the construction's terminal certificate,
+/// and the intermediate-policy certificate must be the identical decoded
+/// object projected as issuer by `adjacent_link`. Both checks happen before the
+/// existing RSA key and signature work, so terminal policy or policy for a
+/// detached or byte-equal re-decode cannot authorize cryptography for the
+/// retained path. Success retains both complete proof objects without advancing
+/// path length, authenticating another adjacency, establishing trust, or
+/// granting transport authority.
 pub fn verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link<
     'path,
     'target,
@@ -864,6 +870,14 @@ pub fn verify_constructed_x509_rsa_sha256_intermediate_issuer_policy_link<
     >,
     X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError,
 > {
+    if adjacent_link.issuer_depth() + 1 == adjacent_link.constructed_path().issuer_count() {
+        return Err(
+            X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkError::new(
+                X509RsaSha256ConstructedPathIntermediateIssuerPolicyLinkErrorKind::TerminalIssuer,
+            ),
+        );
+    }
+
     if !std::ptr::eq(
         adjacent_link.issuer_certificate(),
         intermediate_policy.certificate(),
