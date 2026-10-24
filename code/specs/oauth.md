@@ -1216,6 +1216,22 @@ signature, authorize a responder, bind the identifier or status to a
 certificate or constructed path, interpret extensions, decide freshness,
 fetch or cache revocation data, read a clock, or grant path, trust, TLS, HTTP,
 OAuth transport, or network authority. Concrete HTTPS remains unavailable.
+A bounded `x509-ocsp-response-data` prerequisite now composes exactly one RFC
+6960 `ResponseData` SEQUENCE within caller-owned DER depth, element, length,
+OID-arc, extension-count, and fixed response-count limits. DER's default `v1`
+version is accepted only by omission; a present explicit version is rejected
+as either the encoded default or an unsupported value. The responder identifier
+must be exactly one explicit `byName [1]` RFC 5280 Name or explicit `byKey [2]`
+OCTET STRING, `producedAt` uses the strict OCSP GeneralizedTime profile, and
+the non-empty ordered response sequence composes bounded structural
+`SingleResponse` values. One optional explicit `responseExtensions [1]` field
+may follow and remains a generic, non-empty, unique-OID extension collection.
+The structural layer does not interpret the responder key hash or extensions,
+select or validate CertID hash algorithms, authenticate a response signature,
+authorize a responder, bind any response to a certificate or constructed path,
+decide freshness or revocation, fetch or cache data, read a clock, or grant
+path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
+remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
