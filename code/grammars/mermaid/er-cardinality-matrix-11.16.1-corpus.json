@@ -1,0 +1,23 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 complete symbolic ER cardinality matrix",
+  "fixtures": [
+    { "name": "only-one-to-one-or-more", "source": "erDiagram\nA ||--|{ B : has", "from": "1", "to": "1..*" },
+    { "name": "only-one-to-zero-or-more", "source": "erDiagram\nA ||..o{ B : has", "from": "1", "to": "0..*" },
+    { "name": "zero-or-one-to-zero-or-more", "source": "erDiagram\nA |o..o{ B : has", "from": "0..1", "to": "0..*" },
+    { "name": "zero-or-one-to-one-or-more", "source": "erDiagram\nA |o--|{ B : has", "from": "0..1", "to": "1..*" },
+    { "name": "one-or-more-to-only-one", "source": "erDiagram\nA }|--|| B : has", "from": "1..*", "to": "1" },
+    { "name": "zero-or-more-to-only-one", "source": "erDiagram\nA }o--|| B : has", "from": "0..*", "to": "1" },
+    { "name": "zero-or-more-to-zero-or-one", "source": "erDiagram\nA }o..o| B : has", "from": "0..*", "to": "0..1" },
+    { "name": "one-or-more-to-zero-or-one", "source": "erDiagram\nA }|..o| B : has", "from": "1..*", "to": "0..1" },
+    { "name": "zero-or-one-to-only-one", "source": "erDiagram\nA |o..|| B : has", "from": "0..1", "to": "1" },
+    { "name": "only-one-to-only-one", "source": "erDiagram\nA ||..|| B : has", "from": "1", "to": "1" },
+    { "name": "only-one-to-zero-or-one", "source": "erDiagram\nA ||--o| B : has", "from": "1", "to": "0..1" },
+    { "name": "zero-or-one-to-zero-or-one", "source": "erDiagram\nA |o..o| B : has", "from": "0..1", "to": "0..1" },
+    { "name": "zero-or-more-to-zero-or-more", "source": "erDiagram\nA }o--o{ B : has", "from": "0..*", "to": "0..*" },
+    { "name": "one-or-more-to-one-or-more", "source": "erDiagram\nA }|..|{ B : has", "from": "1..*", "to": "1..*" },
+    { "name": "zero-or-more-to-one-or-more", "source": "erDiagram\nA }o--|{ B : has", "from": "0..*", "to": "1..*" },
+    { "name": "one-or-more-to-zero-or-more", "source": "erDiagram\nA }|..o{ B : has", "from": "1..*", "to": "0..*" }
+  ]
+}

@@ -21,6 +21,10 @@ cut.
   in the README, completion spec, and backlog (#17999); artifact coverage and
   unsigned-platform limitations remain unchanged.
 
+### Changed
+
+- Tests read the backend list from `mosaic_package_artifact_builder::Backend` (`Backend::NATIVE` / `Backend::ALL`) instead of a hand-kept copy, so a backend added to Mosaic is gated here automatically.
+
 ## [0.5.9] - 2026-10-22
 
 ### Fixed — Qt text widths and Web Component input fidelity

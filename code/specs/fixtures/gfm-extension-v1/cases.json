@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "profile": "gfm-extension-v1",
+  "limits": {
+    "max_source_bytes": 8192,
+    "max_source_lines": 128,
+    "max_source_line_bytes": 1024,
+    "max_ast_nodes": 256,
+    "max_ast_depth": 16,
+    "max_ast_text_bytes": 8192,
+    "max_html_bytes": 32768
+  },
+  "cases": [
+    {
+      "id": "strike-basic",
+      "source": "before ~~gone~~ after\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"before "},{"type":"strikethrough","children":[{"type":"text","value":"gone"}]},{"type":"text","value":" after"}]}]},
+      "expected_html": "<p>before <del>gone</del> after</p>\n"
+    },
+    {
+      "id": "strike-strong-child",
+      "source": "~~gone **now**~~\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"strikethrough","children":[{"type":"text","value":"gone "},{"type":"strong","children":[{"type":"text","value":"now"}]}]}]}]},
+      "expected_html": "<p><del>gone <strong>now</strong></del></p>\n"
+    },
+    {
+      "id": "strike-single-tilde",
+      "source": "before ~kept~ after\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"before ~kept~ after"}]}]},
+      "expected_html": "<p>before ~kept~ after</p>\n"
+    },
+    {
+      "id": "task-checked-lower",
+      "source": "- [x] done\n",
+      "expected_ast": {"type":"document","children":[{"type":"list","ordered":false,"start":null,"tight":true,"children":[{"type":"task_item","checked":true,"children":[{"type":"paragraph","children":[{"type":"text","value":"done"}]}]}]}]},
+      "expected_html": "<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> done</li>\n</ul>\n"
+    },
+    {
+      "id": "task-checked-upper",
+      "source": "- [X] done\n",
+      "expected_ast": {"type":"document","children":[{"type":"list","ordered":false,"start":null,"tight":true,"children":[{"type":"task_item","checked":true,"children":[{"type":"paragraph","children":[{"type":"text","value":"done"}]}]}]}]},
+      "expected_html": "<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> done</li>\n</ul>\n"
+    },
+    {
+      "id": "task-unchecked",
+      "source": "- [ ] todo\n",
+      "expected_ast": {"type":"document","children":[{"type":"list","ordered":false,"start":null,"tight":true,"children":[{"type":"task_item","checked":false,"children":[{"type":"paragraph","children":[{"type":"text","value":"todo"}]}]}]}]},
+      "expected_html": "<ul>\n<li><input type=\"checkbox\" disabled=\"\" /> todo</li>\n</ul>\n"
+    },
+    {
+      "id": "task-like-paragraph",
+      "source": "[x] not a list\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"["},{"type":"text","value":"x"},{"type":"text","value":"] not a list"}]}]},
+      "expected_html": "<p>[x] not a list</p>\n"
+    },
+    {
+      "id": "table-alignments",
+      "source": "| Plain | Left | Center | Right |\n| --- | :--- | :---: | ---: |\n| a | b | c | d |\n",
+      "expected_ast": {"type":"document","children":[{"type":"table","align":[null,"left","center","right"],"children":[{"type":"table_row","isHeader":true,"children":[{"type":"table_cell","children":[{"type":"text","value":"Plain"}]},{"type":"table_cell","children":[{"type":"text","value":"Left"}]},{"type":"table_cell","children":[{"type":"text","value":"Center"}]},{"type":"table_cell","children":[{"type":"text","value":"Right"}]}]},{"type":"table_row","isHeader":false,"children":[{"type":"table_cell","children":[{"type":"text","value":"a"}]},{"type":"table_cell","children":[{"type":"text","value":"b"}]},{"type":"table_cell","children":[{"type":"text","value":"c"}]},{"type":"table_cell","children":[{"type":"text","value":"d"}]}]}]}]},
+      "expected_html": "<table>\n<thead>\n<tr>\n<th>Plain</th>\n<th align=\"left\">Left</th>\n<th align=\"center\">Center</th>\n<th align=\"right\">Right</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>a</td>\n<td align=\"left\">b</td>\n<td align=\"center\">c</td>\n<td align=\"right\">d</td>\n</tr>\n</tbody>\n</table>\n"
+    },
+    {
+      "id": "table-inline-strike",
+      "source": "| State |\n| --- |\n| ~~old~~ new |\n",
+      "expected_ast": {"type":"document","children":[{"type":"table","align":[null],"children":[{"type":"table_row","isHeader":true,"children":[{"type":"table_cell","children":[{"type":"text","value":"State"}]}]},{"type":"table_row","isHeader":false,"children":[{"type":"table_cell","children":[{"type":"strikethrough","children":[{"type":"text","value":"old"}]},{"type":"text","value":" new"}]}]}]}]},
+      "expected_html": "<table>\n<thead>\n<tr>\n<th>State</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td><del>old</del> new</td>\n</tr>\n</tbody>\n</table>\n"
+    },
+    {
+      "id": "table-short-row",
+      "source": "| A | B |\n| --- | --- |\n| one |\n",
+      "expected_ast": {"type":"document","children":[{"type":"table","align":[null,null],"children":[{"type":"table_row","isHeader":true,"children":[{"type":"table_cell","children":[{"type":"text","value":"A"}]},{"type":"table_cell","children":[{"type":"text","value":"B"}]}]},{"type":"table_row","isHeader":false,"children":[{"type":"table_cell","children":[{"type":"text","value":"one"}]},{"type":"table_cell","children":[]}]}]}]},
+      "expected_html": "<table>\n<thead>\n<tr>\n<th>A</th>\n<th>B</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>one</td>\n<td></td>\n</tr>\n</tbody>\n</table>\n"
+    },
+    {
+      "id": "table-long-row",
+      "source": "| A |\n| --- |\n| one | ignored |\n",
+      "expected_ast": {"type":"document","children":[{"type":"table","align":[null],"children":[{"type":"table_row","isHeader":true,"children":[{"type":"table_cell","children":[{"type":"text","value":"A"}]}]},{"type":"table_row","isHeader":false,"children":[{"type":"table_cell","children":[{"type":"text","value":"one"}]}]}]}]},
+      "expected_html": "<table>\n<thead>\n<tr>\n<th>A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>one</td>\n</tr>\n</tbody>\n</table>\n"
+    },
+    {
+      "id": "table-missing-delimiter",
+      "source": "| A | B |\n| one | two |\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"text","value":"| A | B |"},{"type":"soft_break"},{"type":"text","value":"| one | two |"}]}]},
+      "expected_html": "<p>| A | B |\n| one | two |</p>\n"
+    },
+    {
+      "id": "fence-named-info",
+      "source": "```typescript linenos\nconst x = 1 < 2;\n```\n",
+      "expected_ast": {"type":"document","children":[{"type":"fenced_block","name":"typescript","info":"typescript linenos","value":"const x = 1 < 2;\n"}]},
+      "expected_html": "<pre><code class=\"language-typescript\">const x = 1 &lt; 2;\n</code></pre>\n"
+    },
+    {
+      "id": "fence-anonymous-empty",
+      "source": "~~~\n~~~\n",
+      "expected_ast": {"type":"document","children":[{"type":"fenced_block","name":null,"info":null,"value":""}]},
+      "expected_html": "<pre><code></code></pre>\n"
+    },
+    {
+      "id": "fence-inert-mermaid",
+      "source": "```mermaid theme=dark\nA --> B & C\n```\n",
+      "expected_ast": {"type":"document","children":[{"type":"fenced_block","name":"mermaid","info":"mermaid theme=dark","value":"A --> B & C\n"}]},
+      "expected_html": "<pre><code class=\"language-mermaid\">A --&gt; B &amp; C\n</code></pre>\n"
+    },
+    {
+      "id": "mixed",
+      "source": "~~old~~\n\n- [x] ship\n\n| A |\n| :---: |\n| cell |\n\n```diagram\nA < B\n```\n",
+      "expected_ast": {"type":"document","children":[{"type":"paragraph","children":[{"type":"strikethrough","children":[{"type":"text","value":"old"}]}]},{"type":"list","ordered":false,"start":null,"tight":true,"children":[{"type":"task_item","checked":true,"children":[{"type":"paragraph","children":[{"type":"text","value":"ship"}]}]}]},{"type":"table","align":["center"],"children":[{"type":"table_row","isHeader":true,"children":[{"type":"table_cell","children":[{"type":"text","value":"A"}]}]},{"type":"table_row","isHeader":false,"children":[{"type":"table_cell","children":[{"type":"text","value":"cell"}]}]}]},{"type":"fenced_block","name":"diagram","info":"diagram","value":"A < B\n"}]},
+      "expected_html": "<p><del>old</del></p>\n<ul>\n<li><input type=\"checkbox\" disabled=\"\" checked=\"\" /> ship</li>\n</ul>\n<table>\n<thead>\n<tr>\n<th align=\"center\">A</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td align=\"center\">cell</td>\n</tr>\n</tbody>\n</table>\n<pre><code class=\"language-diagram\">A &lt; B\n</code></pre>\n"
+    }
+  ]
+}

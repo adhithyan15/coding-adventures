@@ -55,6 +55,9 @@ Finite fractional static-real inputs may feed those normalizers when the result
 is an exact integer, including nested call-free conditionals whose normalized
 branches agree. Nonintegral, path-dependent, dynamic, and oversized results
 fail closed.
+An exact `sign` result is classified as a static factor around the one dynamic
+sign root. Two dynamic roots, path-dependent signs, and effectful selectors
+fail closed.
 
 **AL-multidim-bool:** the seven-backend matrix executes a two-dimensional
 boolean array through a rank-aware value formal with two non-unit lower bounds.

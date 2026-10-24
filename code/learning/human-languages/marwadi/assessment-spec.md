@@ -4,12 +4,13 @@
 
 **Basis:** project-defined CEFR-aligned equivalent
 
-**Status:** target specified; task inventories, mocks, calibration, and human
-validation are still backlog
+**Status:** target specified; the pre-A1 task inventory and two structural
+mock forms are authored, but qualified review, recording, calibration, and
+book-only human validation remain backlog
 
 This specification names the assessment that the Marwadi book must eventually
 prepare a book-only learner to pass. It is not an external qualification and it
-does not claim that the current starter chapter is exam-ready. The learner-facing
+does not claim that the current book is exam-ready. The learner-facing
 name at each rung is **Coding Adventures Marwadi <Level> Assessment —
 project-defined equivalent**.
 
