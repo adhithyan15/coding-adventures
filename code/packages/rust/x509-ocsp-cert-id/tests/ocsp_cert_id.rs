@@ -66,10 +66,7 @@ fn valid_cert_id() -> Vec<u8> {
 
 fn decode(
     encoded: &[u8],
-) -> Result<
-    x509_ocsp_cert_id::X509OcspCertId<'_>,
-    x509_ocsp_cert_id::X509OcspCertIdError,
-> {
+) -> Result<x509_ocsp_cert_id::X509OcspCertId<'_>, x509_ocsp_cert_id::X509OcspCertIdError> {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let element = decoder.decode_exact(encoded).expect("valid DER framing");
     decode_x509_ocsp_cert_id(&mut decoder, element)
@@ -141,7 +138,9 @@ fn every_field_is_required_in_schema_order() {
 
     for field_count in 0..fields.len() {
         assert_eq!(
-            decode(&sequence(&fields[..field_count])).unwrap_err().kind(),
+            decode(&sequence(&fields[..field_count]))
+                .unwrap_err()
+                .kind(),
             expected[field_count]
         );
     }
@@ -157,9 +156,9 @@ fn hash_algorithm_is_fully_validated_under_shared_limits() {
     );
     assert_eq!(
         decode(&wrong_tag).unwrap_err().kind(),
-        X509OcspCertIdErrorKind::InvalidHashAlgorithm(
-            X509AlgorithmIdentifierErrorKind::Structure(Asn1ErrorKind::UnexpectedTag)
-        )
+        X509OcspCertIdErrorKind::InvalidHashAlgorithm(X509AlgorithmIdentifierErrorKind::Structure(
+            Asn1ErrorKind::UnexpectedTag
+        ))
     );
 
     let invalid_oid = cert_id(
@@ -194,9 +193,7 @@ fn hash_algorithm_is_fully_validated_under_shared_limits() {
             .unwrap_err()
             .kind(),
         X509OcspCertIdErrorKind::InvalidHashAlgorithm(
-            X509AlgorithmIdentifierErrorKind::InvalidAlgorithm(
-                Asn1ErrorKind::OidArcLimitExceeded
-            )
+            X509AlgorithmIdentifierErrorKind::InvalidAlgorithm(Asn1ErrorKind::OidArcLimitExceeded)
         )
     );
 }
@@ -223,18 +220,9 @@ fn issuer_hashes_must_be_primitive_octet_strings() {
 #[test]
 fn serial_number_uses_the_strict_rfc_5280_primitive() {
     for (serial, expected) in [
-        (
-            integer(&[0x00]),
-            X509SerialNumberErrorKind::NotPositive,
-        ),
-        (
-            integer(&[0x80]),
-            X509SerialNumberErrorKind::NotPositive,
-        ),
-        (
-            integer(&[0x01; 21]),
-            X509SerialNumberErrorKind::TooLong,
-        ),
+        (integer(&[0x00]), X509SerialNumberErrorKind::NotPositive),
+        (integer(&[0x80]), X509SerialNumberErrorKind::NotPositive),
+        (integer(&[0x01; 21]), X509SerialNumberErrorKind::TooLong),
     ] {
         let encoded = cert_id(
             algorithm(None),
@@ -254,11 +242,7 @@ fn malformed_children_and_trailing_fields_fail_closed() {
     for encoded in [
         sequence(&[vec![0x30, 2, 0x06]]),
         sequence(&[algorithm(None), vec![0x04, 2, 0xaa]]),
-        sequence(&[
-            algorithm(None),
-            octet_string(&[0x11]),
-            vec![0x04, 2, 0xaa],
-        ]),
+        sequence(&[algorithm(None), octet_string(&[0x11]), vec![0x04, 2, 0xaa]]),
         sequence(&[
             algorithm(None),
             octet_string(&[0x11]),
@@ -304,9 +288,9 @@ fn shared_depth_and_element_budgets_are_enforced() {
         decode_x509_ocsp_cert_id(&mut depth_decoder, root)
             .unwrap_err()
             .kind(),
-        X509OcspCertIdErrorKind::InvalidHashAlgorithm(
-            X509AlgorithmIdentifierErrorKind::Structure(Asn1ErrorKind::DepthLimitExceeded)
-        )
+        X509OcspCertIdErrorKind::InvalidHashAlgorithm(X509AlgorithmIdentifierErrorKind::Structure(
+            Asn1ErrorKind::DepthLimitExceeded
+        ))
     );
 
     let element_limits = Asn1Limits {
