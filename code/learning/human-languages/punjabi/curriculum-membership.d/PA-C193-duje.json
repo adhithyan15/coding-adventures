@@ -1,0 +1,11 @@
+{
+  "id": "PA-C193-duje",
+  "pathSegment": "PA-PATH-193-A2-ORDINAL-E",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-193-A2-ORDINAL-E",
+      "order": 3
+    }
+  ]
+}

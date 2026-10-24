@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "First and Second in a Room",
+  "label": "ch:pa-a2-ordinal-e",
+  "canDo": "I can contrast first and second across a direct room phrase and the same masculine oblique location frame.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C193-payoff",
+    "kind": "production",
+    "summary": "Contrast first and second across direct and oblique room frames through listening, speaking, reading, and writing.",
+    "assesses": [
+      "PA-FORM-PAHILE-ORDINAL-193",
+      "PA-FORM-DUJE-ORDINAL-193"
+    ],
+    "note": "This sixteenth Punjabi A2 mock-draft prerequisite tranche does not by itself unblock mock 1 and provides no mock, readiness, attainment, external-equivalence, or human-validation evidence."
+  }
+}

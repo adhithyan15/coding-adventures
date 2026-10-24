@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-193-A2-ORDINAL-E",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can contrast first and second across a direct room phrase and the same masculine oblique location frame.",
+  "prerequisites": [
+    "PA-EXT-192-A2-LOKAAN-OBLIQUE"
+  ]
+}

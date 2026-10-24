@@ -1,0 +1,11 @@
+{
+  "id": "PA-C193-pahile",
+  "pathSegment": "PA-PATH-193-A2-ORDINAL-E",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-193-A2-ORDINAL-E",
+      "order": 1
+    }
+  ]
+}

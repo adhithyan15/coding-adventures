@@ -101,7 +101,7 @@ it("adds a slow Punjabi A2 ordinal e prerequisite without mock credit", () => {
   expect(learnerCopy).toContain("ਪਹਿਲੇ ਕਮਰੇ ਵਿੱਚ");
   expect(learnerCopy).toContain("ਦੂਜਾ ਕਮਰਾ");
   expect(learnerCopy).toContain("ਦੂਜੇ ਕਮਰੇ ਵਿੱਚ");
-  expect(learnerCopy).toMatch(/Gill.*Gleason.*masculine.*singular direct.*-ਆ.*oblique.*-ਏ/is);
+  expect(learnerCopy).toMatch(/Gill.*Gleason.*masculine.*singular direct.*oblique.*ਪਹਿਲਾ.*ਪਹਿਲੇ/is);
   expect(learnerCopy).toMatch(/first.*ਪਹਿਲਾ.*second.*ਦੂਜਾ/is);
   expect(learnerCopy).toMatch(/two ordinals.*not.*every Punjabi adjective/is);
   expect(learnerCopy).toMatch(/sixteenth prerequisite tranche|does not unblock.*mock 1/is);
