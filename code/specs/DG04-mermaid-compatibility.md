@@ -140,8 +140,10 @@ declarations update entities introduced by earlier relationships, preserve
 authored IDs, and combine with shorthand classes through semantic IR, layout,
 and paint. The `u` parent cardinality is disambiguated from an entity literally
 named `u`, with both forms preserved through semantic IR, layout, and paint. ER
-remains partial while the rest of the pinned upstream syntax and visual corpus
-is incomplete.
+entities accept empty blocks and single-line compact attribute blocks without
+requiring whitespace around braces, preserving any fields through semantic IR,
+layout, and paint. ER remains partial while the rest of the pinned upstream
+syntax and visual corpus is incomplete.
 
 ## Required New Semantic Families
 

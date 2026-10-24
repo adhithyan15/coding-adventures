@@ -233,6 +233,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/er-parent-cardinality-11.16.1-visual-corpus.json"
     ));
+    const ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-corpus.json"
+    ));
+    const ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/er-compact-attribute-blocks-11.16.1-visual-corpus.json"
+    ));
     const TIMELINE_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/timeline-11.16.1-corpus.json"
@@ -2830,6 +2838,52 @@ line "Target" [35, 50, 68, 82]"##,
                 fixture["name"].as_str().expect("fixture name")
             );
             write_png(&pixels, &output).expect("ER parent cardinality PNG write failed");
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_er_compact_attribute_blocks_to_png() {
+        let syntax: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_CORPUS)
+            .expect("ER compact attribute block corpus JSON");
+        let visual: Value = serde_json::from_str(ER_COMPACT_ATTRIBUTE_BLOCKS_VISUAL_CORPUS)
+            .expect("ER compact attribute block visual corpus JSON");
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("ER compact fixtures");
+        let visual_names = visual["fixtures"].as_array().expect("ER compact visuals");
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        for (fixture, visual_name) in fixtures.iter().zip(visual_names) {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_er_diagram(fixture["source"].as_str().expect("ER compact source"))
+                .expect("ER compact fixture must parse");
+            let layout = layout_structural_diagram(&diagram);
+            assert_eq!(layout.relationships.len(), 1);
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+            let pixels = render(&scene);
+            let output = format!(
+                "/tmp/mermaid_er_compact_attribute_blocks_{}.png",
+                fixture["name"].as_str().expect("fixture name")
+            );
+            write_png(&pixels, &output).expect("ER compact attribute block PNG write failed");
             assert!(pixels.width > 0 && pixels.height > 0);
         }
     }
