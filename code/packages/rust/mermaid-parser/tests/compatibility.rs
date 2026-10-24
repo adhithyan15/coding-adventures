@@ -125,6 +125,14 @@ const ER_NUMERIC_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-numeric-cardinality-11.16.1-visual-corpus.json"
 ));
+const ER_QUOTED_ENTITY_VALIDATION_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-corpus.json"
+));
+const ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-quoted-entity-validation-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -2294,6 +2302,52 @@ fn pinned_er_numeric_cardinality_disambiguates_numeric_entities() {
     assert_eq!(diagram.relationships[1].from_mult.as_deref(), Some("0..*"));
     assert_eq!(diagram.relationships[1].to_mult.as_deref(), Some("1"));
     assert!(diagram.nodes.iter().any(|node| node.id == "1"));
+}
+
+#[test]
+fn pinned_er_quoted_entity_constraints_preserve_general_quoted_text() {
+    let syntax: Value = serde_json::from_str(ER_QUOTED_ENTITY_VALIDATION_CORPUS)
+        .expect("ER quoted entity validation corpus must be JSON");
+    let visual: Value = serde_json::from_str(ER_QUOTED_ENTITY_VALIDATION_VISUAL_CORPUS)
+        .expect("ER quoted entity validation visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["valid"][0]["name"]);
+    let relationship_diagram = parse_er_diagram(
+        syntax["valid"][0]["source"]
+            .as_str()
+            .expect("valid ER quoted text source"),
+    )
+    .expect("general ER quoted text fixture must parse");
+    let attribute_diagram = parse_er_diagram(
+        syntax["valid"][1]["source"]
+            .as_str()
+            .expect("valid ER attribute comment source"),
+    )
+    .expect("general ER attribute comment fixture must parse");
+    let account = attribute_diagram
+        .nodes
+        .iter()
+        .find(|node| node.id == "ACCOUNT")
+        .expect("ACCOUNT");
+
+    assert_eq!(
+        relationship_diagram.relationships[0].label.as_deref(),
+        Some("%")
+    );
+    assert_eq!(
+        account.compartments[0].entries,
+        ["status: string - 100% sourced"]
+    );
+    for fixture in syntax["invalid"]
+        .as_array()
+        .expect("invalid ER quoted entity fixtures")
+    {
+        assert!(
+            parse_er_diagram(fixture["source"].as_str().expect("invalid ER source")).is_err(),
+            "invalid quoted entity fixture {:?} parsed",
+            fixture["name"]
+        );
+    }
 }
 
 #[test]
