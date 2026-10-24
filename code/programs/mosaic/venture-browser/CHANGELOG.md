@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- `scripts/build-all.sh` and `scripts/build-all.ps1` ask `mosaic-compile backends` for their build matrix instead of keeping a copy, and the package test checks they do (it used to check each hand-copied name).
 - The web interaction test types with `input` events on both web backends. The
   Web Component's text fields used to dispatch `onChange` on `change` (blur);
   they now dispatch per keystroke, as HTML's always did, and keep focus.

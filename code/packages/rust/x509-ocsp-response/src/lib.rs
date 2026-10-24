@@ -14,10 +14,12 @@
 //!     response        OCTET STRING }
 //! ```
 //!
-//! This crate validates that envelope without assigning meaning to the
-//! response-type OID or decoding the OCTET STRING. Keeping dispatch outside
-//! this layer prevents a syntactically valid response type from silently
-//! acquiring signature, responder, revocation, or transport authority.
+//! This crate validates that envelope and provides one explicit structural
+//! dispatch for the exact `id-pkix-ocsp-basic` OID. The dispatch frames the
+//! OCTET STRING as one DER document and composes the repository-owned basic
+//! response decoder without resetting the caller's budget. Neither generic
+//! envelope decoding nor basic-response dispatch grants signature, responder,
+//! revocation, or transport authority.
 
 #![deny(unsafe_code)]
 
@@ -28,8 +30,14 @@ use der_asn1::{
 use der_tlv::TagClass;
 use std::error::Error;
 use std::fmt;
+use x509_ocsp_basic_response::{
+    decode_x509_ocsp_basic_response, X509OcspBasicResponseError, X509OcspBasicResponseErrorKind,
+};
+
+pub use x509_ocsp_basic_response::X509OcspBasicResponse;
 
 const RESPONSE_BYTES_TAG: u32 = 0;
+const ID_PKIX_OCSP_BASIC: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 48, 1, 1];
 
 /// One assigned RFC 6960 `OCSPResponseStatus` value.
 ///
@@ -76,6 +84,7 @@ impl X509OcspResponseStatus {
 pub struct X509OcspResponseBytes<'a> {
     encoded: &'a [u8],
     response_type: ObjectIdentifier<'a>,
+    response_element: Asn1Element<'a>,
     response: &'a [u8],
 }
 
@@ -105,7 +114,7 @@ impl fmt::Debug for X509OcspResponseBytes<'_> {
         formatter
             .debug_struct("X509OcspResponseBytes")
             .field("response_type_arc_count", &self.response_type.arc_count())
-            .field("response_octet_count", &self.response.len())
+            .field("response_octet_count", &self.response().len())
             .finish()
     }
 }
@@ -149,7 +158,9 @@ impl fmt::Debug for X509OcspResponse<'_> {
             )
             .field(
                 "response_octet_count",
-                &self.response_bytes.map(|response| response.response.len()),
+                &self
+                    .response_bytes
+                    .map(|response| response.response().len()),
             )
             .finish()
     }
@@ -278,6 +289,92 @@ impl fmt::Display for X509OcspResponseError {
 }
 
 impl Error for X509OcspResponseError {}
+
+/// Stable basic-response dispatch failures. No category retains payload bytes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum X509OcspBasicResponseDispatchErrorKind {
+    UnsupportedResponseType,
+    InvalidResponseFraming(Asn1ErrorKind),
+    InvalidBasicResponse(X509OcspBasicResponseErrorKind),
+}
+
+/// A redacted dispatch failure at an offset local to the response body.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct X509OcspBasicResponseDispatchError {
+    kind: X509OcspBasicResponseDispatchErrorKind,
+    offset: usize,
+}
+
+impl X509OcspBasicResponseDispatchError {
+    const fn new(kind: X509OcspBasicResponseDispatchErrorKind, offset: usize) -> Self {
+        Self { kind, offset }
+    }
+
+    fn framing(error: Asn1Error) -> Self {
+        Self::new(
+            X509OcspBasicResponseDispatchErrorKind::InvalidResponseFraming(error.kind()),
+            error.offset(),
+        )
+    }
+
+    fn basic(error: X509OcspBasicResponseError) -> Self {
+        Self::new(
+            X509OcspBasicResponseDispatchErrorKind::InvalidBasicResponse(error.kind()),
+            error.offset(),
+        )
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509OcspBasicResponseDispatchErrorKind {
+        self.kind
+    }
+
+    /// Return the failing byte offset relative to the embedded response body.
+    ///
+    /// An unsupported response type returns zero because its body is not read.
+    pub const fn offset(self) -> usize {
+        self.offset
+    }
+}
+
+impl fmt::Display for X509OcspBasicResponseDispatchError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 basic OCSP response dispatch error {:?} at body byte {}",
+            self.kind, self.offset
+        )
+    }
+}
+
+impl Error for X509OcspBasicResponseDispatchError {}
+
+/// Decode exact `id-pkix-ocsp-basic` response bytes under the shared decoder.
+///
+/// The response-type OID is compared before the body is read. For the one
+/// recognized OID, the OCTET STRING must contain exactly one canonical DER
+/// document, and the basic response is decoded through the supplied decoder so
+/// its existing depth and total-element authority is retained. Success proves
+/// syntax only; algorithm selection, signature verification, responder
+/// authorization, certificate/path binding, freshness, and revocation policy
+/// remain caller-owned boundaries.
+pub fn decode_x509_ocsp_basic_response_bytes<'a>(
+    decoder: &mut Asn1Decoder,
+    response_bytes: X509OcspResponseBytes<'a>,
+) -> Result<X509OcspBasicResponse<'a>, X509OcspBasicResponseDispatchError> {
+    if !response_bytes.response_type().equals(ID_PKIX_OCSP_BASIC) {
+        return Err(X509OcspBasicResponseDispatchError::new(
+            X509OcspBasicResponseDispatchErrorKind::UnsupportedResponseType,
+            0,
+        ));
+    }
+
+    let root = decoder
+        .decode_exact_embedded(response_bytes.response_element, response_bytes.response())
+        .map_err(X509OcspBasicResponseDispatchError::framing)?;
+    decode_x509_ocsp_basic_response(decoder, root)
+        .map_err(X509OcspBasicResponseDispatchError::basic)
+}
 
 /// Decode one exact RFC 6960 `OCSPResponse` SEQUENCE.
 ///
@@ -432,6 +529,7 @@ fn decode_response_bytes<'a>(
     Ok(X509OcspResponseBytes {
         encoded,
         response_type,
+        response_element,
         response,
     })
 }
