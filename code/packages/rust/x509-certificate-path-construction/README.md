@@ -23,6 +23,14 @@ Success returns non-copyable borrowed evidence retaining the exact target,
 candidate slice, and ordered selected indices. A later validator can therefore
 consume the constructed chain without accepting a caller-substituted pool.
 
+The path can also project a non-copyable adjacent-link value for any retained
+issuer depth. At depth zero the child is the exact target; later depths use the
+preceding selected candidate as child; and the current selected candidate is
+the issuer. The projection keeps the complete construction borrowed and
+returns `None` outside its issuer count. This lets a later signature verifier
+consume the exact ordered pair without rerunning Name policy or accepting
+caller-supplied endpoints.
+
 This crate does not search ambiguous alternate branches, implement complete
 RFC 5280 distinguished-name equality, decide that a terminal is trusted,
 authenticate a link, or apply role, algorithm, validity, path-length,

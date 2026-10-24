@@ -11,6 +11,9 @@
 //! "terminal". In particular, a terminal callback is not a trust decision made
 //! by this crate. Later validation must authenticate every link and apply role,
 //! algorithm, time, path-length, name-constraint, revocation, and trust policy.
+//! To support that later work without rerunning selection, a constructed path
+//! can project one exact adjacent child/issuer pair at a time. The projection
+//! remains borrowed from the path and grants no authentication by itself.
 
 #![deny(unsafe_code)]
 
@@ -82,6 +85,92 @@ pub struct ConstructedX509CertificatePath<'target, 'target_encoded, 'candidates,
     issuer_count: usize,
 }
 
+/// Non-copyable evidence for one exact adjacent link in a constructed path.
+///
+/// `issuer_depth` addresses the same selected-issuer position as
+/// [`ConstructedX509CertificatePath::issuer_certificate`]. At depth zero the
+/// child is the target. At every later depth the child is the preceding
+/// selected candidate. Both endpoints are derived before this value is
+/// returned, and the complete construction remains borrowed so the pair cannot
+/// outlive or be detached from its retained ordering evidence.
+///
+/// This is adjacency evidence only. It does not verify the child's signature,
+/// validate either certificate, establish trust, or apply path policy.
+pub struct ConstructedX509CertificatePathAdjacentLink<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    constructed_path: &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    issuer_depth: usize,
+    child_target_certificate: Option<&'target X509Certificate<'target_encoded>>,
+    child_candidate_certificate: Option<&'candidates X509Certificate<'candidate_encoded>>,
+    issuer_certificate: &'candidates X509Certificate<'candidate_encoded>,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ConstructedX509CertificatePathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the exact complete construction from which this pair was derived.
+    pub const fn constructed_path(
+        &self,
+    ) -> &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        self.constructed_path
+    }
+
+    /// Return this pair's selected-issuer depth.
+    pub const fn issuer_depth(&self) -> usize {
+        self.issuer_depth
+    }
+
+    /// Return the target when it is this pair's child.
+    ///
+    /// This is `Some` exactly at issuer depth zero.
+    pub const fn child_target_certificate(
+        &self,
+    ) -> Option<&'target X509Certificate<'target_encoded>> {
+        self.child_target_certificate
+    }
+
+    /// Return the preceding selected candidate when it is this pair's child.
+    ///
+    /// This is `Some` exactly when the issuer depth is greater than zero.
+    pub const fn child_candidate_certificate(
+        &self,
+    ) -> Option<&'candidates X509Certificate<'candidate_encoded>> {
+        self.child_candidate_certificate
+    }
+
+    /// Return the exact selected candidate serving as this pair's issuer.
+    pub const fn issuer_certificate(&self) -> &'candidates X509Certificate<'candidate_encoded> {
+        self.issuer_certificate
+    }
+}
+
+impl fmt::Debug for ConstructedX509CertificatePathAdjacentLink<'_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ConstructedX509CertificatePathAdjacentLink")
+    }
+}
+
 impl<'target, 'target_encoded, 'candidates, 'candidate_encoded>
     ConstructedX509CertificatePath<'target, 'target_encoded, 'candidates, 'candidate_encoded>
 {
@@ -131,6 +220,39 @@ impl<'target, 'target_encoded, 'candidates, 'candidate_encoded>
     ) -> Option<&'candidates X509Certificate<'candidate_encoded>> {
         let candidate_index = self.candidate_index(issuer_depth)?;
         self.candidate_certificates.get(candidate_index)
+    }
+
+    /// Project one exact child/issuer pair from the retained path order.
+    ///
+    /// No Name or terminal-policy callback is rerun. An out-of-range depth,
+    /// including every depth for a terminal target, returns `None` without
+    /// exposing partial evidence.
+    pub fn adjacent_link<'path>(
+        &'path self,
+        issuer_depth: usize,
+    ) -> Option<
+        ConstructedX509CertificatePathAdjacentLink<
+            'path,
+            'target,
+            'target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    > {
+        let issuer_certificate = self.issuer_certificate(issuer_depth)?;
+        let (child_target_certificate, child_candidate_certificate) = if issuer_depth == 0 {
+            (Some(self.target_certificate), None)
+        } else {
+            (None, Some(self.issuer_certificate(issuer_depth - 1)?))
+        };
+
+        Some(ConstructedX509CertificatePathAdjacentLink {
+            constructed_path: self,
+            issuer_depth,
+            child_target_certificate,
+            child_candidate_certificate,
+            issuer_certificate,
+        })
     }
 }
 
