@@ -1165,6 +1165,18 @@ path, trust, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 therefore remains unavailable until authenticated revocation evidence is
 composed with the exact certificate/path boundary and the other remaining TLS
 work.
+A bounded `x509-ocsp-cert-id` prerequisite now decodes exactly one RFC 6960
+`CertID` SEQUENCE within caller-owned DER depth, element, length, and OID-arc
+limits. Success retains the generic hash `AlgorithmIdentifier`, exact borrowed
+issuer-name and issuer-key hash OCTET STRING contents, and the validated
+positive RFC 5280 certificate serial number. The structural layer deliberately
+accepts hash lengths according to the selected algorithm's later data-driven
+policy rather than embedding an algorithm registry. It does not choose a hash
+algorithm, compute or compare issuer hashes, parse a larger OCSP response,
+authenticate a response signature, authorize a responder, bind the identifier
+to a certificate or constructed path, decide status or freshness, fetch or
+cache revocation data, read a clock, or grant path, trust, TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS remains unavailable.
 
 The current slices intentionally stop before provider HTTPS transport. The
 loopback host owns only local TCP and injected browser authority; custody owns
