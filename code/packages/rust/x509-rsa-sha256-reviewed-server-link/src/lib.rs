@@ -377,6 +377,81 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable constructed reviewed path after intermediate DNS policy.
+///
+/// Success retains the complete construction-bound anchor-policy proof and
+/// proves either that its exact intermediate has no NameConstraints extension
+/// or that the supported critical permitted-and-excluded-DNS subset was
+/// applied to every dNSName in the exact retained target. It is not
+/// generalized path validation, revocation, TLS, HTTP, OAuth transport, or
+/// network authority.
+pub struct ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    anchor_policy: ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed complete construction-bound anchor-policy proof.
+    pub const fn anchor_policy(
+        &self,
+    ) -> &ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.anchor_policy
+    }
+
+    /// Return DNS evidence when the exact intermediate carried supported
+    /// critical NameConstraints.
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(
+            "ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy",
+        )
+    }
+}
+
 /// Non-copyable direct reviewed-server-link evidence after anchor DNS policy.
 ///
 /// Success proves either that the selected snapshot entry carries no
@@ -960,6 +1035,69 @@ pub fn validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_
     Ok(
         ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy {
             reviewed_intermediate_server_path,
+            constrained_dns_names,
+        },
+    )
+}
+
+/// Apply the exact constructed intermediate's supported critical DNS policy.
+///
+/// This consumes the complete construction-bound anchor-policy proof. The
+/// target and intermediate are derived only through that retained path,
+/// preventing certificate, SAN, or path substitution. An absent extension
+/// succeeds without new evidence; a present extension must be critical and
+/// must decode as the supported permitted-and-excluded-DNS subset under
+/// caller-owned limits.
+pub fn validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    anchor_policy: ValidatedX509RsaSha256ConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ReviewedServerLinkError,
+> {
+    let target_certificate = anchor_policy
+        .reviewed_intermediate_server_path()
+        .server_policy()
+        .certificate();
+    let intermediate_certificate = anchor_policy
+        .reviewed_intermediate_server_path()
+        .reviewed_intermediate_path()
+        .authenticated_path()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_intermediate_dns_policy(
+        target_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy {
+            anchor_policy,
             constrained_dns_names,
         },
     )
