@@ -105,12 +105,16 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
     };
     let mut out = Vec::new();
     // Slice 2: `return` / `new.target` outside a function. They need the
-    // parse tree, so only parse when a candidate token is present.
+    // parse tree, so only parse when a candidate KEYWORD token is present.
+    // A string `"return"` or a member name `x.return` is not one.
     let candidate = tokens.iter().enumerate().any(|(i, t)| {
-        t.value == "return"
-            || (t.value == "new"
-                && tokens.get(i + 1).is_some_and(|d| d.value == ".")
-                && tokens.get(i + 2).is_some_and(|n| n.value == "target"))
+        let keyword = matches!(t.type_, lexer::token::TokenType::Keyword)
+            && !(i > 0 && matches!(tokens[i - 1].value.as_str(), "." | "?."));
+        keyword
+            && (t.value == "return"
+                || (t.value == "new"
+                    && tokens.get(i + 1).is_some_and(|d| d.value == ".")
+                    && tokens.get(i + 2).is_some_and(|n| n.value == "target")))
     });
     if candidate {
         if let Ok(root) = parse_javascript_typed(source, version) {
@@ -142,29 +146,46 @@ pub fn scan(file: usize, source: &str, version: EsVersion) -> Vec<Refusal> {
 /// Slice 2 (CLOC44): every `return` and `new.target` that is not inside a
 /// function, in the parse tree of one file.
 ///
-/// Upstream's rule, measured on the jar, is not quite ECMA-262's:
+/// Upstream's rule, measured on the jar, is not quite ECMA-262's, and it
+/// treats the two keywords differently:
 ///
-/// | Where                                   | `return`  | `new.target` |
-/// |-----------------------------------------|-----------|--------------|
-/// | top level, a block, a label             | refused   | refused      |
-/// | a function, method, getter, setter      | allowed   | allowed      |
-/// | an arrow (even at top level)            | allowed   | allowed      |
-/// | a class `static {}` block               | refused   | refused      |
-/// | a class field initialiser (`x = …`)     | n/a       | refused      |
+/// | Where                                       | `return`  | `new.target` |
+/// |---------------------------------------------|-----------|--------------|
+/// | top level, a block, a label                 | refused   | refused      |
+/// | a function, method, getter, setter          | allowed   | allowed      |
+/// | an arrow (even at top level)                | allowed   | allowed      |
+/// | a class `static {}` block                   | refused   | as outside   |
+/// | a class field initialiser (`x = …`)         | n/a       | as outside   |
+/// | a method's computed key (`[k](){}`)         | n/a       | as outside   |
 ///
-/// So: any function-like node, arrows included, opens a function context
-/// (its parameters too, which is why the node and not just its
-/// `function_body` counts), and a static block or field initialiser closes
-/// it again. Each refusal is reported at the statement's or expression's
-/// first token.
+/// "As outside" means the context around the class: `class A{x=new.target}`
+/// is refused at top level, but `function f(){class A{x=new.target}}`
+/// compiles. So two flags travel down the tree:
 ///
+/// - a function-like node (declaration, expression, method, accessor,
+///   generator, async form, arrow) sets both, which covers its parameters
+///   as well as its body;
+/// - `static_block` clears `return_ok` only;
+/// - a method's `property_name` child (its key, computed or not) keeps the
+///   flags from outside the method.
+///
+/// Each refusal is reported at the statement's or expression's first token.
 /// The walk is iterative, with an explicit stack, so a deeply nested input
 /// can't overflow the native stack.
 fn outside_function(file: usize, root: &GrammarASTNode) -> Vec<Refusal> {
+    #[derive(Clone, Copy)]
+    struct Context {
+        return_ok: bool,
+        new_target_ok: bool,
+    }
+    const FUNCTION: Context = Context { return_ok: true, new_target_ok: true };
     let mut out = Vec::new();
-    let mut stack: Vec<(&GrammarASTNode, bool)> = vec![(root, false)];
-    while let Some((node, inherited)) = stack.pop() {
-        let in_function = match node.rule_name.as_str() {
+    let top = Context { return_ok: false, new_target_ok: false };
+    let mut stack: Vec<(&GrammarASTNode, Context)> = vec![(root, top)];
+    while let Some((node, outer)) = stack.pop() {
+        let rule = node.rule_name.as_str();
+        let method_like = matches!(rule, "method_definition" | "async_method" | "private_method_definition");
+        let here = match rule {
             "function_declaration"
             | "function_expression"
             | "function_body"
@@ -174,36 +195,34 @@ fn outside_function(file: usize, root: &GrammarASTNode) -> Vec<Refusal> {
             | "async_function_expression"
             | "async_generator_declaration"
             | "async_generator_expression"
-            | "method_definition"
-            | "async_method"
-            | "private_method_definition"
             | "arrow_function"
-            | "async_arrow_function" => true,
-            "static_block" | "class_field_declaration" => false,
-            _ => inherited,
+            | "async_arrow_function" => FUNCTION,
+            _ if method_like => FUNCTION,
+            "static_block" => Context { return_ok: false, ..outer },
+            _ => outer,
         };
-        if !in_function {
-            let message = match node.rule_name.as_str() {
-                "return_statement" => Some(RETURN_OUTSIDE_FUNCTION),
-                "member_expression" if is_new_target(node) => Some(NEW_TARGET_OUTSIDE_FUNCTION),
-                _ => None,
-            };
-            if let (Some(message), Some(line), Some(column)) =
-                (message, node.start_line, node.start_column)
-            {
-                out.push(Refusal {
-                    file,
-                    line,
-                    // 1-based in the tree; upstream prints 0-based.
-                    column: column.saturating_sub(1),
-                    key: PARSE_ERROR,
-                    message,
-                });
+        let message = match rule {
+            "return_statement" if !here.return_ok => Some(RETURN_OUTSIDE_FUNCTION),
+            "member_expression" if !here.new_target_ok && is_new_target(node) => {
+                Some(NEW_TARGET_OUTSIDE_FUNCTION)
             }
+            _ => None,
+        };
+        if let (Some(message), Some(line), Some(column)) = (message, node.start_line, node.start_column) {
+            out.push(Refusal {
+                file,
+                line,
+                // 1-based in the tree; upstream prints 0-based.
+                column: column.saturating_sub(1),
+                key: PARSE_ERROR,
+                message,
+            });
         }
         for child in node.children.iter().rev() {
             if let ASTNodeOrToken::Node(n) = child {
-                stack.push((n, in_function));
+                // A method's key is evaluated outside the method.
+                let ctx = if method_like && n.rule_name == "property_name" { outer } else { here };
+                stack.push((n, ctx));
             }
         }
     }
@@ -335,6 +354,29 @@ mod tests {
         assert_eq!(parse_refusals("f(new.target, 1 + 2);"), vec![(2, NEW_TARGET_OUTSIDE_FUNCTION)]);
         assert_eq!(parse_refusals("class A{static{new.target}}"), vec![(15, NEW_TARGET_OUTSIDE_FUNCTION)]);
         assert_eq!(parse_refusals("class A{x=new.target}"), vec![(10, NEW_TARGET_OUTSIDE_FUNCTION)]);
+        // A method's computed key is outside the method.
+        assert_eq!(parse_refusals("class A{static [new.target](){}}"), vec![(16, NEW_TARGET_OUTSIDE_FUNCTION)]);
+        assert_eq!(parse_refusals("class A{x=class B{y=new.target}}"), vec![(20, NEW_TARGET_OUTSIDE_FUNCTION)]);
+    }
+
+    #[test]
+    fn class_fields_and_static_blocks_follow_the_enclosing_function_for_new_target() {
+        for src in [
+            "function make(){return class{kind=new.target}}",
+            "function f(){class A{static x=new.target}}",
+            "function f(){class A{static{new.target}}}",
+            "class A{m(){class B{x=new.target}}}",
+            "var x=()=>{class B{static{new.target}}}",
+            "function f(){class A{static{class B{static{new.target}}}}}",
+            "function f(){class A{[new.target](){}}}",
+        ] {
+            assert!(scan_es(src).is_empty(), "{src:?}");
+        }
+        // ... but a static block still has no `return`.
+        assert_eq!(
+            parse_refusals("function f(){class A{static{return}}}"),
+            vec![(28, RETURN_OUTSIDE_FUNCTION)]
+        );
     }
 
     #[test]

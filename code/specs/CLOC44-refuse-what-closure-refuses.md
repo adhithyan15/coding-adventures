@@ -80,9 +80,11 @@ nothing is written.
 
 Both are `JSC_PARSE_ERROR`s, reported at the statement's or expression's
 first token, for every occurrence and at every level. Upstream's rule is
-Closure's, not quite ECMA-262's: an arrow counts as a function even for
-`new.target` at top level, and a class static block or field initialiser
-does not count:
+Closure's, not quite ECMA-262's, and it treats the two keywords
+differently. An arrow counts as a function even for `new.target` at top
+level. A class static block clears the context for `return` only. A static
+block, a field initialiser and a method's computed key all see the context
+*around* the class for `new.target`:
 
 | input | upstream |
 |---|---|
@@ -92,15 +94,21 @@ does not count:
 | `()=>new.target` (top level) | compiled |
 | `class A{static{return}}`, `class A{static{new.target}}` | refused |
 | `class A{x=new.target}` | refused, "new.target must be inside a function" |
+| `function f(){class A{x=new.target}}`, `function f(){class A{static{new.target}}}` | compiled |
+| `function f(){class A{static{return}}}` | refused |
+| `class A{static [new.target](){}}` | refused (the key is outside the method) |
 | `class A{#x}return;` | private element at 8, then `return` at 11 |
 
 These need structure that tokens can't give, so `refusals::scan` parses the
 file with `parse_javascript_typed` and walks the tree iteratively
-(`outside_function`). It parses only when a `return` or `new . target` token
-is present, so other files pay nothing. Function-like nodes (declarations,
+(`outside_function`). It parses only when a `return` keyword, or a `new`
+keyword followed by `. target`, is present (not a string, not after `.`),
+so other files pay nothing. Function-like nodes (declarations,
 expressions, methods, accessors, generators, async forms and arrows) turn
 function context on, which covers their parameters as well as their
-bodies. `static_block` and `class_field_declaration` turn it off. A file
+bodies. Two flags travel down the tree, `return_ok` and `new_target_ok`:
+`static_block` clears `return_ok` only, and a method's `property_name` child
+keeps the flags from outside the method. A file
 that doesn't parse yields no slice-2 refusals. SIMPLE and ADVANCED then
 report their own parse failure; WHITESPACE_ONLY, which never parses,
 compiles the file as before. That is fail-open, but only for inputs the

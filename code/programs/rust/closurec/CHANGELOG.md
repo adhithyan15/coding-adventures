@@ -122,18 +122,24 @@ inside function", "new.target must be inside a function"). closurec now
 rejects them identically: the same diagnostic, location and exit status at
 every level, and no output.
 
-Upstream's rule is Closure's own. An arrow counts as a function (so a
-top-level `()=>new.target` compiles), and a class `static {}` block or field
-initialiser does not (so `class A{x=new.target}` is refused). The check
-parses only files that contain a `return` or `new.target`, and walks the
-tree iteratively. Every refusal is reported in source order, interleaved
-with the slice-1 private-element errors.
+Upstream's rule is Closure's own:
+- An arrow counts as a function, so a top-level `()=>new.target` compiles.
+- A class `static {}` block clears the context for `return` only;
+  `new.target` there, or in a field initialiser, follows the enclosing
+  context. So `class A{x=new.target}` is refused at top level, and compiles
+  inside a function.
+- A method's computed key is outside the method, so
+  `class A{[new.target](){}}` is refused at top level.
+
+The check parses only files that contain a `return` or `new` keyword token,
+and walks the tree iteratively. Every refusal is reported in source order,
+interleaved with the slice-1 private-element errors.
 
 The `simple-newtarget` and `simple-try-catch` fixtures now pin the jar's
-refusal. Five unit tests cover the rule. closurec gains a direct path
+refusal. Six unit tests cover the rule. closurec gains a direct path
 dependency on `parser` (already a transitive one) for the parse-tree types.
 
-
+### Fixed - outer binding shadowed by a `for`-head `let`/`const` survives (#16008)
 
 `var x = 1; for (let x of [7]) console.log(x); console.log(x);` compiled at
 ADVANCED to output without `var x = 1;`, which threw `ReferenceError`. The fix
