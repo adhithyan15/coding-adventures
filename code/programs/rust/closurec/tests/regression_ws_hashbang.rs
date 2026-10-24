@@ -8,6 +8,11 @@
 //! 21.0.10 with `--compilation_level WHITESPACE_ONLY`; upstream drops the
 //! hashbang at every level. When `node` is on `PATH`, each output must also
 //! print what its source prints.
+//!
+//! Two lexer shapes would have made dropping the token delete code, so they
+//! are refused instead (`REFUSED`): a `#!` line ended by U+2028/U+2029, which
+//! the lexer runs past (#17887), and a `#!` anywhere but offset 0, which is a
+//! SyntaxError.
 
 use std::process::Command;
 
@@ -20,6 +25,14 @@ const CASES: &[(&str, &str)] = &[
         "#!/usr/bin/env node\n\n// c\nvar x = 1;\nconsole.log(x)\n",
         "var x=1;console.log(x);",
     ),
+];
+
+/// Inputs WHITESPACE_ONLY must refuse: non-zero exit, no output.
+const REFUSED: &[&str] = &[
+    "#!/x\u{2028}console.log(1)\n",
+    "#!/x\u{2029}console.log(1)\nconsole.log(2)\n",
+    "console.log(1);\n#!foo\nconsole.log(2);\n",
+    " #!/x\nconsole.log(1)\n",
 ];
 
 fn compile_ws(source: &str) -> String {
@@ -84,5 +97,30 @@ fn whitespace_only_hashbang_output_prints_what_the_source_prints() {
         let compiled = compile_ws(source);
         let compiled_says = node_stdout(&compiled).expect("node ran a moment ago");
         assert_eq!(compiled_says, source_says, "{source:?} -> {compiled:?}");
+    }
+}
+
+#[test]
+fn whitespace_only_refuses_hashbangs_that_would_lose_code() {
+    for source in REFUSED {
+        let dir = std::env::temp_dir().join(format!(
+            "closurec-ws-hashbang-refused-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0)
+        ));
+        std::fs::create_dir(&dir).expect("fresh scratch dir");
+        let path = dir.join("input.js");
+        std::fs::write(&path, source).expect("write input");
+        let out = Command::new(BINARY)
+            .args(["--compilation_level", "WHITESPACE_ONLY", "--js"])
+            .arg(&path)
+            .output()
+            .expect("run closurec");
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(!out.status.success(), "{source:?} was accepted");
+        assert!(out.stdout.is_empty(), "{source:?} produced output");
     }
 }

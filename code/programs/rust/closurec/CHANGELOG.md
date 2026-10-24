@@ -49,9 +49,14 @@ while its line break was dropped, so the whole program became part of the
 comment and nothing ran. The hashbang is now dropped like any comment, as
 upstream does at every level (closurec's SIMPLE/ADVANCED already did).
 
-`tests/regression_ws_hashbang.rs` pins two shapes to the jar's bytes and
-checks with `node` that each output prints what its source prints. One
-unit test covers LF, CRLF and a following comment.
+Two shapes are refused instead, because dropping the token would delete
+code or accept an invalid program:
+- a `#!` line ended by U+2028/U+2029, which the lexer runs past (#17887);
+- a `#!` anywhere but the very start of the file, which is a SyntaxError.
+
+`tests/regression_ws_hashbang.rs` pins two shapes to the jar's bytes,
+checks with `node` that each output prints what its source prints, and
+checks that four inputs are refused. Two unit tests cover the rules.
 
 ### Fixed - templates, comments and regexes end where JavaScript ends them (#17886, #17888, #17887)
 

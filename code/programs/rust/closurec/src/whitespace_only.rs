@@ -173,6 +173,7 @@ pub fn whitespace_only_minify(
 ) -> Result<String, MinifyError> {
     let tokens = tokenize_javascript_typed(source, version)
         .map_err(MinifyError::LexError)?;
+    check_hashbangs(&tokens)?;
 
     // Filter out trivia tokens (comments, whitespace, newlines)
     // and the EOF sentinel. The lexer marks trivia via the
@@ -5083,6 +5084,45 @@ pub(crate) fn is_trivia(tok: &lexer::token::Token) -> bool {
             | lexer::token::TokenType::Indent
             | lexer::token::TokenType::Dedent
     )
+}
+
+/// #18137: `is_trivia` drops a HASHBANG, so first make sure every HASHBANG
+/// token really is one. Two lexer shapes would otherwise turn into silent
+/// miscompiles:
+///
+/// | Input                         | Why it must be refused                 |
+/// |-------------------------------|----------------------------------------|
+/// | `#!/x⟨U+2028⟩console.log(1)`  | U+2028/U+2029 end the hashbang, but the |
+/// |                               | lexer's `[^\n\r]*` runs past them, so  |
+/// |                               | the token holds real code (#17887)     |
+/// | `f();⏎#!x⏎g()` or ` #!x`      | `#!` is only a hashbang at offset 0;   |
+/// |                               | anywhere else it is a SyntaxError      |
+///
+/// Dropping either token would delete code, or turn an invalid program into
+/// a valid one. Refusing keeps the failure loud until the lexer stops at
+/// every line terminator.
+fn check_hashbangs(tokens: &[lexer::token::Token]) -> Result<(), MinifyError> {
+    for (i, t) in tokens.iter().enumerate() {
+        if !t.type_name.as_deref().is_some_and(|n| n.eq_ignore_ascii_case("HASHBANG")) {
+            continue;
+        }
+        // Offset 0: the first token, on line 1 at column 1 (columns are
+        // 1-based), so not even whitespace precedes it.
+        if i != 0 || t.line != 1 || t.column != 1 {
+            return Err(MinifyError::LexError(format!(
+                "line {}: `#!` is only allowed at the very start of a file",
+                t.line
+            )));
+        }
+        if t.value.contains(['\u{2028}', '\u{2029}']) {
+            return Err(MinifyError::LexError(
+                "line 1: a U+2028/U+2029 line terminator inside the `#!` line is not supported \
+                 (#17887)"
+                    .to_string(),
+            ));
+        }
+    }
+    Ok(())
 }
 
 /// True iff this is the EOF sentinel emitted by the lexer.
@@ -10788,5 +10828,22 @@ mod tests {
         assert_eq!(minify("#!/x\r\nvar a=1;\nf(a)"), "var a=1;f(a);");
         // A `#!` line followed only by a comment and blank lines.
         assert_eq!(minify("#!/x\n\n// c\nvar x = 1;"), "var x=1;");
+    }
+
+    #[test]
+    fn issue18137_hashbangs_that_would_lose_code_are_refused() {
+        let refused = |src: &str| {
+            matches!(
+                whitespace_only_minify(src, EsVersion::Es2025, None),
+                Err(MinifyError::LexError(_))
+            )
+        };
+        // U+2028/U+2029 end the hashbang, but the lexer runs past them.
+        assert!(refused("#!/x\u{2028}console.log(1)"));
+        assert!(refused("#!/x\u{2029}console.log(1)\nf()"));
+        // `#!` is only a hashbang at the very start of the file.
+        assert!(refused("console.log(1);\n#!foo\nconsole.log(2);"));
+        assert!(refused(" #!/x\nconsole.log(1)"));
+        assert!(!refused("#!/x\nconsole.log(1)"));
     }
 }

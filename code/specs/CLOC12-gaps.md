@@ -299,8 +299,18 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream (v20260915).** Drops the hashbang at every level:
   `#!/usr/bin/env node⏎console.log(1)` → `console.log(1);`.
 - **Resolution.** `is_trivia` lists `HASHBANG`, so WHITESPACE_ONLY drops it
-  like a line comment. Tests: one unit test and
-  `closurec/tests/regression_ws_hashbang.rs` (node-backed).
+  like a line comment. `check_hashbangs` first refuses the two lexer shapes
+  where dropping the token would delete code or accept an invalid program:
+  - a HASHBANG containing U+2028/U+2029. The `.tokens` rule
+    `^#![^\n\r]*` runs past those line terminators, so the token holds
+    real code. That is the open part of #17887.
+  - a HASHBANG that is not at offset 0. The `^` anchor matches at every
+    token start, but `#!` anywhere else is a SyntaxError (upstream reports
+    a parse error).
+  SIMPLE/ADVANCED still delete the code after a U+2028 hashbang until the
+  lexer is fixed (#17887).
+- **Tests.** Two unit tests, and `closurec/tests/regression_ws_hashbang.rs`
+  (node-backed, plus four refused inputs).
 
 ### gap-034 — class declaration trailing `;` after `}`
 
