@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 197,
+  "sourceHash": "fnv1a64:44b685cb281f4d71",
+  "lessonIds": [
+    "PA-C197-routine-return",
+    "PA-C197-dinchariya",
+    "PA-C197-dinchariya-review",
+    "PA-C197-routine-label",
+    "PA-C197-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch197.txt",
+  "json": "punjabi/narration/ch197.json",
+  "textHash": "fnv1a64:2ef7e7273e813bf2",
+  "jsonHash": "fnv1a64:7f4669e0978c2949",
+  "findings": []
+}
