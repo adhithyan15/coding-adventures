@@ -50,7 +50,7 @@ reviews_of: [HI-C93-ke-paas, HI-C40-here]
 
 Hindi asks **कितनी दूर**, with the feminine **कितनी**, whatever the place. **दूर** itself never changes: **गाँव दूर है**, **नदी दूर है**. The place you measure from takes **से**, as in **यहाँ से**.
 
-- **बहुत दूर नहीं है।** (*bahut dūr nahīṁ hai.*) — It's not very far.
+- **बहुत दूर नहीं है।** (*bahut dūr nahīṃ hai.*) — It's not very far.
 - **मेरा घर स्टेशन से दूर है।** (*merā ghar sṭeśan se dūr hai.*) — My house is far from the station.
 
 ## The word, taken apart
@@ -64,7 +64,7 @@ Hindi asks **कितनी दूर**, with the feminine **कितनी**,
 [PAUSE 1s]
 - [YOU SAY: *dūr*, then *kitnī dūr*]
 - [YOU SAY: "How far is the station from here?" — *sṭeśan yahā̃ se kitnī dūr hai?*]
-- [YOU SAY: "It's not very far" — *bahut dūr nahīṁ hai*]
+- [YOU SAY: "It's not very far" — *bahut dūr nahīṃ hai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C282-DUR-01] -->

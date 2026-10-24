@@ -49,8 +49,8 @@ Word for word, "it seems to me that …". The thinker takes **मुझे**, an
 
 - **आपको क्या लगता है?** (*āpko kyā lagtā hai?*) — What do you think?
 - **तुम्हें क्या लगता है?** (*tumhẽ kyā lagtā hai?*) — the same, to a friend
-- **मुझे नहीं लगता कि वह आएगा।** (*mujhe nahīṁ lagtā ki vah āegā.*) — I don't think he will come. With **नहीं**, the **है** drops.
-- **मुझे लगा कि तुम नहीं आओगे।** (*mujhe lagā ki tum nahīṁ āoge.*) — I thought you wouldn't come.
+- **मुझे नहीं लगता कि वह आएगा।** (*mujhe nahīṃ lagtā ki vah āegā.*) — I don't think he will come. With **नहीं**, the **है** drops.
+- **मुझे लगा कि तुम नहीं आओगे।** (*mujhe lagā ki tum nahīṃ āoge.*) — I thought you wouldn't come.
 
 ## You'll want to know: in my opinion
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C280-RAY-MEIN-01]; assesses=[HI-LEX-C206-THG206-02, HI-LEX-C206-THG206-03, HI-CONCEPT-C34-SOCHNA-01, HI-LEX-C80-EASE-01] -->
@@ -69,8 +69,8 @@ Word for word, "it seems to me that …". The thinker takes **मुझे**, an
 
 [PAUSE 1s]
 - [YOU SAY: "What do you think?" — *āpko kyā lagtā hai?*]
-- [YOU SAY: "I don't think he will come" — *mujhe nahīṁ lagtā ki vah āegā*]
-- [YOU SAY: "I thought you wouldn't come" — *mujhe lagā ki tum nahīṁ āoge*]
+- [YOU SAY: "I don't think he will come" — *mujhe nahīṃ lagtā ki vah āegā*]
+- [YOU SAY: "I thought you wouldn't come" — *mujhe lagā ki tum nahīṃ āoge*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C280-LAGTA-KI-01, HI-GRAMMAR-C280-RAY-MEIN-01] -->

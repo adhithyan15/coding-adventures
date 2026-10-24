@@ -17,7 +17,7 @@ sounds: []
 roots: [khush-persian]
 etymology_hook: "khuś: usually traced to Persian khush 'happy, pleasant'"
 duration:
-  max_seconds: 160
+  max_seconds: 165
 requires:
   knowledge: [HI-CONCEPT-C02-KHUSHI-01, HI-LEX-C108-FEEL-03, HI-LEX-C71-TODAY-01, HI-LEX-C90-ROUT-01, HI-GRAMMAR-C276-PAST-PERSON-01]
 introduces:
@@ -50,7 +50,7 @@ reviews_of: [HI-C02-khushi, HI-C108-udas]
 
 **ख़ुश** never changes: **वह ख़ुश है** for him and for her, **हम ख़ुश हैं** for us. It is the word **ख़ुशी** is built on: **ख़ुश**, "happy", and **ख़ुशी** (*khuśī*), "happiness".
 
-With **होना** in the past, it says the gladness came: **वह बहुत ख़ुश हुई** (*vah bahut khuś huī*), "she was very pleased". The one you are pleased with takes **से**: **मैं तुमसे ख़ुश हूँ** (*maiṁ tumse khuś hūṁ*), "I am pleased with you".
+With **होना** in the past, it says the gladness came: **वह बहुत ख़ुश हुई** (*vah bahut khuś huī*), "she was very pleased". The one you are pleased with takes **से**, written as one word with a pronoun: **तुमसे** is **तुम** with **से**. **मैं तुमसे ख़ुश हूँ** (*maiṁ tumse khuś hūṁ*), "I am pleased with you".
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

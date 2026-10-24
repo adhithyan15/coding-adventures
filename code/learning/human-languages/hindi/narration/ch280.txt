@@ -131,8 +131,8 @@ You'll want to know: मुझे लगता है कि.
 Word for word, "it seems to me that …". The thinker takes मुझे, and लगता है stays as it is whatever follows कि.
 आपको क्या लगता है? (āpko kyā lagtā hai?) — What do you think?
 तुम्हें क्या लगता है? (tumhẽ kyā lagtā hai?) — the same, to a friend.
-मुझे नहीं लगता कि वह आएगा। (mujhe nahīṁ lagtā ki vah āegā.) — I don't think he will come. With नहीं, the है drops.
-मुझे लगा कि तुम नहीं आओगे। (mujhe lagā ki tum nahīṁ āoge.) — I thought you wouldn't come.
+मुझे नहीं लगता कि वह आएगा। (mujhe nahīṃ lagtā ki vah āegā.) — I don't think he will come. With नहीं, the है drops.
+मुझे लगा कि तुम नहीं आओगे। (mujhe lagā ki tum nahīṃ āoge.) — I thought you wouldn't come.
 
 You'll want to know: in my opinion.
 मेरी राय में हिंदी आसान है। merī rāy meṁ hindī āsān hai. — "In my opinion Hindi is easy."
@@ -143,9 +143,9 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "What do you think?" — āpko kyā lagtā hai?]
 [pause 8 seconds for the answer]
-[your turn — say: "I don't think he will come" — mujhe nahīṁ lagtā ki vah āegā]
+[your turn — say: "I don't think he will come" — mujhe nahīṃ lagtā ki vah āegā]
 [pause 8 seconds for the answer]
-[your turn — say: "I thought you wouldn't come" — mujhe lagā ki tum nahīṁ āoge]
+[your turn — say: "I thought you wouldn't come" — mujhe lagā ki tum nahīṃ āoge]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 24 seconds]
 Say that you think Mira will come, then that in your opinion the book is good.
@@ -168,7 +168,7 @@ You'll want to know: की वजह से, के कारण.
 बारिश की वजह से हम घर पर रहे। bāriś kī vajah se ham ghar par rahe. — "Because of the rain we stayed at home."
 वजह (vajah), "a reason", is feminine, so की वजह से (kī vajah se): "from the reason of". कारण, which you know, is masculine and does the same job a little more formally: के कारण (ke kāraṇ).
 भीड़ की वजह से मुझे देर हुई। (bhīṛ kī vajah se mujhe der huī.) — Because of the crowd I was late.
-बीमारी के कारण वह नहीं आया। (bīmārī ke kāraṇ vah nahīṁ āyā.) — Because of illness he didn't come.
+बीमारी के कारण वह नहीं आया। (bīmārī ke kāraṇ vah nahīṃ āyā.) — Because of illness he didn't come.
 A pronoun takes its -की form: मेरी वजह से (merī vajah se), "because of me"; उसकी वजह से (uskī vajah se), "because of him", or her.
 
 You'll want to know: the reason is that …
@@ -183,7 +183,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "Because of the crowd I was late" — bhīṛ kī vajah se mujhe der huī]
 [pause 8 seconds for the answer]
-[your turn — say: "He didn't come, because he was ill" — vah nahīṁ āyā, kyoṁki vah bīmār thā]
+[your turn — say: "He didn't come, because he was ill" — vah nahīṃ āyā, kyoṁki vah bīmār thā]
 [pause 8 seconds for the answer]
 [your turn — say: "Because of me she was late" — merī vajah se use der huī]
 [pause 8 seconds for the answer]

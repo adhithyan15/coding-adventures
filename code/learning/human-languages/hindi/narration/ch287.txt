@@ -47,7 +47,7 @@ The subject is what depends, and करता follows it: यात्रा is 
 टिकट का दाम ट्रेन पर निर्भर करता है। (ṭikaṭ kā dām ṭren par nirbhar kartā hai.) — The price of a ticket depends on the train.
 
 You'll want to know: it depends whether …
-यह इस पर निर्भर करता है कि बारिश होगी या नहीं। yah is par nirbhar kartā hai ki bāriś hogī yā nahīṁ. — "It depends on whether it rains or not."
+यह इस पर निर्भर करता है कि बारिश होगी या नहीं। yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ. — "It depends on whether it rains or not."
 When what it depends on is a whole sentence, Hindi says इस पर, "on this", and then gives the sentence after कि. It is often a question with या नहीं, "or not", in the future.
 यह इस पर निर्भर करता है कि तुम कब आओगे। (yah is par nirbhar kartā hai ki tum kab āoge.) — It depends on when you come.
 

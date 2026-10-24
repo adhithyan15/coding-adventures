@@ -54,16 +54,16 @@ The answer often comes in minutes: **पाँच मिनट का रास�
 
 > **सीधे जाइए, फिर बाएँ मुड़िए।**
 >
-> *sīdhe jāie, phir bāeṁ muṛiye.* — "Go straight on, then turn left."
+> *sīdhe jāie, phir bāẽ muṛiye.* — "Go straight on, then turn left."
 
-**मुड़ना** (*muṛnā*) is "to turn", and **मुड़िए** asks it politely, as **बोलिए** does. **सीधे**, **बाएँ**, **दाएँ** (*sīdhe*, *bāeṁ*, *dāeṁ*) are the forms of **सीधा**, **बायाँ** and **दायाँ** that say which way.
+**मुड़ना** (*muṛnā*) is "to turn", and **मुड़िए** asks it politely, as **बोलिए** does. **सीधे**, **बाएँ**, **दाएँ** (*sīdhe*, *bāẽ*, *dāẽ*) are the forms of **सीधा**, **बायाँ** and **दायाँ** that say which way.
 
-- **चौराहे से दाएँ मुड़िए।** (*caurāhe se dāeṁ muṛiye.*) — Turn right at the crossroads.
-- **पुल के बाद दूसरी गली में बाएँ मुड़िए।** (*pul ke bād dūsrī galī meṁ bāeṁ muṛiye.*) — After the bridge, take the second side street on the left. **गली** is feminine, so **दूसरी**.
+- **चौराहे से दाएँ मुड़िए।** (*caurāhe se dāẽ muṛiye.*) — Turn right at the crossroads.
+- **पुल के बाद दूसरी गली में बाएँ मुड़िए।** (*pul ke bād dūsrī galī meṁ bāẽ muṛiye.*) — After the bridge, take the second side street on the left. **गली** is feminine, so **दूसरी**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C282-ASK-WAY-01, HI-GRAMMAR-C282-GIVE-WAY-01, HI-LEX-C282-DUR-01, HI-LEX-C282-BATANA-01] -->
-<!-- hl-activity: {"id": "HI-C282-kaisejatehain-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C282-ASK-WAY-01", "HI-GRAMMAR-C282-GIVE-WAY-01"], "prompt": "Ask how to get to the station, then give the answer: go straight on, then turn right at the crossroads.", "answer": "sṭeśan kaise jāte haiṁ? sīdhe jāie, phir caurāhe se dāeṁ muṛiye", "accepted": ["स्टेशन कैसे जाते हैं? सीधे जाइए, फिर चौराहे से दाएँ मुड़िए।"], "feedback": {"correct": "kaise jāte haiṁ asks the way; sīdhe and dāeṁ say where to go.", "incorrect": "Ask with kaise jāte haiṁ; answer with sīdhe jāie and dāeṁ muṛiye."}, "response_seconds": 24} -->
+<!-- hl-activity: {"id": "HI-C282-kaisejatehain-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C282-ASK-WAY-01", "HI-GRAMMAR-C282-GIVE-WAY-01"], "prompt": "Ask how to get to the station, then give the answer: go straight on, then turn right at the crossroads.", "answer": "sṭeśan kaise jāte haiṁ? sīdhe jāie, phir caurāhe se dāẽ muṛiye", "accepted": ["स्टेशन कैसे जाते हैं? सीधे जाइए, फिर चौराहे से दाएँ मुड़िए।"], "feedback": {"correct": "kaise jāte haiṁ asks the way; sīdhe and dāẽ say where to go.", "incorrect": "Ask with kaise jāte haiṁ; answer with sīdhe jāie and dāẽ muṛiye."}, "response_seconds": 24} -->
 
 [PAUSE 1s]
 - [YOU SAY: "Excuse me, where is the post office?" — *māf kījiye, ḍākghar kahā̃ hai?*]

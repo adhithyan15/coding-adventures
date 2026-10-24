@@ -4,7 +4,7 @@
   "chapter": 280,
   "title": "What I Think, and Why",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3a0e7ebab797320e",
+  "sourceHash": "fnv1a64:c817abf7b9affd05",
   "lessons": [
     {
       "id": "HI-C280-lagna",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d62f3b68859cf4e",
+      "sourceHash": "fnv1a64:faceba15ef84414e",
       "notice": null,
       "blocks": [
         {
@@ -570,11 +570,11 @@
             },
             {
               "kind": "speech",
-              "text": "मुझे नहीं लगता कि वह आएगा। (mujhe nahīṁ lagtā ki vah āegā.) — I don't think he will come. With नहीं, the है drops."
+              "text": "मुझे नहीं लगता कि वह आएगा। (mujhe nahīṃ lagtā ki vah āegā.) — I don't think he will come. With नहीं, the है drops."
             },
             {
               "kind": "speech",
-              "text": "मुझे लगा कि तुम नहीं आओगे। (mujhe lagā ki tum nahīṁ āoge.) — I thought you wouldn't come."
+              "text": "मुझे लगा कि तुम नहीं आओगे। (mujhe lagā ki tum nahīṃ āoge.) — I thought you wouldn't come."
             }
           ]
         },
@@ -620,20 +620,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I don't think he will come\" — mujhe nahīṁ lagtā ki vah āegā",
+              "instruction": "\"I don't think he will come\" — mujhe nahīṃ lagtā ki vah āegā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I don't think he will come\" — *mujhe nahīṁ lagtā ki vah āegā*]"
+              "source": "[YOU SAY: \"I don't think he will come\" — *mujhe nahīṃ lagtā ki vah āegā*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I thought you wouldn't come\" — mujhe lagā ki tum nahīṁ āoge",
+              "instruction": "\"I thought you wouldn't come\" — mujhe lagā ki tum nahīṃ āoge",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I thought you wouldn't come\" — *mujhe lagā ki tum nahīṁ āoge*]"
+              "source": "[YOU SAY: \"I thought you wouldn't come\" — *mujhe lagā ki tum nahīṃ āoge*]"
             },
             {
               "kind": "activity",
@@ -689,7 +689,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9f87104c51fea5a",
+      "sourceHash": "fnv1a64:6f23f30181c33276",
       "notice": null,
       "blocks": [
         {
@@ -738,7 +738,7 @@
             },
             {
               "kind": "speech",
-              "text": "बीमारी के कारण वह नहीं आया। (bīmārī ke kāraṇ vah nahīṁ āyā.) — Because of illness he didn't come."
+              "text": "बीमारी के कारण वह नहीं आया। (bīmārī ke kāraṇ vah nahīṃ āyā.) — Because of illness he didn't come."
             },
             {
               "kind": "speech",
@@ -798,11 +798,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"He didn't come, because he was ill\" — vah nahīṁ āyā, kyoṁki vah bīmār thā",
+              "instruction": "\"He didn't come, because he was ill\" — vah nahīṃ āyā, kyoṁki vah bīmār thā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"He didn't come, because he was ill\" — *vah nahīṁ āyā, kyoṁki vah bīmār thā*]"
+              "source": "[YOU SAY: \"He didn't come, because he was ill\" — *vah nahīṃ āyā, kyoṁki vah bīmār thā*]"
             },
             {
               "kind": "prompt",

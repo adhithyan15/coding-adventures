@@ -4,7 +4,7 @@
   "chapter": 283,
   "title": "Tickets, Trains and Trouble",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:297f3c0a71ddb7be",
+  "sourceHash": "fnv1a64:5fbff62880455557",
   "lessons": [
     {
       "id": "HI-C283-agla",
@@ -135,9 +135,9 @@
     {
       "id": "HI-C283-ektikat",
       "sequence": 15590,
-      "title": "शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījiye) — at the ticket window",
+      "title": "शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījie) — at the ticket window",
       "headword": "शहर के लिए दो टिकट दीजिए",
-      "romanization": "śahar ke liye do ṭikaṭ dījiye",
+      "romanization": "śahar ke liye do ṭikaṭ dījie",
       "gloss": "two tickets for the city, please — buying a ticket, and asking when the train leaves",
       "script": "devanagari",
       "modality": "voice",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8bff1cf45d0c81a",
+      "sourceHash": "fnv1a64:851223818a9bc3b1",
       "notice": null,
       "blocks": [
         {
@@ -172,11 +172,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "शहर के लिए दो टिकट दीजिए। śahar ke liye do ṭikaṭ dījiye. — \"Two tickets for the city, please.\""
+              "text": "शहर के लिए दो टिकट दीजिए। śahar ke liye do ṭikaṭ dījie. — \"Two tickets for the city, please.\""
             },
             {
               "kind": "speech",
-              "text": "The place you are going takes के लिए, \"for\". टिकट is masculine, and it does not change for two."
+              "text": "The place you are going takes के लिए, \"for\". टिकट is masculine in standard Hindi, though you will hear it made feminine too, and it does not change for two."
             },
             {
               "kind": "speech",
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "कितने का, \"of how much\", agrees with the ticket."
+              "text": "In कितने का, \"of how much\", the का agrees with the ticket."
             }
           ]
         },
@@ -255,7 +255,7 @@
               ],
               "responseSeconds": 24,
               "acceptedResponses": [
-                "śahar ke liye do ṭikaṭ dījiye; aglī ṭren kitne baje calegī?",
+                "śahar ke liye do ṭikaṭ dījie; aglī ṭren kitne baje calegī?",
                 "शहर के लिए दो टिकट दीजिए। अगली ट्रेन कितने बजे चलेगी?"
               ],
               "feedback": {
@@ -278,7 +278,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Two tickets for the city\"? (शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījiye).) \"How much is one ticket?\" (एक टिकट कितने का है?) \"What time does it leave?\" (कितने बजे चलेगी?) \"How long will it take?\" (कितना समय लगेगा?)"
+              "text": "\"Two tickets for the city\"? (शहर के लिए दो टिकट दीजिए (śahar ke liye do ṭikaṭ dījie).) \"How much is one ticket?\" (एक टिकट कितने का है?) \"What time does it leave?\" (कितने बजे चलेगी?) \"How long will it take?\" (कितना समय लगेगा?)"
             }
           ]
         }

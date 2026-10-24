@@ -16,7 +16,7 @@ prerequisites: [HI-C92-se-comparison, HI-C285-sabse, HI-C64-more, HI-C64-little,
 sounds: []
 roots: []
 duration:
-  max_seconds: 265
+  max_seconds: 280
 requires:
   knowledge: [HI-LEX-C92-DEG-03, HI-LEX-C285-SABSE-01, HI-LEX-C64-MEASURE-05, HI-LEX-C64-MEASURE-04, HI-LEX-C72-COST-04, HI-LEX-C82-BODY-01, HI-CONCEPT-C36-KAMRA-01, HI-LEX-C136-THINGS136-02, HI-LEX-C72-COST-01, HI-LEX-C84-POSS-05, HI-CONCEPT-C05-RAHNA-01, HI-LEX-C45-ASK-01, HI-LEX-C139-THINGS139-03, HI-CONCEPT-C35-PASAND-01, HI-LEX-C68-ORIGIN-03, HI-LEX-C56-ROAD-03]
 introduces:
@@ -49,6 +49,8 @@ You know the frame: what is measured against takes **से**, and the adjective
 
 - **से ज़्यादा** (*se zyādā*), "more than": **यह कमरा उस कमरे से ज़्यादा बड़ा है।** (*yah kamrā us kamre se zyādā baṛā hai.*) — This room is bigger than that one.
 - **से कम** (*se kam*), "less than": **यह साड़ी उससे कम महँगी है।** (*yah sāṛī usse kam mahãgī hai.*) — This sari is less expensive than that one.
+
+**उस कमरे से** and **उससे** both use **उस**, the form **वह** takes when a postposition follows, as in **उसके बाद**; **उससे** is **उस** with **से**, "than that one".
 
 They work with nouns too: **मेरे पास तुमसे ज़्यादा पैसे हैं** (*mere pās tumse zyādā paise haiṁ*), "I have more money than you".
 

@@ -45,7 +45,7 @@ reviews_of: [HI-C276-vahgaya]
 >
 > *usne khānā khāyā.* — "He (or she) ate the meal."
 
-With a verb that has an object, such as eating, reading or saying, the past changes: the doer takes **ने** (*ne*). The pronouns fuse with it: **मैंने**, **तुमने**, **आपने**, **उसने**, **हमने**, **उन्होंने** (*maiṁne*, *tumne*, *āpne*, *usne*, *hamne*, *unhoṁne*). A name takes **ने** after it: **मीरा ने**. **उसने** is "he" or "she"; the verb no longer says which.
+With a verb that has an object, such as eating, reading or saying, the past changes: the doer takes **ने** (*ne*). The pronouns fuse with it: **मैंने**, **तुमने**, **आपने**, **उसने**, **हमने**, **उन्होंने** (*maiṁne*, *tumne*, *āpne*, *usne*, *hamne*, *unhoṁne*), the last from **वे**. A name takes **ने** after it: **मीरा ने**. **उसने** is "he" or "she"; the verb no longer says which.
 
 ## You'll want to know: the verb follows the thing
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C276-OBJECT-AGREEMENT-01]; assesses=[HI-LEX-C209-THG209-05, HI-LEX-C91-NOUN-02, HI-CONCEPT-C34-PADHNA-01, HI-LEX-LOOK, HI-JOIN-KI-01, HI-LEX-C45-ASK-01] -->

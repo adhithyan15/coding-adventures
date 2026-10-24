@@ -4,7 +4,7 @@
   "chapter": 286,
   "title": "If, and Otherwise",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:b1a72d2cbd27d2b4",
+  "sourceHash": "fnv1a64:2c2bcf0810045fa9",
   "lessons": [
     {
       "id": "HI-C286-agarto",
@@ -178,7 +178,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28c70f928b16ea1a",
+      "sourceHash": "fnv1a64:853ec12d91c385de",
       "notice": null,
       "blocks": [
         {
@@ -228,15 +228,15 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "जल्दी चलो, नहीं तो देर हो जाएगी। jaldī calo, nahīṁ to der ho jāegī. — \"Hurry up, otherwise we'll be late.\""
+              "text": "जल्दी चलो, नहीं तो देर हो जाएगी। jaldī calo, nahīṃ to der ho jāegī. — \"Hurry up, otherwise we'll be late.\""
             },
             {
               "kind": "speech",
-              "text": "नहीं तो (nahīṁ to) is \"if not, then\": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here हो जाएगी, the future of हो गई."
+              "text": "नहीं तो (nahīṃ to) is \"if not, then\": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here हो जाएगी, the future of हो गई."
             },
             {
               "kind": "speech",
-              "text": "खाना खाओ, नहीं तो भूख लगेगी। (khānā khāo, nahīṁ to bhūkh lagegī.) — Eat, or you'll get hungry."
+              "text": "खाना खाओ, नहीं तो भूख लगेगी। (khānā khāo, nahīṃ to bhūkh lagegī.) — Eat, or you'll get hungry."
             }
           ]
         },
@@ -272,11 +272,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Eat, or you'll get hungry\" — khānā khāo, nahīṁ to bhūkh lagegī",
+              "instruction": "\"Eat, or you'll get hungry\" — khānā khāo, nahīṃ to bhūkh lagegī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Eat, or you'll get hungry\" — *khānā khāo, nahīṁ to bhūkh lagegī*]"
+              "source": "[YOU SAY: \"Eat, or you'll get hungry\" — *khānā khāo, nahīṃ to bhūkh lagegī*]"
             },
             {
               "kind": "activity",
@@ -290,13 +290,13 @@
               ],
               "responseSeconds": 26,
               "acceptedResponses": [
-                "agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā; jaldī calo, nahīṁ to der ho jāegī",
+                "agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā; jaldī calo, nahīṃ to der ho jāegī",
                 "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगा। जल्दी चलो, नहीं तो देर हो जाएगी।",
                 "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगी। जल्दी चलो, नहीं तो देर हो जाएगी।"
               ],
               "feedback": {
                 "correct": "chūṭ gaī tries the case out; the result and the warning are in the future.",
-                "incorrect": "After agar, the plain past: chūṭ gaī; then to and the future. For the warning, nahīṁ to and the future."
+                "incorrect": "After agar, the plain past: chūṭ gaī; then to and the future. For the warning, nahīṃ to and the future."
               }
             }
           ]

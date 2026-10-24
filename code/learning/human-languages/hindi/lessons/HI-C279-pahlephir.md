@@ -16,7 +16,7 @@ prerequisites: [HI-C75-first, HI-C04-phir, HI-C279-akhir, HI-C69-station, HI-C69
 sounds: []
 roots: []
 duration:
-  max_seconds: 200
+  max_seconds: 205
 requires:
   knowledge: [HI-LEX-C75-ORDINAL-01, HI-CONCEPT-C04-PHIR-01, HI-LEX-C279-AKHIR-01, HI-LEX-C69-GOING-03, HI-LEX-C69-GOING-04, HI-GRAMMAR-C276-PAST-PERSON-01, HI-GRAMMAR-C276-ERGATIVE-NE-01, HI-LEX-C90-ROUT-06, HI-LEX-C84-POSS-01, HI-LEX-C69-GOING-01, HI-GRAMMAR-C279-KAR-SEQUENCE-01, HI-LEX-C56-ROAD-02]
 introduces:
@@ -59,7 +59,7 @@ Each one opens its sentence, and the verb after it is the plain past. **टि�
 ## You'll want to know: उसके बाद
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C279-USKE-BAAD-01]; assesses=[HI-LEX-C90-ROUT-06, HI-LEX-C84-POSS-01, HI-LEX-C69-GOING-01] -->
 
-**उसके बाद** is "after that": **उस**, the form **वह** takes before a postposition, as in **उसका**, then **के बाद**. **इसके बाद** (*iske bād*), "after this", is built the same way.
+**उसके बाद** is "after that": **उस**, the form **वह** takes before a postposition, as in **उसका**, then **के बाद**. **इसके बाद** (*iske bād*), "after this", is built the same way, on **इस**, the form **यह** takes before a postposition.
 
 > **उसके बाद हम गाड़ी में बैठे।**
 >

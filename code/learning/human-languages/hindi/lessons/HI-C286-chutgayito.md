@@ -55,20 +55,20 @@ For one event that may or may not happen, Hindi can put it in the plain past aft
 
 > **जल्दी चलो, नहीं तो देर हो जाएगी।**
 >
-> *jaldī calo, nahīṁ to der ho jāegī.* — "Hurry up, otherwise we'll be late."
+> *jaldī calo, nahīṃ to der ho jāegī.* — "Hurry up, otherwise we'll be late."
 
-**नहीं तो** (*nahīṁ to*) is "if not, then": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here **हो जाएगी**, the future of **हो गई**.
+**नहीं तो** (*nahīṃ to*) is "if not, then": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here **हो जाएगी**, the future of **हो गई**.
 
-- **खाना खाओ, नहीं तो भूख लगेगी।** (*khānā khāo, nahīṁ to bhūkh lagegī.*) — Eat, or you'll get hungry.
+- **खाना खाओ, नहीं तो भूख लगेगी।** (*khānā khāo, nahīṃ to bhūkh lagegī.*) — Eat, or you'll get hungry.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C286-IF-PERFECTIVE-01, HI-GRAMMAR-C286-NAHIN-TO-01] -->
-<!-- hl-activity: {"id": "HI-C286-chutgayito-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C286-IF-PERFECTIVE-01", "HI-GRAMMAR-C286-NAHIN-TO-01"], "prompt": "Say that if you miss your train you will come by bus, then warn a friend: hurry up, otherwise we'll be late.", "answer": "agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā; jaldī calo, nahīṁ to der ho jāegī", "accepted": ["अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगा। जल्दी चलो, नहीं तो देर हो जाएगी।", "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगी। जल्दी चलो, नहीं तो देर हो जाएगी।"], "feedback": {"correct": "chūṭ gaī tries the case out; the result and the warning are in the future.", "incorrect": "After agar, the plain past: chūṭ gaī; then to and the future. For the warning, nahīṁ to and the future."}, "response_seconds": 26} -->
+<!-- hl-activity: {"id": "HI-C286-chutgayito-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C286-IF-PERFECTIVE-01", "HI-GRAMMAR-C286-NAHIN-TO-01"], "prompt": "Say that if you miss your train you will come by bus, then warn a friend: hurry up, otherwise we'll be late.", "answer": "agar merī ṭren chūṭ gaī, to maiṁ bas se āūṅgā; jaldī calo, nahīṃ to der ho jāegī", "accepted": ["अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगा। जल्दी चलो, नहीं तो देर हो जाएगी।", "अगर मेरी ट्रेन छूट गई, तो मैं बस से आऊँगी। जल्दी चलो, नहीं तो देर हो जाएगी।"], "feedback": {"correct": "chūṭ gaī tries the case out; the result and the warning are in the future.", "incorrect": "After agar, the plain past: chūṭ gaī; then to and the future. For the warning, nahīṃ to and the future."}, "response_seconds": 26} -->
 
 [PAUSE 1s]
 - [YOU SAY: "If you're running late, phone me" — *agar āpko der ho gaī, to mujhe fon kījiye*]
 - [YOU SAY: "If she says yes, we'll go tomorrow" — *agar usne hā̃ kahā, to ham kal caleṅge*]
-- [YOU SAY: "Eat, or you'll get hungry" — *khānā khāo, nahīṁ to bhūkh lagegī*]
+- [YOU SAY: "Eat, or you'll get hungry" — *khānā khāo, nahīṃ to bhūkh lagegī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C286-IF-PERFECTIVE-01, HI-GRAMMAR-C286-NAHIN-TO-01] -->

@@ -51,9 +51,9 @@ For one event that may or may not happen, Hindi can put it in the plain past aft
 अगर उसने हाँ कहा, तो हम कल चलेंगे। (agar usne hā̃ kahā, to ham kal caleṅge.) — If she says yes, we'll go tomorrow.
 
 You'll want to know: नहीं तो, otherwise.
-जल्दी चलो, नहीं तो देर हो जाएगी। jaldī calo, nahīṁ to der ho jāegī. — "Hurry up, otherwise we'll be late."
-नहीं तो (nahīṁ to) is "if not, then": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here हो जाएगी, the future of हो गई.
-खाना खाओ, नहीं तो भूख लगेगी। (khānā khāo, nahīṁ to bhūkh lagegī.) — Eat, or you'll get hungry.
+जल्दी चलो, नहीं तो देर हो जाएगी। jaldī calo, nahīṃ to der ho jāegī. — "Hurry up, otherwise we'll be late."
+नहीं तो (nahīṃ to) is "if not, then": a warning about what follows if the first part does not happen. The first part is often a request. The warning is in the future: here हो जाएगी, the future of हो गई.
+खाना खाओ, नहीं तो भूख लगेगी। (khānā khāo, nahīṃ to bhūkh lagegī.) — Eat, or you'll get hungry.
 
 Guided Practice.
 [pause 1 second]
@@ -61,7 +61,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "If she says yes, we'll go tomorrow" — agar usne hā̃ kahā, to ham kal caleṅge]
 [pause 8 seconds for the answer]
-[your turn — say: "Eat, or you'll get hungry" — khānā khāo, nahīṁ to bhūkh lagegī]
+[your turn — say: "Eat, or you'll get hungry" — khānā khāo, nahīṃ to bhūkh lagegī]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 26 seconds]
 Say that if you miss your train you will come by bus, then warn a friend: hurry up, otherwise we'll be late.

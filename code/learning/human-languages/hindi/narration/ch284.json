@@ -4,7 +4,7 @@
   "chapter": 284,
   "title": "Feelings and Hopes",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d3cde2f1ff49c390",
+  "sourceHash": "fnv1a64:9600763616f1f387",
   "lessons": [
     {
       "id": "HI-C284-khush",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:814aa7daf91f7fbb",
+      "sourceHash": "fnv1a64:464042860157d656",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "With होना in the past, it says the gladness came: वह बहुत ख़ुश हुई (vah bahut khuś huī), \"she was very pleased\". The one you are pleased with takes से: मैं तुमसे ख़ुश हूँ (maiṁ tumse khuś hūṁ), \"I am pleased with you\"."
+              "text": "With होना in the past, it says the gladness came: वह बहुत ख़ुश हुई (vah bahut khuś huī), \"she was very pleased\". The one you are pleased with takes से, written as one word with a pronoun: तुमसे is तुम with से. मैं तुमसे ख़ुश हूँ (maiṁ tumse khuś hūṁ), \"I am pleased with you\"."
             }
           ]
         },
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:040aedd6b162f409",
+      "sourceHash": "fnv1a64:ab6fde7d0fcebc21",
       "notice": null,
       "blocks": [
         {
@@ -394,11 +394,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"I hope it won't rain tomorrow\" — mujhe ummīd hai ki kal bāriś nahīṁ hogī",
+              "instruction": "\"I hope it won't rain tomorrow\" — mujhe ummīd hai ki kal bāriś nahīṃ hogī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"I hope it won't rain tomorrow\" — *mujhe ummīd hai ki kal bāriś nahīṁ hogī*]"
+              "source": "[YOU SAY: \"I hope it won't rain tomorrow\" — *mujhe ummīd hai ki kal bāriś nahīṃ hogī*]"
             },
             {
               "kind": "activity",

@@ -4,7 +4,7 @@
   "chapter": 285,
   "title": "Taller, the Tallest, and How Long",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:662a95bb62345f97",
+  "sourceHash": "fnv1a64:125d50058084dfe0",
   "lessons": [
     {
       "id": "HI-C285-sabse",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78df4f315b339963",
+      "sourceHash": "fnv1a64:f949cf16cbd766f8",
       "notice": null,
       "blocks": [
         {
@@ -189,6 +189,10 @@
             {
               "kind": "speech",
               "text": "से कम (se kam), \"less than\": यह साड़ी उससे कम महँगी है। (yah sāṛī usse kam mahãgī hai.) — This sari is less expensive than that one."
+            },
+            {
+              "kind": "speech",
+              "text": "उस कमरे से and उससे both use उस, the form वह takes when a postposition follows, as in उसके बाद; उससे is उस with से, \"than that one\"."
             },
             {
               "kind": "speech",

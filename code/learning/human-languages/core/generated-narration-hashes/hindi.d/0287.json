@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 287,
-  "sourceHash": "fnv1a64:fdcba75bcab726b7",
+  "sourceHash": "fnv1a64:feff7a7370d1b431",
   "lessonIds": [
     "HI-C287-nirbharkarna",
     "HI-C287-nirbharkartahai",
@@ -13,7 +13,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch287.txt",
   "json": "hindi/narration/ch287.json",
-  "textHash": "fnv1a64:8f48b835559afa69",
-  "jsonHash": "fnv1a64:bed0206e4c61f32b",
+  "textHash": "fnv1a64:cb41324cf07271af",
+  "jsonHash": "fnv1a64:2cc194dcbfbcb3c8",
   "findings": []
 }

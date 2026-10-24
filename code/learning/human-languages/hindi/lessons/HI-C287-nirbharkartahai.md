@@ -56,7 +56,7 @@ The subject is what depends, and **करता** follows it: **यात्र�
 
 > **यह इस पर निर्भर करता है कि बारिश होगी या नहीं।**
 >
-> *yah is par nirbhar kartā hai ki bāriś hogī yā nahīṁ.* — "It depends on whether it rains or not."
+> *yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ.* — "It depends on whether it rains or not."
 
 When what it depends on is a whole sentence, Hindi says **इस पर**, "on this", and then gives the sentence after **कि**. It is often a question with **या नहीं**, "or not", in the future.
 
@@ -64,7 +64,7 @@ When what it depends on is a whole sentence, Hindi says **इस पर**, "on t
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C287-DEPENDS-ON-01, HI-GRAMMAR-C287-DEPENDS-KI-01] -->
-<!-- hl-activity: {"id": "HI-C287-nirbharkartahai-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C287-DEPENDS-ON-01", "HI-GRAMMAR-C287-DEPENDS-KI-01"], "prompt": "Say that your trip depends on the weather, then that it depends on whether it rains or not.", "answer": "merī yātrā mausam par nirbhar kartī hai; yah is par nirbhar kartā hai ki bāriś hogī yā nahīṁ", "accepted": ["मेरी यात्रा मौसम पर निर्भर करती है। यह इस पर निर्भर करता है कि बारिश होगी या नहीं।"], "feedback": {"correct": "kartī for yātrā; is par … ki for a whole sentence.", "incorrect": "yātrā is feminine: nirbhar kartī hai. For a sentence, say is par nirbhar kartā hai ki …."}, "response_seconds": 26} -->
+<!-- hl-activity: {"id": "HI-C287-nirbharkartahai-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C287-DEPENDS-ON-01", "HI-GRAMMAR-C287-DEPENDS-KI-01"], "prompt": "Say that your trip depends on the weather, then that it depends on whether it rains or not.", "answer": "merī yātrā mausam par nirbhar kartī hai; yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ", "accepted": ["मेरी यात्रा मौसम पर निर्भर करती है। यह इस पर निर्भर करता है कि बारिश होगी या नहीं।"], "feedback": {"correct": "kartī for yātrā; is par … ki for a whole sentence.", "incorrect": "yātrā is feminine: nirbhar kartī hai. For a sentence, say is par nirbhar kartā hai ki …."}, "response_seconds": 26} -->
 
 [PAUSE 1s]
 - [YOU SAY: "It's up to you" — *yah tum par nirbhar kartā hai*]

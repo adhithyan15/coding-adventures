@@ -45,12 +45,12 @@ reviews_of: [HI-C95-chahiye, HI-C95-mujhe-chahiye, HI-C122-janahai]
 >
 > *tumhẽ ārām karnā cāhiye.* — "You should rest."
 
-**चाहिए** after a thing is "is needed". After a verb in **-ना** it is "should". The one who should takes **को**, or a short form of it (**मुझे**, **तुम्हें**, **आपको**, **उसे**), and **चाहिए** does not change.
+**चाहिए** after a thing is "is needed". After a verb in **-ना** it is "should". The one who should takes **को** (**आपको**), or a pronoun's short form of it (**मुझे**, **तुम्हें**, **उसे**), and **चाहिए** does not change.
 
 - **आपको डाक्टर के पास जाना चाहिए।** (*āpko ḍākṭar ke pās jānā cāhiye.*) — You should go to the doctor.
 - **हमें पानी पीना चाहिए।** (*hamẽ pānī pīnā cāhiye.*) — We should drink water.
 
-"Should not" puts **नहीं** before the verb: **तुम्हें ऐसा नहीं करना चाहिए** (*tumhẽ aisā nahīṁ karnā cāhiye*), "you shouldn't do that".
+"Should not" puts **नहीं** before the verb: **तुम्हें ऐसा नहीं करना चाहिए** (*tumhẽ aisā nahīṃ karnā cāhiye*), "you shouldn't do that".
 
 ## You'll want to know: have to
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C281-PADNA-MUST-01]; assesses=[HI-LEX-C122-LATE-05, HI-LEX-C90-ROUT-04, HI-LEX-C153-THINGS153-04, HI-GRAMMAR-C277-FUTURE-PERSON-01, HI-GRAMMAR-C276-PAST-PERSON-01] -->
@@ -73,7 +73,7 @@ Three shades, then: **जाना है**, which you say as you leave, is a pl
 
 [PAUSE 1s]
 - [YOU SAY: "You should go to the doctor" — *āpko ḍākṭar ke pās jānā cāhiye*]
-- [YOU SAY: "You shouldn't do that" — *tumhẽ aisā nahīṁ karnā cāhiye*]
+- [YOU SAY: "You shouldn't do that" — *tumhẽ aisā nahīṃ karnā cāhiye*]
 - [YOU SAY: "Tomorrow I will have to work" — *kal mujhe kām karnā paṛegā*]
 
 ## Wrap-up Recall

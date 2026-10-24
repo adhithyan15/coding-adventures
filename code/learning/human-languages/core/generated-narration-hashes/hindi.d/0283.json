@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 283,
-  "sourceHash": "fnv1a64:297f3c0a71ddb7be",
+  "sourceHash": "fnv1a64:5fbff62880455557",
   "lessonIds": [
     "HI-C283-agla",
     "HI-C283-ektikat",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch283.txt",
   "json": "hindi/narration/ch283.json",
-  "textHash": "fnv1a64:7c98b4c974a5e3cc",
-  "jsonHash": "fnv1a64:60daec9d45017217",
+  "textHash": "fnv1a64:7ef3bd55bebc71b1",
+  "jsonHash": "fnv1a64:8cc95e2869132cda",
   "findings": []
 }

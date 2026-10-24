@@ -11,10 +11,10 @@ Say "I need tea". (मुझे चाय चाहिए.) Then "I have to go",
 
 You'll want to know: should.
 तुम्हें आराम करना चाहिए। tumhẽ ārām karnā cāhiye. — "You should rest."
-चाहिए after a thing is "is needed". After a verb in -ना it is "should". The one who should takes को, or a short form of it (मुझे, तुम्हें, आपको, उसे), and चाहिए does not change.
+चाहिए after a thing is "is needed". After a verb in -ना it is "should". The one who should takes को (आपको), or a pronoun's short form of it (मुझे, तुम्हें, उसे), and चाहिए does not change.
 आपको डाक्टर के पास जाना चाहिए। (āpko ḍākṭar ke pās jānā cāhiye.) — You should go to the doctor.
 हमें पानी पीना चाहिए। (hamẽ pānī pīnā cāhiye.) — We should drink water.
-"Should not" puts नहीं before the verb: तुम्हें ऐसा नहीं करना चाहिए (tumhẽ aisā nahīṁ karnā cāhiye), "you shouldn't do that".
+"Should not" puts नहीं before the verb: तुम्हें ऐसा नहीं करना चाहिए (tumhẽ aisā nahīṃ karnā cāhiye), "you shouldn't do that".
 
 You'll want to know: have to.
 कल मुझे दफ़्तर जाना पड़ेगा। kal mujhe daftar jānā paṛegā. — "Tomorrow I will have to go to the office."
@@ -28,7 +28,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "You should go to the doctor" — āpko ḍākṭar ke pās jānā cāhiye]
 [pause 8 seconds for the answer]
-[your turn — say: "You shouldn't do that" — tumhẽ aisā nahīṁ karnā cāhiye]
+[your turn — say: "You shouldn't do that" — tumhẽ aisā nahīṃ karnā cāhiye]
 [pause 8 seconds for the answer]
 [your turn — say: "Tomorrow I will have to work" — kal mujhe kām karnā paṛegā]
 [pause 8 seconds for the answer]
@@ -123,7 +123,7 @@ Warm-up.
 Say "because of the rain". (बारिश की वजह से.) Then the two words for "therefore", the everyday one and the formal one. (इसलिए, अतः (ataḥ).)
 
 You'll want to know: cause, इसलिए, result.
-बारिश हो रही थी, इसलिए मैं नहीं गया। bāriś ho rahī thī, isliye maiṁ nahīṁ gayā. — "It was raining, so I didn't go."
+बारिश हो रही थी, इसलिए मैं नहीं गया। bāriś ho rahī thī, isliye maiṁ nahīṃ gayā. — "It was raining, so I didn't go."
 इसलिए stands between two whole sentences: the cause first, then the result. क्योंकि turns the order round.
 [a table of 2 rows, read aloud]
 order: cause, इसलिए, result. sentence: बारिश हो रही है, इसलिए मैं घर पर हूँ। (bāriś ho rahī hai, isliye maiṁ ghar par hūṁ.)
@@ -172,7 +172,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: You're ill? Then you should rest.]
 [pause 8 seconds for the answer]
-[your turn — say: I think we will have to wait.]
+[your turn — say: I think we will have to leave early.]
 [pause 8 seconds for the answer]
 [once you have stopped driving — read: कल छुट्टी है, अतः (ataḥ) दफ़्तर बंद रहेगा। Then say it the everyday way.]
 

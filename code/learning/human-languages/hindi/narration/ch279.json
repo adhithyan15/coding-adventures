@@ -4,7 +4,7 @@
   "chapter": 279,
   "title": "Telling It in Order",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9507ebd6e0097f07",
+  "sourceHash": "fnv1a64:10deb2b4222b8a57",
   "lessons": [
     {
       "id": "HI-C279-khakar",
@@ -314,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3fcb3f59efdd982",
+      "sourceHash": "fnv1a64:c67e0c0bf821c097",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +375,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "उसके बाद is \"after that\": उस, the form वह takes before a postposition, as in उसका, then के बाद. इसके बाद (iske bād), \"after this\", is built the same way."
+              "text": "उसके बाद is \"after that\": उस, the form वह takes before a postposition, as in उसका, then के बाद. इसके बाद (iske bād), \"after this\", is built the same way, on इस, the form यह takes before a postposition."
             },
             {
               "kind": "speech",

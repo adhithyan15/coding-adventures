@@ -4,7 +4,7 @@
   "chapter": 281,
   "title": "Should, Must, and So",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a9eb5705019ef783",
+  "sourceHash": "fnv1a64:39875e1792a34eb6",
   "lessons": [
     {
       "id": "HI-C281-janachahiye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eeeb7d034b7f1aa",
+      "sourceHash": "fnv1a64:129eb34691760e76",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "चाहिए after a thing is \"is needed\". After a verb in -ना it is \"should\". The one who should takes को, or a short form of it (मुझे, तुम्हें, आपको, उसे), and चाहिए does not change."
+              "text": "चाहिए after a thing is \"is needed\". After a verb in -ना it is \"should\". The one who should takes को (आपको), or a pronoun's short form of it (मुझे, तुम्हें, उसे), and चाहिए does not change."
             },
             {
               "kind": "speech",
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Should not\" puts नहीं before the verb: तुम्हें ऐसा नहीं करना चाहिए (tumhẽ aisā nahīṁ karnā cāhiye), \"you shouldn't do that\"."
+              "text": "\"Should not\" puts नहीं before the verb: तुम्हें ऐसा नहीं करना चाहिए (tumhẽ aisā nahīṃ karnā cāhiye), \"you shouldn't do that\"."
             }
           ]
         },
@@ -120,11 +120,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"You shouldn't do that\" — tumhẽ aisā nahīṁ karnā cāhiye",
+              "instruction": "\"You shouldn't do that\" — tumhẽ aisā nahīṃ karnā cāhiye",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"You shouldn't do that\" — *tumhẽ aisā nahīṁ karnā cāhiye*]"
+              "source": "[YOU SAY: \"You shouldn't do that\" — *tumhẽ aisā nahīṃ karnā cāhiye*]"
             },
             {
               "kind": "prompt",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29437bf1316fdd6e",
+      "sourceHash": "fnv1a64:7281a037ea7ee9de",
       "notice": null,
       "blocks": [
         {
@@ -554,7 +554,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "बारिश हो रही थी, इसलिए मैं नहीं गया। bāriś ho rahī thī, isliye maiṁ nahīṁ gayā. — \"It was raining, so I didn't go.\""
+              "text": "बारिश हो रही थी, इसलिए मैं नहीं गया। bāriś ho rahī thī, isliye maiṁ nahīṃ gayā. — \"It was raining, so I didn't go.\""
             },
             {
               "kind": "speech",
@@ -656,7 +656,7 @@
               ],
               "responseSeconds": 26,
               "acceptedResponses": [
-                "bāriś ho rahī thī, isliye maiṁ nahīṁ gayā; to tumhẽ ḍākṭar ke pās jānā cāhiye",
+                "bāriś ho rahī thī, isliye maiṁ nahīṃ gayā; to tumhẽ ḍākṭar ke pās jānā cāhiye",
                 "बारिश हो रही थी, इसलिए मैं नहीं गया। तो तुम्हें डाक्टर के पास जाना चाहिए।",
                 "बारिश हो रही थी, इसलिए मैं नहीं गई। तो तुम्हें डाक्टर के पास जाना चाहिए।"
               ],
@@ -699,7 +699,7 @@
       "modalityReasons": [
         "eyes-or-hands-step"
       ],
-      "sourceHash": "fnv1a64:b4b0b9a7a20ebe99",
+      "sourceHash": "fnv1a64:c6d0dbc206a3aca7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -770,11 +770,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "I think we will have to wait.",
+              "instruction": "I think we will have to leave early.",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: I think we will have to wait.]"
+              "source": "[YOU SAY: I think we will have to leave early.]"
             },
             {
               "kind": "prompt",

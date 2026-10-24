@@ -58,7 +58,7 @@ After the stem comes a vowel for the person: **ऊँ** for I, **ओ** for **त
 
 **लेना** and **देना** shorten the stem: **मैं लूँगा** (*maiṁ lūṅgā*), **वह लेगा** (*vah legā*), **हम लेंगे** (*ham leṅge*); **मैं दूँगा** (*maiṁ dūṅgā*), **वह देगा** (*vah degā*). **पीना** gives **वह पिएगा** (*vah piegā*).
 
-"Will not" puts **नहीं** in front: **मैं नहीं जाऊँगा** (*maiṁ nahīṁ jāūṅgā*).
+"Will not" puts **नहीं** in front: **मैं नहीं जाऊँगा** (*maiṁ nahīṃ jāūṅgā*).
 
 ## You'll want to know: होगा, will be
 <!-- hl-knowledge: introduces=[HI-GRAMMAR-C277-WILL-BE-01]; assesses=[HI-LEX-C87-PAST-01, HI-LEX-C87-PAST-02, HI-LEX-C184-THG184-05, HI-LEX-C185-THG185-02, HI-CONCEPT-C39-DOST-01] -->

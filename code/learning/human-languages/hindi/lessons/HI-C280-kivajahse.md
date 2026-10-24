@@ -50,7 +50,7 @@ reviews_of: [HI-C71-kyonki, HI-C71-kyon, HI-C106-bimar, HI-C276-vahgaya]
 **वजह** (*vajah*), "a reason", is feminine, so **की वजह से**: "from the reason of". **कारण**, which you know, is masculine and does the same job a little more formally: **के कारण** (*ke kāraṇ*).
 
 - **भीड़ की वजह से मुझे देर हुई।** (*bhīṛ kī vajah se mujhe der huī.*) — Because of the crowd I was late.
-- **बीमारी के कारण वह नहीं आया।** (*bīmārī ke kāraṇ vah nahīṁ āyā.*) — Because of illness he didn't come.
+- **बीमारी के कारण वह नहीं आया।** (*bīmārī ke kāraṇ vah nahīṃ āyā.*) — Because of illness he didn't come.
 
 A pronoun takes its **-की** form: **मेरी वजह से** (*merī vajah se*), "because of me"; **उसकी वजह से** (*uskī vajah se*), "because of him", or her.
 
@@ -75,7 +75,7 @@ A pronoun takes its **-की** form: **मेरी वजह से** (*merī 
 
 [PAUSE 1s]
 - [YOU SAY: "Because of the crowd I was late" — *bhīṛ kī vajah se mujhe der huī*]
-- [YOU SAY: "He didn't come, because he was ill" — *vah nahīṁ āyā, kyoṁki vah bīmār thā*]
+- [YOU SAY: "He didn't come, because he was ill" — *vah nahīṃ āyā, kyoṁki vah bīmār thā*]
 - [YOU SAY: "Because of me she was late" — *merī vajah se use der huī*]
 
 ## Wrap-up Recall

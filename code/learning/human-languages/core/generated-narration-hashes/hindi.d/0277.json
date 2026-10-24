@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 277,
-  "sourceHash": "fnv1a64:0df86223ff82dfcc",
+  "sourceHash": "fnv1a64:a7b47e941af1a161",
   "lessonIds": [
     "HI-C277-vahkarega",
     "HI-R277-what-will-happen"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch277.txt",
   "json": "hindi/narration/ch277.json",
-  "textHash": "fnv1a64:778405b5c2004e72",
-  "jsonHash": "fnv1a64:a56db5ece896e073",
+  "textHash": "fnv1a64:b1ae43f7d3a9eb4c",
+  "jsonHash": "fnv1a64:b34fb658f1e6b730",
   "findings": []
 }

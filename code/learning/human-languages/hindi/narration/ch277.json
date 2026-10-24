@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "What Will Happen",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0df86223ff82dfcc",
+  "sourceHash": "fnv1a64:a7b47e941af1a161",
   "lessons": [
     {
       "id": "HI-C277-vahkarega",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b7dc0b17fd147b6a",
+      "sourceHash": "fnv1a64:454c463d90a1f776",
       "notice": null,
       "blocks": [
         {
@@ -76,7 +76,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"Will not\" puts नहीं in front: मैं नहीं जाऊँगा (maiṁ nahīṁ jāūṅgā)."
+              "text": "\"Will not\" puts नहीं in front: मैं नहीं जाऊँगा (maiṁ nahīṃ jāūṅgā)."
             }
           ]
         },

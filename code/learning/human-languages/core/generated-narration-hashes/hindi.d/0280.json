@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 280,
-  "sourceHash": "fnv1a64:3a0e7ebab797320e",
+  "sourceHash": "fnv1a64:c817abf7b9affd05",
   "lessonIds": [
     "HI-C280-lagna",
     "HI-C280-aisa",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch280.txt",
   "json": "hindi/narration/ch280.json",
-  "textHash": "fnv1a64:7f465ec2c24ee46f",
-  "jsonHash": "fnv1a64:af7bf55aa931e4e7",
+  "textHash": "fnv1a64:7e04bf796e97314f",
+  "jsonHash": "fnv1a64:536bf7bae4de3f37",
   "findings": []
 }

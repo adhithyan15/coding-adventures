@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 282,
-  "sourceHash": "fnv1a64:ad2e994b1fba5baf",
+  "sourceHash": "fnv1a64:c9a7fd0f5c1243a8",
   "lessonIds": [
     "HI-C282-batana",
     "HI-C282-dur",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch282.txt",
   "json": "hindi/narration/ch282.json",
-  "textHash": "fnv1a64:09c9c97a68a21949",
-  "jsonHash": "fnv1a64:8a1a8f34f8ace17c",
+  "textHash": "fnv1a64:5ceed2b5acde2093",
+  "jsonHash": "fnv1a64:2bcb5a056482a874",
   "findings": []
 }

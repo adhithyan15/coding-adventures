@@ -4,7 +4,7 @@
   "chapter": 282,
   "title": "Asking the Way",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ad2e994b1fba5baf",
+  "sourceHash": "fnv1a64:c9a7fd0f5c1243a8",
   "lessons": [
     {
       "id": "HI-C282-batana",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79142d0afc4969de",
+      "sourceHash": "fnv1a64:43b27baf160a664a",
       "notice": null,
       "blocks": [
         {
@@ -192,7 +192,7 @@
             },
             {
               "kind": "speech",
-              "text": "बहुत दूर नहीं है। (bahut dūr nahīṁ hai.) — It's not very far."
+              "text": "बहुत दूर नहीं है। (bahut dūr nahīṃ hai.) — It's not very far."
             },
             {
               "kind": "speech",
@@ -243,11 +243,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"It's not very far\" — bahut dūr nahīṁ hai",
+              "instruction": "\"It's not very far\" — bahut dūr nahīṃ hai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"It's not very far\" — *bahut dūr nahīṁ hai*]"
+              "source": "[YOU SAY: \"It's not very far\" — *bahut dūr nahīṃ hai*]"
             }
           ]
         },
@@ -283,7 +283,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:348f485879a394a6",
+      "sourceHash": "fnv1a64:e19ee788eb9ec46e",
       "notice": null,
       "blocks": [
         {
@@ -329,19 +329,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सीधे जाइए, फिर बाएँ मुड़िए। sīdhe jāie, phir bāeṁ muṛiye. — \"Go straight on, then turn left.\""
+              "text": "सीधे जाइए, फिर बाएँ मुड़िए। sīdhe jāie, phir bāẽ muṛiye. — \"Go straight on, then turn left.\""
             },
             {
               "kind": "speech",
-              "text": "मुड़ना (muṛnā) is \"to turn\", and मुड़िए asks it politely, as बोलिए does. सीधे, बाएँ, दाएँ (sīdhe, bāeṁ, dāeṁ) are the forms of सीधा, बायाँ and दायाँ that say which way."
+              "text": "मुड़ना (muṛnā) is \"to turn\", and मुड़िए asks it politely, as बोलिए does. सीधे, बाएँ, दाएँ (sīdhe, bāẽ, dāẽ) are the forms of सीधा, बायाँ and दायाँ that say which way."
             },
             {
               "kind": "speech",
-              "text": "चौराहे से दाएँ मुड़िए। (caurāhe se dāeṁ muṛiye.) — Turn right at the crossroads."
+              "text": "चौराहे से दाएँ मुड़िए। (caurāhe se dāẽ muṛiye.) — Turn right at the crossroads."
             },
             {
               "kind": "speech",
-              "text": "पुल के बाद दूसरी गली में बाएँ मुड़िए। (pul ke bād dūsrī galī meṁ bāeṁ muṛiye.) — After the bridge, take the second side street on the left. गली is feminine, so दूसरी."
+              "text": "पुल के बाद दूसरी गली में बाएँ मुड़िए। (pul ke bād dūsrī galī meṁ bāẽ muṛiye.) — After the bridge, take the second side street on the left. गली is feminine, so दूसरी."
             }
           ]
         },
@@ -377,12 +377,12 @@
               ],
               "responseSeconds": 24,
               "acceptedResponses": [
-                "sṭeśan kaise jāte haiṁ? sīdhe jāie, phir caurāhe se dāeṁ muṛiye",
+                "sṭeśan kaise jāte haiṁ? sīdhe jāie, phir caurāhe se dāẽ muṛiye",
                 "स्टेशन कैसे जाते हैं? सीधे जाइए, फिर चौराहे से दाएँ मुड़िए।"
               ],
               "feedback": {
-                "correct": "kaise jāte haiṁ asks the way; sīdhe and dāeṁ say where to go.",
-                "incorrect": "Ask with kaise jāte haiṁ; answer with sīdhe jāie and dāeṁ muṛiye."
+                "correct": "kaise jāte haiṁ asks the way; sīdhe and dāẽ say where to go.",
+                "incorrect": "Ask with kaise jāte haiṁ; answer with sīdhe jāie and dāẽ muṛiye."
               }
             }
           ]

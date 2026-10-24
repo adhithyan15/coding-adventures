@@ -20,7 +20,7 @@ who went: women. the past: गईं (gaīṁ).
 
 You'll want to know: how a stem takes the ending.
 Most verbs put the ending on the stem: बैठना becomes वह बैठा, वह बैठी (vah baiṭhā, vah baiṭhī). A stem ending in a vowel adds -या for a man: आना becomes आया, आई (āyā, āī). Two change the stem: जाना becomes गया, and होना becomes हुआ, हुई (huā, huī): क्या हुआ?, "what happened?"
-"Did not": मैं नहीं गया (maiṁ nahīṁ gayā). A bare stem with गया says the change is complete, as in देर हो गई and वह सो गया (vah so gayā), "he fell asleep".
+"Did not": मैं नहीं गया (maiṁ nahīṃ gayā). A bare stem with गया says the change is complete, as in देर हो गई and वह सो गया (vah so gayā), "he fell asleep".
 
 Guided Practice.
 [pause 1 second]
@@ -45,7 +45,7 @@ Say "she went". (vah gaī.) खाना खाया? leaves the eater out; thi
 
 Grammar Lens: the doer takes ने.
 उसने खाना खाया। usne khānā khāyā. — "He (or she) ate the meal."
-With a verb that has an object, such as eating, reading or saying, the past changes: the doer takes ने (ne). The pronouns fuse with it: मैंने, तुमने, आपने, उसने, हमने, उन्होंने (maiṁne, tumne, āpne, usne, hamne, unhoṁne). A name takes ने after it: मीरा ने. उसने is "he" or "she"; the verb no longer says which.
+With a verb that has an object, such as eating, reading or saying, the past changes: the doer takes ने (ne). The pronouns fuse with it: मैंने, तुमने, आपने, उसने, हमने, उन्होंने (maiṁne, tumne, āpne, usne, hamne, unhoṁne), the last from वे. A name takes ने after it: मीरा ने. उसने is "he" or "she"; the verb no longer says which.
 
 You'll want to know: the verb follows the thing.
 मीरा ने रोटी खाई। Mīrā ne roṭī khāī. — "Mira ate a roti."

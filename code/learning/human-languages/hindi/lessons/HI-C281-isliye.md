@@ -43,7 +43,7 @@ reviews_of: [HI-C247-isliye, HI-C281-atah, HI-C280-kivajahse]
 
 > **बारिश हो रही थी, इसलिए मैं नहीं गया।**
 >
-> *bāriś ho rahī thī, isliye maiṁ nahīṁ gayā.* — "It was raining, so I didn't go."
+> *bāriś ho rahī thī, isliye maiṁ nahīṃ gayā.* — "It was raining, so I didn't go."
 
 **इसलिए** stands between two whole sentences: the cause first, then the result. **क्योंकि** turns the order round.
 
@@ -70,7 +70,7 @@ In formal writing, **अतः** takes the place of **इसलिए**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C281-ISLIYE-RESULT-01, HI-GRAMMAR-C281-TO-SO-01, HI-GRAMMAR-C281-CHAHIYE-SHOULD-01] -->
-<!-- hl-activity: {"id": "HI-C281-isliye-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C281-ISLIYE-RESULT-01", "HI-GRAMMAR-C281-TO-SO-01"], "prompt": "Say that it was raining, so you didn't go. Then answer a friend who says he is ill: then you should go to the doctor.", "answer": "bāriś ho rahī thī, isliye maiṁ nahīṁ gayā; to tumhẽ ḍākṭar ke pās jānā cāhiye", "accepted": ["बारिश हो रही थी, इसलिए मैं नहीं गया। तो तुम्हें डाक्टर के पास जाना चाहिए।", "बारिश हो रही थी, इसलिए मैं नहीं गई। तो तुम्हें डाक्टर के पास जाना चाहिए।"], "feedback": {"correct": "The cause, isliye, the result; to opens the reply.", "incorrect": "Put the cause first and isliye before the result; start the reply with to."}, "response_seconds": 26} -->
+<!-- hl-activity: {"id": "HI-C281-isliye-r1", "kind": "text", "assesses": ["HI-GRAMMAR-C281-ISLIYE-RESULT-01", "HI-GRAMMAR-C281-TO-SO-01"], "prompt": "Say that it was raining, so you didn't go. Then answer a friend who says he is ill: then you should go to the doctor.", "answer": "bāriś ho rahī thī, isliye maiṁ nahīṃ gayā; to tumhẽ ḍākṭar ke pās jānā cāhiye", "accepted": ["बारिश हो रही थी, इसलिए मैं नहीं गया। तो तुम्हें डाक्टर के पास जाना चाहिए।", "बारिश हो रही थी, इसलिए मैं नहीं गई। तो तुम्हें डाक्टर के पास जाना चाहिए।"], "feedback": {"correct": "The cause, isliye, the result; to opens the reply.", "incorrect": "Put the cause first and isliye before the result; start the reply with to."}, "response_seconds": 26} -->
 
 [PAUSE 1s]
 - [YOU SAY: "It's raining, so I'm at home" — *bāriś ho rahī hai, isliye maiṁ ghar par hūṁ*]

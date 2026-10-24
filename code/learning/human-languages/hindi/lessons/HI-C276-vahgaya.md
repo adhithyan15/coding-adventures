@@ -59,7 +59,7 @@ With a past, **कल** is yesterday. **गया** is **जाना** in the p
 
 Most verbs put the ending on the stem: **बैठना** → **वह बैठा**, **वह बैठी** (*vah baiṭhā*, *vah baiṭhī*). A stem ending in a vowel adds **-या** for a man: **आना** → **आया**, **आई** (*āyā*, *āī*). Two change the stem: **जाना** → **गया**, and **होना** → **हुआ**, **हुई** (*huā*, *huī*): **क्या हुआ?**, "what happened?"
 
-"Did not": **मैं नहीं गया** (*maiṁ nahīṁ gayā*). A bare stem with **गया** says the change is complete, as in **देर हो गई** and **वह सो गया** (*vah so gayā*), "he fell asleep".
+"Did not": **मैं नहीं गया** (*maiṁ nahīṃ gayā*). A bare stem with **गया** says the change is complete, as in **देर हो गई** and **वह सो गया** (*vah so gayā*), "he fell asleep".
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C276-PAST-PERSON-01, HI-GRAMMAR-C276-PAST-STEMS-01, HI-CONCEPT-C36-GHAR-01, HI-CONCEPT-C29-SHAAM-01] -->

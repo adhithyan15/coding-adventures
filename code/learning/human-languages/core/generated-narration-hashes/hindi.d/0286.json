@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 286,
-  "sourceHash": "fnv1a64:b1a72d2cbd27d2b4",
+  "sourceHash": "fnv1a64:2c2bcf0810045fa9",
   "lessonIds": [
     "HI-C286-agarto",
     "HI-C286-chutgayito",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch286.txt",
   "json": "hindi/narration/ch286.json",
-  "textHash": "fnv1a64:fdd8ee774aa83d5f",
-  "jsonHash": "fnv1a64:dde1687d189b941e",
+  "textHash": "fnv1a64:65cf151ad61b0827",
+  "jsonHash": "fnv1a64:02069212b755a8b2",
   "findings": []
 }

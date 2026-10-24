@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 284,
-  "sourceHash": "fnv1a64:d3cde2f1ff49c390",
+  "sourceHash": "fnv1a64:9600763616f1f387",
   "lessonIds": [
     "HI-C284-khush",
     "HI-C284-darlagta",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch284.txt",
   "json": "hindi/narration/ch284.json",
-  "textHash": "fnv1a64:821208508290dea8",
-  "jsonHash": "fnv1a64:bd21e70aced9d1f3",
+  "textHash": "fnv1a64:72d6aee52b53119b",
+  "jsonHash": "fnv1a64:6cd296311e2d1b0a",
   "findings": []
 }

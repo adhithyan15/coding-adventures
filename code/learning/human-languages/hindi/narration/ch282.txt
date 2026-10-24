@@ -45,7 +45,7 @@ You'll want to know: दूर.
 दूर — dūr — "far, far away".
 स्टेशन यहाँ से कितनी दूर है? sṭeśan yahā̃ se kitnī dūr hai? — "How far is the station from here?"
 Hindi asks कितनी दूर (dūr), with the feminine कितनी, whatever the place. दूर (dūr) itself never changes: गाँव दूर (dūr) है, नदी दूर (dūr) है. The place you measure from takes से, as in यहाँ से.
-बहुत दूर नहीं है। (bahut dūr nahīṁ hai.) — It's not very far.
+बहुत दूर नहीं है। (bahut dūr nahīṃ hai.) — It's not very far.
 मेरा घर स्टेशन से दूर है। (merā ghar sṭeśan se dūr hai.) — My house is far from the station.
 
 The word, taken apart.
@@ -57,7 +57,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "How far is the station from here?" — sṭeśan yahā̃ se kitnī dūr hai?]
 [pause 8 seconds for the answer]
-[your turn — say: "It's not very far" — bahut dūr nahīṁ hai]
+[your turn — say: "It's not very far" — bahut dūr nahīṃ hai]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -78,10 +78,10 @@ You'll want to know: asking the way.
 The answer often comes in minutes: पाँच मिनट का रास्ता है (pā̃c minaṭ kā rāstā hai), "it's five minutes away".
 
 You'll want to know: following the way.
-सीधे जाइए, फिर बाएँ मुड़िए। sīdhe jāie, phir bāeṁ muṛiye. — "Go straight on, then turn left."
-मुड़ना (muṛnā) is "to turn", and मुड़िए asks it politely, as बोलिए does. सीधे, बाएँ, दाएँ (sīdhe, bāeṁ, dāeṁ) are the forms of सीधा, बायाँ and दायाँ that say which way.
-चौराहे से दाएँ मुड़िए। (caurāhe se dāeṁ muṛiye.) — Turn right at the crossroads.
-पुल के बाद दूसरी गली में बाएँ मुड़िए। (pul ke bād dūsrī galī meṁ bāeṁ muṛiye.) — After the bridge, take the second side street on the left. गली is feminine, so दूसरी.
+सीधे जाइए, फिर बाएँ मुड़िए। sīdhe jāie, phir bāẽ muṛiye. — "Go straight on, then turn left."
+मुड़ना (muṛnā) is "to turn", and मुड़िए asks it politely, as बोलिए does. सीधे, बाएँ, दाएँ (sīdhe, bāẽ, dāẽ) are the forms of सीधा, बायाँ and दायाँ that say which way.
+चौराहे से दाएँ मुड़िए। (caurāhe se dāẽ muṛiye.) — Turn right at the crossroads.
+पुल के बाद दूसरी गली में बाएँ मुड़िए। (pul ke bād dūsrī galī meṁ bāẽ muṛiye.) — After the bridge, take the second side street on the left. गली is feminine, so दूसरी.
 
 Guided Practice.
 [pause 1 second]

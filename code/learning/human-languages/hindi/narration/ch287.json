@@ -4,7 +4,7 @@
   "chapter": 287,
   "title": "It Depends, and What Would Be",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fdcba75bcab726b7",
+  "sourceHash": "fnv1a64:feff7a7370d1b431",
   "lessons": [
     {
       "id": "HI-C287-nirbharkarna",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e318f017f1fa5b9",
+      "sourceHash": "fnv1a64:7df07906faa086f1",
       "notice": null,
       "blocks": [
         {
@@ -199,7 +199,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "यह इस पर निर्भर करता है कि बारिश होगी या नहीं। yah is par nirbhar kartā hai ki bāriś hogī yā nahīṁ. — \"It depends on whether it rains or not.\""
+              "text": "यह इस पर निर्भर करता है कि बारिश होगी या नहीं। yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ. — \"It depends on whether it rains or not.\""
             },
             {
               "kind": "speech",
@@ -252,7 +252,7 @@
               ],
               "responseSeconds": 26,
               "acceptedResponses": [
-                "merī yātrā mausam par nirbhar kartī hai; yah is par nirbhar kartā hai ki bāriś hogī yā nahīṁ",
+                "merī yātrā mausam par nirbhar kartī hai; yah is par nirbhar kartā hai ki bāriś hogī yā nahīṃ",
                 "मेरी यात्रा मौसम पर निर्भर करती है। यह इस पर निर्भर करता है कि बारिश होगी या नहीं।"
               ],
               "feedback": {

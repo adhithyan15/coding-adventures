@@ -13,7 +13,7 @@ You'll want to know: ख़ुश.
 ख़ुश — khuś — "happy, glad".
 आज मैं बहुत ख़ुश हूँ। āj maiṁ bahut khuś hūṁ. — "I am very happy today."
 ख़ुश (khuś) never changes: वह ख़ुश (khuś) है for him and for her, हम ख़ुश (khuś) हैं for us. It is the word ख़ुशी is built on: ख़ुश (khuś), "happy", and ख़ुशी (khuśī), "happiness".
-With होना in the past, it says the gladness came: वह बहुत ख़ुश हुई (vah bahut khuś huī), "she was very pleased". The one you are pleased with takes से: मैं तुमसे ख़ुश हूँ (maiṁ tumse khuś hūṁ), "I am pleased with you".
+With होना in the past, it says the gladness came: वह बहुत ख़ुश हुई (vah bahut khuś huī), "she was very pleased". The one you are pleased with takes से, written as one word with a pronoun: तुमसे is तुम with से. मैं तुमसे ख़ुश हूँ (maiṁ tumse khuś hūṁ), "I am pleased with you".
 
 The word, taken apart.
 ख़ुश (khuś) is usually traced to Persian khush, "happy, pleasant". ख़ुशी adds -ई, the ending of many Hindi nouns of feeling, and ख़ुशबू, "fragrance", opens with the same word.
@@ -91,7 +91,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: "My dream is to become a doctor" — merā sapnā ḍākṭar bannā hai]
 [pause 8 seconds for the answer]
-[your turn — say: "I hope it won't rain tomorrow" — mujhe ummīd hai ki kal bāriś nahīṁ hogī]
+[your turn — say: "I hope it won't rain tomorrow" — mujhe ummīd hai ki kal bāriś nahīṃ hogī]
 [pause 8 seconds for the answer]
 [question — say your answer, then pause 24 seconds]
 Say that you want to become a teacher, then that you hope Mira will come.

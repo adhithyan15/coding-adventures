@@ -68,7 +68,7 @@ Hope works the same way: **मुझे उम्मीद है कि …** (
 
 [PAUSE 1s]
 - [YOU SAY: "My dream is to become a doctor" — *merā sapnā ḍākṭar bannā hai*]
-- [YOU SAY: "I hope it won't rain tomorrow" — *mujhe ummīd hai ki kal bāriś nahīṁ hogī*]
+- [YOU SAY: "I hope it won't rain tomorrow" — *mujhe ummīd hai ki kal bāriś nahīṃ hogī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-GRAMMAR-C284-WANT-TO-BECOME-01, HI-GRAMMAR-C284-HOPE-DREAM-01] -->
