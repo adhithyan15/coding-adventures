@@ -1,5 +1,38 @@
 # Changelog
 
+## 0.5.0 - Unreleased - JavaScript edition selection is real (LANG84 6d)
+
+### Added
+
+- `compile_source_at(source, release, module_name)`: lex, parse and compile
+  against exactly one ECMAScript edition, chosen by its inventory ID in
+  `code/grammars/ecmascript/releases.csv` (`"es2016"` … `"es2025"`). The
+  module records the edition in `IIRModule::release`.
+- `run_source_at`, `run_module`, `supported_releases`, `resolve_release`,
+  `DEFAULT_RELEASE` (`es2020`, the edition the IIR path always used) and
+  `SUBSET` (`es-number-log`).
+- `FrontendError`: the LANG84 C6 categories (`UnknownRelease`,
+  `ReleaseNotAvailable`, `Budget`, `Lex`, `Parse`, `Unsupported`), each
+  naming its edition. `message()` returns the producer's text verbatim.
+- `profiles` module with one profile, `ecmascript`: the subset has no
+  edition-varying semantics.
+- Tests: `release_subsets` (stage I: every `es-number-log` corpus case on
+  every claiming edition, re-checked against host `node` when installed),
+  `release_sweep` (writes `release_classes.csv`: two IIR-identity classes,
+  es2016 and es2021, split by numeric separators), and unit tests for
+  exact-match resolution, escaping and suggestions.
+
+### Changed
+
+- The hard-coded `SOURCE_EDITION = Es2020` is gone: `compile_source` and
+  `run_source` now go through `compile_source_at(None)`. Their `String`
+  errors are unchanged, byte for byte; their modules now record
+  `release: Some("es2020")`.
+- No request falls back to another edition (LANG84 C4). `es1`, `es3`,
+  `es5`, `es2015` (source evidence pending), `es2026` and the `js1.x`
+  rows are `ReleaseNotAvailable`; anything else is `UnknownRelease`, echoed
+  escaped and truncated, with up to five suggestions.
+
 ## 0.4.0 - Unreleased - the grammar tells a regex from a division (LANG84 6a)
 
 * **`compile_source` parses with `parse_javascript_cst_bounded`** (new in

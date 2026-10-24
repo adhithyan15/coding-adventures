@@ -1,6 +1,9 @@
 # ECMAScript 2022 (ES13) — Lexical Grammar
 # @version 1
 # @ecmascript_edition 2022
+# source_ref: https://github.com/tc39/ecma262/tree/es2022
+# source_sha: d711ba960cd12b7658d6bb26d7556e690290190c
+# PARTIAL: the IIR path claims es-number-log only (LANG84 phase 6d; see releases.csv); this lexical pair predates LANG84 and is not yet audited clause by clause against the tagged spec text.
 #
 # ECMA-262, 13th Edition — June 2022
 #

@@ -103,10 +103,15 @@
 //! | `js_<name>`     | runner builtins       | `_`             |
 //! | `js.<name>`     | user `let` / `const`  | `.`             |
 //!
-//! # Editions
+//! # Editions (LANG84 phase 6d)
 //!
-//! [`compile_source`] parses ECMAScript 2020, as it always has (LANG84 phase
-//! 6d makes the edition selectable). [`compile_ast`] keys only on rule names
+//! [`compile_source_at`] parses with exactly one ECMAScript edition's
+//! `.tokens`/`.grammar` pair, chosen by an inventory ID from
+//! `code/grammars/ecmascript/releases.csv` (`"es2016"` … `"es2025"`), and
+//! records it in `IIRModule::release`. `None` selects [`DEFAULT_RELEASE`],
+//! `es2020`, the edition [`compile_source`] has always used; an ID that is
+//! not a row, or a row that does not claim the subset, is a typed error and
+//! never falls back to another edition (see [`releases`]). [`compile_ast`] keys only on rule names
 //! and token types that the `es*.grammar` files share, so a CST from another
 //! edition plugs in unchanged: es5's `arguments` rule lists its expressions
 //! directly instead of through `argument_list`, which the argument reader
@@ -114,9 +119,17 @@
 //! `lexical_declaration`; and a rule this file does not know classifies as
 //! "unsupported", never as something it is not.
 
+pub mod frontend_error;
+pub mod profiles;
+pub mod releases;
+
+pub use frontend_error::FrontendError;
+pub use releases::{resolve_release, supported_releases, DEFAULT_RELEASE, SUBSET};
+
 use coding_adventures_javascript_parser::parse_javascript_cst_bounded;
 #[cfg(test)]
 use coding_adventures_javascript_parser::parse_javascript_typed;
+#[cfg(test)]
 use coding_adventures_javascript_tokens::EsVersion;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lexer::token::Token;
@@ -129,10 +142,6 @@ use vm_core::{value::Value, VMCore};
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
 const MAX_AST_NODES: usize = 16_384;
 const MAX_EXPRESSION_DEPTH: usize = 64;
-
-/// The ECMAScript edition whose `.tokens`/`.grammar` pair [`compile_source`]
-/// parses with. Unchanged from the typed-AST pipeline.
-const SOURCE_EDITION: EsVersion = EsVersion::Es2020;
 
 /// Runner builtin raised by reading a name that no declaration binds.
 const NOT_DEFINED_BUILTIN: &str = "js_reference_error_not_defined";
@@ -230,19 +239,53 @@ const RUNNER_GLOBAL_NAMES: &[&str] = &[
     "Reflect",
 ];
 
-/// Parse source and compile the currently supported JavaScript subset.
+/// Parse source with [`DEFAULT_RELEASE`] and compile the supported subset.
+///
+/// The pre-6d entry point, kept with its `String` errors: each message is
+/// exactly the text it returned before releases were selectable
+/// ([`FrontendError::message`]). New callers should use
+/// [`compile_source_at`], which says which edition and which C6 category.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
+    compile_source_at(source, None, module_name).map_err(|error| error.message())
+}
+
+/// Lex, parse and compile `source` against exactly one ECMAScript edition.
+///
+/// `release` is `None` for [`DEFAULT_RELEASE`] or an exact inventory ID such
+/// as `Some("es2017")`. The returned module names that edition in
+/// `IIRModule::release` (LANG84 "Selection API"), so a backend or a cache
+/// can tell two editions' modules apart even when their code is identical.
+///
+/// ```text
+///   resolve_release ─► size budget ─► parse_javascript_cst_bounded(edition)
+///                   ─► compile_ast ─► module.release = Some(edition)
+/// ```
+pub fn compile_source_at(
+    source: &str,
+    release: Option<&str>,
+    module_name: &str,
+) -> Result<IIRModule, FrontendError> {
+    let (release, edition) = resolve_release(release)?;
     if source.len() > MAX_SOURCE_BYTES {
-        return Err(format!(
-            "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
-        ));
+        return Err(FrontendError::Budget {
+            release: release.to_string(),
+            which: "source bytes",
+            message: format!(
+                "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
+            ),
+        });
     }
     // Regex literals are outside the native subset, but telling one from a
-    // division is the grammar's job, not ours: es2020.tokens carries the F10
-    // mode table (LANG84 phase 6a), so `8 / 2 / 2` lexes as two divisions and
-    // a real `/re/` becomes one REGEX leaf that `check_cst` rejects.
-    let cst = parse_javascript_cst_bounded(source, SOURCE_EDITION)?;
-    compile_ast(&cst, module_name)
+    // division is the grammar's job, not ours: every claiming edition's
+    // .tokens carries the F10 mode table (LANG84 phase 6a), so `8 / 2 / 2`
+    // lexes as two divisions and a real `/re/` becomes one REGEX leaf that
+    // `check_cst` rejects.
+    let cst = parse_javascript_cst_bounded(source, edition)
+        .map_err(|message| FrontendError::from_parse(release, message))?;
+    let mut module =
+        compile_ast(&cst, module_name).map_err(|message| FrontendError::from_compile(release, message))?;
+    module.release = Some(release.to_string());
+    Ok(module)
 }
 
 /// Compile a JavaScript parse tree (a `program` CST) directly to InterpreterIR.
@@ -1403,11 +1446,31 @@ impl std::error::Error for JavaScriptRunError {}
 
 /// Execute source on this repository's Rust VM and collect console output.
 pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
-    let mut module =
+    let module =
         compile_source(source, "javascript-script").map_err(|message| JavaScriptRunError {
             output: String::new(),
             message,
         })?;
+    run_module(module)
+}
+
+/// Compile `source` for one edition and run it on `vm-core`.
+///
+/// A compile failure is reported as its typed [`FrontendError`] text
+/// (`JavaScript es2017: …`), with no output, since nothing ran.
+pub fn run_source_at(source: &str, release: Option<&str>) -> Result<String, JavaScriptRunError> {
+    let module =
+        compile_source_at(source, release, "javascript-script").map_err(|error| {
+            JavaScriptRunError {
+                output: String::new(),
+                message: error.to_string(),
+            }
+        })?;
+    run_module(module)
+}
+
+/// Run a compiled module on `vm-core` and collect its console output.
+pub fn run_module(mut module: IIRModule) -> Result<String, JavaScriptRunError> {
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
     let mut vm = VMCore::new();

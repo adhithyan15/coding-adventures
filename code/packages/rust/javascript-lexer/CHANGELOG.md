@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## 0.10.1 — Unreleased — LANG84 phase 6d: pair headers cite their releases
+
+### Changed
+
+- `_grammar.rs` regenerated after the es2016–es2025 `.tokens` headers
+  gained `source_ref`/`source_sha`/`PARTIAL` lines (LANG84 stage G). Only
+  `line_number` fields change; no pattern, group or transition differs.
+
 ## 0.10.0 — Unreleased — LANG84 phase 6a: the grammar tells a regex from a division
 
 ### Removed (breaking)
