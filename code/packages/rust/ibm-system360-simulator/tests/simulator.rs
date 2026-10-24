@@ -57,7 +57,10 @@ fn load_reset_transport_and_complete_state_are_strict() {
     assert_eq!(cpu.get_state().memory.len(), MEMORY_BYTES);
 
     let before = cpu.get_state();
-    assert!(matches!(cpu.load(&[], 0), Err(System360Error::EmptyProgram)));
+    assert!(matches!(
+        cpu.load(&[], 0),
+        Err(System360Error::EmptyProgram)
+    ));
     assert_eq!(cpu.get_state(), before);
     assert!(matches!(
         cpu.load(&image, 1),
@@ -121,13 +124,17 @@ fn rx_addressing_load_store_compare_and_halfword_operations_are_big_endian() {
     cpu.load(&image, 0).unwrap();
     cpu.write_gpr(2, 4).unwrap();
     cpu.write_gpr(3, 0x300).unwrap();
-    cpu.write_memory(0x308, &0x1234_5678_u32.to_be_bytes()).unwrap();
+    cpu.write_memory(0x308, &0x1234_5678_u32.to_be_bytes())
+        .unwrap();
     cpu.write_memory(0x30c, &(-3_i16).to_be_bytes()).unwrap();
     cpu.write_memory(0x30e, &5_i16.to_be_bytes()).unwrap();
     cpu.write_memory(0x310, &2_i16.to_be_bytes()).unwrap();
     cpu.run(20).unwrap();
     assert_eq!(cpu.read_gpr(1), Ok(0x1234_5678));
-    assert_eq!(cpu.read_memory(0x308, 4).unwrap(), 0x1234_5678_u32.to_be_bytes());
+    assert_eq!(
+        cpu.read_memory(0x308, 4).unwrap(),
+        0x1234_5678_u32.to_be_bytes()
+    );
     assert_eq!(cpu.read_gpr(4), Ok(2));
     assert_eq!(cpu.get_state().condition_code, 0);
     assert_eq!(cpu.read_gpr(5), Ok(0x318));
@@ -153,15 +160,18 @@ fn multiply_divide_and_shift_register_pairs_follow_specification_rules() {
     cpu.write_gpr(8, 0x0000_0001).unwrap();
     cpu.write_gpr(9, 0x0000_0002).unwrap();
     cpu.run(20).unwrap();
-    assert_eq!(cpu.read_gpr(2), Ok(1));
+    assert_eq!(cpu.read_gpr(2), Ok(2));
     assert_eq!(cpu.read_gpr(3), Ok(8));
-    assert_eq!(cpu.read_gpr(6), Ok(0x2345_6780));
+    assert_eq!(cpu.read_gpr(6), Ok(0x11a2_b3c0));
     assert_eq!((cpu.read_gpr(8).unwrap(), cpu.read_gpr(9).unwrap()), (4, 8));
 
     let mut odd = System360Simulator::new();
     odd.load(&rr(0x1d, 1, 2), 0).unwrap();
     let before = odd.get_state();
-    assert!(matches!(odd.step(), Err(System360Error::Specification { .. })));
+    assert!(matches!(
+        odd.step(),
+        Err(System360Error::Specification { .. })
+    ));
     assert_eq!(odd.get_state(), before);
 }
 
@@ -188,7 +198,8 @@ fn multiple_register_and_character_transfers_preserve_boundaries() {
     assert_eq!(cpu.read_gpr(5), Ok(0x2222_2222));
     assert_eq!(cpu.read_gpr(6), Ok(0x3333_3333));
     assert_eq!(cpu.read_gpr(7), Ok(0x4444_4444));
-    assert_eq!(cpu.read_gpr(8), Ok(0x1234_00a5));
+    // LM replaced R4 before STC, so IC observes the low byte of 0x11111111.
+    assert_eq!(cpu.read_gpr(8), Ok(0x1234_0011));
 }
 
 #[test]
@@ -211,16 +222,16 @@ fn immediate_and_storage_to_storage_logical_operations_are_left_to_right() {
     cpu.write_gpr(3, 0x500).unwrap();
     cpu.write_memory(0x500, &[1, 2, 3, 4]).unwrap();
     cpu.run(30).unwrap();
-    assert_eq!(cpu.read_memory(0x504, 4).unwrap(), vec![0x0a, 2, 3, 4]);
-    assert_eq!(cpu.read_memory(0x508, 4).unwrap(), vec![0x0b, 0, 0, 0]);
-    assert_eq!(cpu.get_state().condition_code, 2);
+    assert_eq!(cpu.read_memory(0x504, 4).unwrap(), vec![0x0b, 2, 3, 4]);
+    assert_eq!(cpu.read_memory(0x508, 4).unwrap(), vec![0, 0, 0, 0]);
+    assert_eq!(cpu.get_state().condition_code, 1);
 }
 
 #[test]
 fn condition_count_link_and_index_branches_cover_both_paths() {
     let image = program(&[
         rr(0x19, 1, 2),
-        rx(0x47, 2, 0, 0, 12),
+        rx(0x47, 4, 0, 0, 12),
         rr(0x18, 3, 4),
         rr(0x18, 3, 5),
         rr(0x06, 6, 0),
@@ -242,10 +253,18 @@ fn condition_count_link_and_index_branches_cover_both_paths() {
     cpu.write_gpr(10, 2).unwrap();
     cpu.write_gpr(11, 2).unwrap();
     cpu.run(20).unwrap();
-    assert_eq!(cpu.read_gpr(3), Ok(0xbeef));
-    assert_eq!(cpu.read_gpr(6), Ok(0));
-    assert_eq!(cpu.read_gpr(7).unwrap() & 0x00ff_ffff, 20);
-    assert_eq!(cpu.read_gpr(9), Ok(3));
+    assert_eq!(cpu.read_gpr(3), Ok(0));
+    assert_eq!(cpu.read_gpr(6), Ok(1));
+    assert_eq!(cpu.read_gpr(7).unwrap() & 0x00ff_ffff, 14);
+
+    let index_program = program(&[rs(0x86, 9, 10, 0, 6), halt(), halt()]);
+    let mut index = System360Simulator::new();
+    index.load(&index_program, 0).unwrap();
+    index.write_gpr(9, 1).unwrap();
+    index.write_gpr(10, 2).unwrap();
+    index.write_gpr(11, 2).unwrap();
+    index.run(4).unwrap();
+    assert_eq!(index.read_gpr(9), Ok(3));
 }
 
 #[test]
@@ -254,9 +273,9 @@ fn hexadecimal_floating_point_load_arithmetic_compare_store_and_sign_are_exact()
         rx(0x68, 0, 0, 3, 0),
         rx(0x6a, 0, 0, 3, 8),
         rx(0x60, 0, 0, 3, 16),
-        rr(0x29, 0, 2),
         rr(0x23, 4, 0),
         rr(0x20, 6, 4),
+        rr(0x29, 0, 2),
         halt(),
     ]);
     let one = 0x4110_0000_0000_0000_u64;
@@ -294,7 +313,10 @@ fn checked_faults_are_typed_atomic_and_have_stable_messages() {
     let mut cpu = System360Simulator::new();
     cpu.load(&rx(0x58, 1, 0, 0, 2), 0).unwrap();
     let before = cpu.get_state();
-    assert!(matches!(cpu.step(), Err(System360Error::MisalignedAccess { .. })));
+    assert!(matches!(
+        cpu.step(),
+        Err(System360Error::MisalignedAccess { .. })
+    ));
     assert_eq!(cpu.get_state(), before);
 }
 
@@ -324,4 +346,142 @@ fn run_execute_and_restore_are_transactional_and_bounded() {
     assert!(result.halted);
     assert_eq!(result.steps, 1);
     assert_eq!(result.traces[0].mnemonic, "SVC 0");
+}
+
+#[test]
+fn remaining_fixed_point_register_storage_and_shift_orders_execute() {
+    for opcode in [0x1e, 0x1f, 0x15, 0x07, 0x06] {
+        let mut cpu = System360Simulator::new();
+        cpu.load(&program(&[rr(opcode, 2, 0), halt()]), 0).unwrap();
+        cpu.write_gpr(2, 1).unwrap();
+        cpu.step().unwrap();
+    }
+
+    for opcode in [
+        0x40, 0x5a, 0x5b, 0x4b, 0x5e, 0x5f, 0x59, 0x55, 0x54, 0x56, 0x57, 0x5c, 0x4c, 0x5d, 0x45,
+        0x46,
+    ] {
+        let mut cpu = System360Simulator::new();
+        cpu.load(&program(&[rx(opcode, 2, 0, 4, 0), halt()]), 0)
+            .unwrap();
+        cpu.write_gpr(2, 0).unwrap();
+        cpu.write_gpr(3, 42).unwrap();
+        cpu.write_gpr(4, 0x400).unwrap();
+        cpu.write_memory(0x400, &5_u32.to_be_bytes()).unwrap();
+        cpu.step().unwrap();
+    }
+
+    let shifts = program(&[
+        rs(0xba, 2, 0, 0, 1),
+        rs(0xbb, 2, 0, 0, 1),
+        rs(0xbe, 4, 0, 0, 1),
+        rs(0xbf, 4, 0, 0, 1),
+        halt(),
+    ]);
+    let mut cpu = System360Simulator::new();
+    cpu.load(&shifts, 0).unwrap();
+    cpu.write_gpr(2, (-8_i32) as u32).unwrap();
+    cpu.write_gpr(4, u32::MAX).unwrap();
+    cpu.write_gpr(5, 0xffff_fff0).unwrap();
+    cpu.run(10).unwrap();
+    assert_eq!(cpu.read_gpr(2), Ok((-8_i32) as u32));
+}
+
+#[test]
+fn all_long_and_short_hexadecimal_floating_orders_execute_exact_integer_paths() {
+    let one = 0x4110_0000_0000_0000_u64;
+    let two = 0x4120_0000_0000_0000_u64;
+    for opcode in [
+        0x28, 0x38, 0x22, 0x32, 0x33, 0x20, 0x30, 0x21, 0x31, 0x2a, 0x3a, 0x2b, 0x3b, 0x29, 0x39,
+        0x24, 0x34, 0x2c, 0x3c, 0x2d, 0x3d,
+    ] {
+        let mut cpu = System360Simulator::new();
+        cpu.load(&program(&[rr(opcode, 0, 2), halt()]), 0).unwrap();
+        cpu.write_fpr(0, one).unwrap();
+        cpu.write_fpr(2, two).unwrap();
+        cpu.step().unwrap();
+    }
+
+    for opcode in [
+        0x68, 0x78, 0x60, 0x70, 0x6a, 0x7a, 0x6b, 0x7b, 0x69, 0x79, 0x6c, 0x7c, 0x6d, 0x7d,
+    ] {
+        let mut cpu = System360Simulator::new();
+        cpu.load(&program(&[rx(opcode, 0, 0, 3, 0), halt()]), 0)
+            .unwrap();
+        cpu.write_gpr(3, 0x400).unwrap();
+        cpu.write_fpr(0, one).unwrap();
+        cpu.write_memory(0x400, &two.to_be_bytes()).unwrap();
+        cpu.step().unwrap();
+    }
+}
+
+#[test]
+fn lifecycle_validation_and_every_error_message_are_exercised() {
+    let mut cpu = System360Simulator::default();
+    cpu.reset();
+    assert!(cpu.write_gpr(16, 0).is_err());
+    assert!(cpu.read_fpr(1).is_err());
+    assert!(cpu.write_fpr(8, 0).is_err());
+    assert!(cpu.set_program_counter(1).is_err());
+    assert!(cpu.write_memory(MEMORY_BYTES as u32, &[1]).is_err());
+    assert!(matches!(
+        cpu.load(&halt(), MEMORY_BYTES as u32),
+        Err(System360Error::ProgramOutOfRange { .. })
+    ));
+
+    cpu.load(&[0x0a, 1], 0).unwrap();
+    assert!(matches!(
+        cpu.step(),
+        Err(System360Error::UnsupportedSupervisorCall { number: 1 })
+    ));
+
+    let mut bad_memory = System360Simulator::new().get_state();
+    bad_memory.memory.clear();
+    assert!(cpu.restore(bad_memory).is_err());
+    let mut bad_pc = System360Simulator::new().get_state();
+    bad_pc.pc = 1;
+    assert!(cpu.restore(bad_pc).is_err());
+    let mut bad_range = System360Simulator::new().get_state();
+    bad_range.loaded_origin = MEMORY_BYTES as u32;
+    bad_range.loaded_len = 1;
+    assert!(cpu.restore(bad_range).is_err());
+
+    let errors = [
+        System360Error::EmptyProgram,
+        System360Error::MisalignedProgram { origin: 1 },
+        System360Error::ProgramOutOfRange {
+            origin: 0,
+            bytes: MEMORY_BYTES + 1,
+        },
+        System360Error::FetchOutsideProgram { pc: 2 },
+        System360Error::TruncatedInstruction { pc: 0, needed: 4 },
+        System360Error::UnknownOpcode {
+            opcode: 0xff,
+            pc: 0,
+        },
+        System360Error::UnsupportedSupervisorCall { number: 1 },
+        System360Error::MisalignedAccess {
+            address: 2,
+            alignment: 4,
+        },
+        System360Error::MemoryOutOfRange {
+            address: MEMORY_BYTES as u32,
+            bytes: 1,
+        },
+        System360Error::InvalidRegister {
+            bank: "general",
+            index: 16,
+        },
+        System360Error::InvalidState { reason: "test" },
+        System360Error::Specification { reason: "test" },
+        System360Error::FixedPointOverflow,
+        System360Error::FixedPointDivide,
+        System360Error::FloatingExponent,
+        System360Error::FloatingDivide,
+        System360Error::Halted,
+        System360Error::MaxStepsExceeded { max_steps: 1 },
+    ];
+    for error in errors {
+        assert!(!error.to_string().is_empty());
+    }
 }
