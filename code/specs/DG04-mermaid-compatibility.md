@@ -142,8 +142,10 @@ and paint. The `u` parent cardinality is disambiguated from an entity literally
 named `u`, with both forms preserved through semantic IR, layout, and paint. ER
 entities accept empty blocks and single-line compact attribute blocks without
 requiring whitespace around braces, preserving any fields through semantic IR,
-layout, and paint. ER remains partial while the rest of the pinned upstream
-syntax and visual corpus is incomplete.
+layout, and paint. HTML-style break variants in quoted relationship roles become
+semantic newlines and lower as multiline backend-neutral text. ER remains
+partial while the rest of the pinned upstream syntax and visual corpus is
+incomplete.
 
 ## Required New Semantic Families
 
