@@ -1,0 +1,1 @@
+var e=new URL(`GU-W52-au-sign-filmstrip-_uxVsluz.svg`,import.meta.url).href;export{e as default};

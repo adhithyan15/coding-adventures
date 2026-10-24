@@ -1,0 +1,1 @@
+var e=new URL(`GU-W53-vocalic-r-letter-filmstrip-Dqz6yo6N.svg`,import.meta.url).href;export{e as default};
