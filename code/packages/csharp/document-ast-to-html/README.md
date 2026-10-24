@@ -64,3 +64,4 @@ sh BUILD
 
 The native tests cover every supported AST node, exact formatting, tight and
 loose lists, raw routing, URL attacks, and each resource boundary.
+See [VALIDATION.md](VALIDATION.md) for the executed checks and their scope.
