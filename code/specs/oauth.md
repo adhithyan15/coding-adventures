@@ -852,6 +852,17 @@ consumption of the non-copyable path or allowing either endpoint to be silently
 discarded. The composition does not authenticate path links, apply issuer,
 anchor, path-length, or name-constraint policy, check revocation, or provide
 complete path validation, TLS, HTTP, OAuth transport, or network authority.
+A bounded adjacent-link projection now borrows one exact constructed path and
+one selected-issuer depth below its retained issuer count. Depth zero derives
+the target as child; every later depth derives the preceding selected candidate
+as child; and the current selected candidate is always the issuer. Out-of-range
+depths return no evidence. The non-copyable projection retains the construction
+borrow and derives both endpoints from its private depth, so later signature
+verification can consume an exact ordered pair without rerunning Name policy or
+accepting caller-substituted certificates. Projection alone does not authenticate
+a signature, validate either certificate, route an algorithm, advance path-length
+state, apply constraints or revocation, establish trust, or provide complete path
+validation, TLS, HTTP, OAuth transport, or network authority.
 The RSA SHA-256 issuer-link composition can now consume that non-copyable
 selection evidence directly. It derives the exact child and selected candidate
 from the evidence, then performs issuing-CA role, caller-owned RSA key-policy,
