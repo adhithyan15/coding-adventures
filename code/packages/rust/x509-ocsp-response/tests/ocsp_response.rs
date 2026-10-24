@@ -159,11 +159,9 @@ fn explicitly_dispatches_only_id_pkix_ocsp_basic() {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let root = decoder.decode_exact(&encoded).unwrap();
     let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
-    let decoded = decode_x509_ocsp_basic_response_bytes(
-        &mut decoder,
-        outer.response_bytes().unwrap(),
-    )
-    .unwrap();
+    let decoded =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap();
 
     assert_eq!(decoded.encoded(), body);
     assert_eq!(decoded.response_data().len(), 1);
@@ -175,17 +173,18 @@ fn unknown_response_types_are_rejected_before_body_parsing() {
     let malformed_secret = [0xde, 0xad, 0xbe, 0xef];
     let encoded = response(
         0,
-        Some(response_bytes(&[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x02], &malformed_secret)),
+        Some(response_bytes(
+            &[0x2b, 0x06, 0x01, 0x05, 0x05, 0x07, 0x30, 0x01, 0x02],
+            &malformed_secret,
+        )),
     );
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let root = decoder.decode_exact(&encoded).unwrap();
     let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
     let before_dispatch = decoder.elements_read();
-    let error = decode_x509_ocsp_basic_response_bytes(
-        &mut decoder,
-        outer.response_bytes().unwrap(),
-    )
-    .unwrap_err();
+    let error =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap_err();
 
     assert_eq!(
         error.kind(),
@@ -204,11 +203,9 @@ fn basic_dispatch_requires_one_exact_der_document() {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let root = decoder.decode_exact(&encoded).unwrap();
     let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
-    let error = decode_x509_ocsp_basic_response_bytes(
-        &mut decoder,
-        outer.response_bytes().unwrap(),
-    )
-    .unwrap_err();
+    let error =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap_err();
 
     assert!(matches!(
         error.kind(),
@@ -224,11 +221,9 @@ fn basic_dispatch_preserves_inner_error_categories_and_redaction() {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
     let root = decoder.decode_exact(&encoded).unwrap();
     let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
-    let error = decode_x509_ocsp_basic_response_bytes(
-        &mut decoder,
-        outer.response_bytes().unwrap(),
-    )
-    .unwrap_err();
+    let error =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap_err();
 
     assert!(matches!(
         error.kind(),
@@ -248,11 +243,9 @@ fn basic_dispatch_keeps_the_outer_decoder_element_budget() {
     let root = decoder.decode_exact(&encoded).unwrap();
     let outer = decode_x509_ocsp_response(&mut decoder, root).unwrap();
     assert_eq!(decoder.elements_read(), 6);
-    let error = decode_x509_ocsp_basic_response_bytes(
-        &mut decoder,
-        outer.response_bytes().unwrap(),
-    )
-    .unwrap_err();
+    let error =
+        decode_x509_ocsp_basic_response_bytes(&mut decoder, outer.response_bytes().unwrap())
+            .unwrap_err();
 
     assert_eq!(
         error.kind(),
