@@ -1,6 +1,6 @@
 # Rust CPU Expansion Backlog
 
-**Status:** active  
+**Status:** active
 **Last reprioritized:** 2026-10-24
 
 This is the live expansion queue after the original 07-series architecture
@@ -84,4 +84,3 @@ architecture/core introduction era, not a claim about a particular chip.
   interconnect models.
 - Descend below Boolean gates only when the SPICE/device-model wave lands.
   Transistor and analog timing claims must reference those lower-level models.
-
