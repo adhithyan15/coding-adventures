@@ -785,6 +785,7 @@ members = [
     "x509-ocsp-basic-response",
     "x509-ocsp-cert-id",
     "x509-ocsp-cert-status",
+    "x509-ocsp-response",
     "x509-ocsp-response-data",
     "x509-ocsp-single-response",
     "x509-algorithm-identifier",

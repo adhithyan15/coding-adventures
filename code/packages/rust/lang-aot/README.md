@@ -61,6 +61,9 @@ Finite fractional static-real inputs may feed the same normalizers when the
 result is an exact integer, including nested call-free conditionals whose
 normalized branches agree. Nonintegral, dynamic, and oversized results remain
 conservative.
+An exact `sign` result is also treated as a static factor around the one dynamic
+sign root. Two dynamic roots, path-dependent signs, and effectful selectors
+remain conservative.
 Positive variable-free whole-number powers may raise the exact sign-rooted integer
 transform within the existing exponent-unroll cap while checked exponentiation
 remains within `2^53`; zero, negative, dynamic, deeper, and oversized powers
