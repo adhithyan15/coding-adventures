@@ -9,6 +9,8 @@ import {
 } from "@coding-adventures/forme-types";
 import { PluginHostError } from "./errors.js";
 
+const MAX_CONTRIBUTED_KINDS = 4_096;
+
 export function descriptorForKindReference(
   reference: string,
   manifest: Manifest,
@@ -46,6 +48,7 @@ function descriptorForBareKind(
 export function buildKindRegistry(manifests: Iterable<Manifest>): KindRegistry {
   const descriptors = new Map<KindName, KindDescriptor>();
   const parents = new Map<KindName, KindName | null>();
+  let contributedKinds = 0;
 
   for (const descriptor of Object.values(Kinds)) {
     descriptors.set(descriptor.name, descriptor);
@@ -54,6 +57,13 @@ export function buildKindRegistry(manifests: Iterable<Manifest>): KindRegistry {
 
   for (const manifest of manifests) {
     for (const contribution of manifest.contributes.kinds) {
+      contributedKinds += 1;
+      if (contributedKinds > MAX_CONTRIBUTED_KINDS) {
+        throw new PluginHostError(
+          "RESOURCE_LIMIT_EXCEEDED",
+          `kind registry exceeds the ${MAX_CONTRIBUTED_KINDS} contributed kind limit`,
+        );
+      }
       const name = contribution.name as KindName;
       if (descriptors.has(name)) {
         throw new PluginHostError(

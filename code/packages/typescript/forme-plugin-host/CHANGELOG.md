@@ -5,7 +5,10 @@
 - Build one immutable host-wide registry for built-in and contributed kinds,
   rejecting duplicate names, missing parents, and subtype cycles before any
   stage resolves. Cross-plugin stage references use the same frozen descriptor
-  snapshots that the orchestrator receives for compatibility checks.
+  snapshots that the orchestrator receives for compatibility checks. Bound
+  contributions to 1,024 kinds per plugin and 4,096 per host, charge manifest
+  source bytes to the aggregate discovery budget, and retain the registry cap
+  for direct builder callers.
 
 ## 1.0.0 — 2026-10-05
 

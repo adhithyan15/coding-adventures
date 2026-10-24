@@ -39,7 +39,10 @@ Host creation also collects every contributed `ext:` kind into one immutable
 registry. Duplicate global names, missing subtype parents, and direct or
 transitive cycles reject the host before plugin code can run. Stage kind
 references and downstream DAG typechecking share those exact frozen
-descriptor/version snapshots, including cross-plugin references.
+descriptor/version snapshots, including cross-plugin references. Discovery
+allows at most 1,024 contributions per plugin and 4,096 per selected host
+snapshot, charges manifest bytes to its aggregate memory budget, and the
+exported registry builder repeats the global cap for direct callers.
 
 `loadPersistentGrants` reads the host-owned `grants.toml` beside each exact
 discovery snapshot and is mutually exclusive with injected `grants`. Missing

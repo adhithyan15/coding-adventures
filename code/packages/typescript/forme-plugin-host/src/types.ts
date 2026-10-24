@@ -9,6 +9,8 @@ import type { Logger } from "@coding-adventures/forme-stage";
 export interface DiscoveredPlugin {
   readonly rootDirectory: string;
   readonly manifestPath: string;
+  /** Exact source byte length charged to the aggregate discovery budget. */
+  readonly manifestByteLength: number;
   readonly entryPath: string;
   readonly entryBytes: Uint8Array;
   /** Exact private discovery snapshots keyed by stage id. */

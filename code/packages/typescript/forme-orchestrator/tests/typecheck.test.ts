@@ -196,6 +196,11 @@ describe("areKindsCompatible — registered extension subtypes", () => {
       { name: "ext:blog-post", version: "1.2" },
       extensionRegistry(),
     )).toBe(false);
+    expect(areKindsCompatible(
+      { name: "ext:blog-post", version: "1.1", discriminant: "drift" },
+      blogPost,
+      extensionRegistry(),
+    )).toBe(false);
   });
 
   it("checks version compatibility across every ancestry edge", () => {

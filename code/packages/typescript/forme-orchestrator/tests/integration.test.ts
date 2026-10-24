@@ -681,6 +681,19 @@ describe("buildDag — direct API", () => {
     };
     const dag = buildDag(validateConfig(config), registry);
     expect(dag.instances.get("join")?.inputProducers.get("posts")).toBe("extensions");
+
+    const incompatibleWrapper = {
+      ...extensions,
+      produces: { name: "Stream" as const, version: "2.0", inner: extensionKind },
+    };
+    const incompatibleConfig: PipelineConfig = {
+      ...config,
+      stages: config.stages.map(spec => spec.id === "extensions"
+        ? { ...spec, stage: incompatibleWrapper }
+        : spec),
+    };
+    expect(() => buildDag(validateConfig(incompatibleConfig), registry))
+      .toThrow(/join.*posts.*incompatible/);
   });
 
   it("rejects explicit wire cycles", () => {

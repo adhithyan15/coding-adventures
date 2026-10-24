@@ -5,7 +5,10 @@
 - Thread the plugin host's immutable kind registry through DAG construction.
   Registered extension producers may widen through direct or transitive
   parents, while narrowing, registry drift, incompatible ancestry versions,
-  stream-shape mismatches, and named-port mismatches remain fail-closed.
+  stream-shape mismatches, and named-port mismatches remain fail-closed. Exact
+  extension-name edges also require canonical registry binding, stream-wrapper
+  metadata is validated, and arbitrarily large version components compare
+  without JavaScript number precision loss.
 
 ## 1.0.0 — 2026-10-05
 

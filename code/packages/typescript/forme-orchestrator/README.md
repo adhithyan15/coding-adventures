@@ -103,7 +103,8 @@ These limits remain after the concurrent scheduler milestone:
   validation; unresolved references remain a hard error without a host
 - Covariant extension-kind widening through the host's immutable validated
   registry for default, stream, and named-port edges; generic producers never
-  narrow into specialized consumers
+  narrow into specialized consumers, and exact-name extension descriptors
+  cannot bypass registry/version binding
 
 ## Coverage
 

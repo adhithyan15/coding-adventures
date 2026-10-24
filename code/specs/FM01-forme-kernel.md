@@ -780,7 +780,9 @@ edge, it checks:
 1. **Name match or safe covariance.** `B.consumes.name === A.produces.name`,
    OR `A.produces.name` is a subtype of `B.consumes.name` (via the
    `subtype-of` chain in the immutable kind registry). A base-kind producer
-   never satisfies a specialized consumer.
+   never satisfies a specialized consumer. Every `ext:` descriptor, including
+   an exact-name producer/consumer pair, must match its canonical registry
+   descriptor; an unregistered or drifted extension fails closed.
 2. **Version compatibility.** `A.produces.version >= B.consumes.version`,
    subject to major-version match. A `1.2` producer can feed a `1.1`
    consumer; a `2.0` producer cannot feed a `1.x` consumer without an
@@ -800,6 +802,11 @@ edge, it checks:
 
 If compatibility fails, the orchestrator refuses to start the pipeline
 with an error pointing at the exact edge.
+
+`Stream<K>` is a versioned built-in wrapper rather than a syntax-only marker.
+Both wrappers must match the canonical Stream version and discriminant rules
+before compatibility recurses into `K`; stream-to-item promotion validates the
+producer wrapper before checking its inner kind.
 
 ### 2.7 Utility types
 
