@@ -11,13 +11,16 @@
 //! issuing-CA role-policy evidence, then certificate-bound data-driven
 //! algorithm-profile evidence, for that exact selected issuer. A final binding
 //! can retain complete intermediate policy, including validity at one explicit
-//! observation, for the identical issuer object. Recognition is not semantic
-//! validation of other critical extensions, and an algorithm profile neither
-//! chooses nor enables this crate's fixed verifier. No result establishes path
-//! length, name constraints, revocation, trust anchors, path construction,
-//! TLS, HTTP, or network effects. A bounded follow-up can apply the existing
-//! path-length transition while retaining the authenticated intermediate, but
-//! it still proves only one caller-ordered step.
+//! observation, for the identical issuer object. A construction-bound entry
+//! point can instead consume one exact adjacent-link projection and retain its
+//! path order while authenticating only that projected pair. Recognition is
+//! not semantic validation of other critical extensions, and an algorithm
+//! profile neither chooses nor enables this crate's fixed verifier. No result
+//! establishes path length, name constraints, revocation, trust anchors,
+//! complete path validation, TLS, HTTP, or network effects. A bounded follow-up
+//! can apply the existing path-length transition while retaining the
+//! authenticated intermediate, but it still proves only one caller-ordered
+//! step.
 
 #![deny(unsafe_code)]
 
@@ -26,6 +29,7 @@ use der_asn1::Asn1Limits;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::X509Certificate;
 use x509_certificate_issuer_candidate_selection::SelectedX509IssuerCandidate;
+use x509_certificate_path_construction::ConstructedX509CertificatePathAdjacentLink;
 use x509_certificate_path_length_policy::{
     X509CertificatePathLengthError, X509CertificatePathLengthState,
 };
@@ -120,6 +124,43 @@ impl fmt::Display for X509RsaSha256IssuerLinkError {
 }
 
 impl std::error::Error for X509RsaSha256IssuerLinkError {}
+
+/// Stable constructed-path link failures that retain no certificate bytes.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaSha256ConstructedPathAdjacentLinkErrorKind {
+    /// The projection did not expose exactly one of its private child forms.
+    InvalidAdjacentLink,
+    /// The exact projected child and issuer failed existing link checks.
+    IssuerLink(X509RsaSha256IssuerLinkErrorKind),
+}
+
+/// A redacted failure while authenticating one constructed-path adjacency.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaSha256ConstructedPathAdjacentLinkError {
+    kind: X509RsaSha256ConstructedPathAdjacentLinkErrorKind,
+}
+
+impl X509RsaSha256ConstructedPathAdjacentLinkError {
+    const fn new(kind: X509RsaSha256ConstructedPathAdjacentLinkErrorKind) -> Self {
+        Self { kind }
+    }
+
+    pub const fn kind(self) -> X509RsaSha256ConstructedPathAdjacentLinkErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaSha256ConstructedPathAdjacentLinkError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA SHA-256 constructed-path adjacent-link error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaSha256ConstructedPathAdjacentLinkError {}
 
 /// Stable stronger-composition failure categories that retain no certificate bytes.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -271,6 +312,64 @@ impl<'child_certificate, 'child_encoded, 'issuer_certificate, 'issuer_encoded>
 impl fmt::Debug for VerifiedX509RsaSha256IssuerLink<'_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaSha256IssuerLink")
+    }
+}
+
+/// Non-copyable authentication evidence for one exact constructed-path adjacency.
+///
+/// The retained projection supplies both endpoints and their order. The
+/// validated key proves that the existing fixed RSA PKCS #1 v1.5 SHA-256
+/// verifier authenticated that exact projected child with that exact selected
+/// issuer. This evidence covers no other path link and grants no complete-path
+/// or trust authority.
+pub struct VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    adjacent_link: ConstructedX509CertificatePathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    issuer_public_key: ValidatedRsaPublicKey<'candidate_encoded>,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the exact construction-bound pair that was authenticated.
+    pub const fn adjacent_link(
+        &self,
+    ) -> &ConstructedX509CertificatePathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.adjacent_link
+    }
+
+    /// Return the validated public key of the projected issuer.
+    pub const fn issuer_public_key(&self) -> ValidatedRsaPublicKey<'candidate_encoded> {
+        self.issuer_public_key
+    }
+}
+
+impl fmt::Debug for VerifiedX509RsaSha256ConstructedPathAdjacentLink<'_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaSha256ConstructedPathAdjacentLink")
     }
 }
 
@@ -560,6 +659,70 @@ pub fn verify_selected_x509_rsa_sha256_issuer_link<
         selected_candidate.candidate_certificate(),
         policy,
     )
+}
+
+/// Authenticate one exact adjacent pair projected from a constructed path.
+///
+/// This consuming entry point does not rerun Name policy. It accepts neither
+/// endpoint separately: the child and issuer are derived only from the
+/// projection's private depth and retained construction. Depth zero verifies
+/// the target child; later depths verify the preceding selected candidate.
+/// Success retains the entire projection beside the validated issuer key so
+/// downstream traversal cannot silently discard path order.
+///
+/// Only one fixed RSA PKCS #1 v1.5 SHA-256 link is authenticated. This does not
+/// route algorithms, retain complete issuer policy, authenticate another link,
+/// validate a path, recognize trust, check revocation, or provide TLS or HTTP.
+pub fn verify_constructed_x509_rsa_sha256_issuer_link<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    adjacent_link: ConstructedX509CertificatePathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    policy: X509RsaSha256IssuerLinkPolicy<'_>,
+) -> Result<
+    VerifiedX509RsaSha256ConstructedPathAdjacentLink<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaSha256ConstructedPathAdjacentLinkError,
+> {
+    let issuer = adjacent_link.issuer_certificate();
+    let issuer_public_key = match (
+        adjacent_link.child_target_certificate(),
+        adjacent_link.child_candidate_certificate(),
+    ) {
+        (Some(child), None) => verify_x509_rsa_sha256_issuer_link_after_name(child, issuer, policy)
+            .map(|verified| verified.issuer_public_key()),
+        (None, Some(child)) => verify_x509_rsa_sha256_issuer_link_after_name(child, issuer, policy)
+            .map(|verified| verified.issuer_public_key()),
+        _ => {
+            return Err(X509RsaSha256ConstructedPathAdjacentLinkError::new(
+                X509RsaSha256ConstructedPathAdjacentLinkErrorKind::InvalidAdjacentLink,
+            ));
+        }
+    }
+    .map_err(|error| {
+        X509RsaSha256ConstructedPathAdjacentLinkError::new(
+            X509RsaSha256ConstructedPathAdjacentLinkErrorKind::IssuerLink(error.kind()),
+        )
+    })?;
+
+    Ok(VerifiedX509RsaSha256ConstructedPathAdjacentLink {
+        adjacent_link,
+        issuer_public_key,
+    })
 }
 
 /// Authenticate one selected issuer while retaining certificate-wide role-policy evidence.

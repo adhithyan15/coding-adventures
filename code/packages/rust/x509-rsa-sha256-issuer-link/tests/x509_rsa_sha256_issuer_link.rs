@@ -3,6 +3,7 @@ use rsa_public_operation::RsaPublicOperationLimits;
 use std::cell::Cell;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_issuer_candidate_selection::select_unique_x509_issuer_candidate_by;
+use x509_certificate_path_construction::construct_unique_x509_certificate_path_by;
 use x509_certificate_path_length_policy::{
     X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
 };
@@ -18,12 +19,13 @@ use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_rsa_sha256_issuer_link::{
     advance_x509_rsa_sha256_authenticated_intermediate_path_length,
     bind_x509_rsa_sha256_intermediate_issuer_policy_link,
-    verify_selected_x509_rsa_sha256_issuer_link,
+    verify_constructed_x509_rsa_sha256_issuer_link, verify_selected_x509_rsa_sha256_issuer_link,
     verify_selected_x509_rsa_sha256_issuer_link_with_policies,
     verify_selected_x509_rsa_sha256_issuer_link_with_role_policy,
-    verify_x509_rsa_sha256_issuer_link, X509RsaSha256IntermediateIssuerPolicyLinkErrorKind,
-    X509RsaSha256IssuerLinkErrorKind, X509RsaSha256IssuerLinkPolicy,
-    X509RsaSha256IssuerPolicyLinkErrorKind, X509RsaSha256IssuerRolePolicyLinkErrorKind,
+    verify_x509_rsa_sha256_issuer_link, X509RsaSha256ConstructedPathAdjacentLinkErrorKind,
+    X509RsaSha256IntermediateIssuerPolicyLinkErrorKind, X509RsaSha256IssuerLinkErrorKind,
+    X509RsaSha256IssuerLinkPolicy, X509RsaSha256IssuerPolicyLinkErrorKind,
+    X509RsaSha256IssuerRolePolicyLinkErrorKind,
 };
 use x509_time::{decode_x509_time, X509Time};
 
@@ -200,6 +202,17 @@ fn mutate_every(encoded: &mut [u8], needle: &[u8], mut mutate: impl FnMut(&mut [
     assert!(matches > 0, "fixture contains mutation target");
 }
 
+fn replace_nth(encoded: &mut [u8], needle: &[u8], occurrence: usize, replacement: &[u8]) {
+    assert_eq!(needle.len(), replacement.len());
+    let offset = encoded
+        .windows(needle.len())
+        .enumerate()
+        .filter_map(|(offset, window)| (window == needle).then_some(offset))
+        .nth(occurrence)
+        .expect("fixture contains requested mutation target");
+    encoded[offset..offset + needle.len()].copy_from_slice(replacement);
+}
+
 #[test]
 fn verifies_one_exact_self_signed_ca_link_and_binds_both_certificates() {
     let child_encoded = fixture();
@@ -264,6 +277,112 @@ fn authenticates_the_exact_pair_consumed_from_selection_evidence() {
     assert!(std::ptr::eq(verified.child(), &child));
     assert!(std::ptr::eq(verified.candidate_issuer(), &candidates[1]));
     assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
+}
+
+#[test]
+fn authenticates_the_exact_target_link_projected_from_a_constructed_path() {
+    let child_encoded = fixture();
+    let mut issuer_encoded = fixture();
+    mutate_first(&mut issuer_encoded, &[0x02, 0x01, 0x01], |serial| {
+        serial[2] = 2;
+    });
+    let child = decode(&child_encoded);
+    let candidates = vec![decode(&issuer_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &child,
+        &candidates,
+        1,
+        2,
+        |certificate| certificate.encoded() == candidates[0].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(0).unwrap();
+
+    let verified = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy()).unwrap();
+
+    assert!(std::ptr::eq(
+        verified.adjacent_link().constructed_path(),
+        &path
+    ));
+    assert!(std::ptr::eq(
+        verified.adjacent_link().child_target_certificate().unwrap(),
+        &child
+    ));
+    assert!(verified
+        .adjacent_link()
+        .child_candidate_certificate()
+        .is_none());
+    assert!(std::ptr::eq(
+        verified.adjacent_link().issuer_certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(verified.issuer_public_key().modulus_bits(), 2_048);
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509RsaSha256ConstructedPathAdjacentLink"
+    );
+}
+
+#[test]
+fn authenticates_the_projected_candidate_child_without_endpoint_substitution() {
+    let mut target_encoded = fixture();
+    replace_nth(
+        &mut target_encoded,
+        b"fixture.example",
+        0,
+        b"interm1.example",
+    );
+    let mut intermediate_encoded = fixture();
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        1,
+        b"interm1.example",
+    );
+    replace_nth(
+        &mut intermediate_encoded,
+        b"fixture.example",
+        0,
+        b"root001.example",
+    );
+    let mut root_encoded = fixture();
+    replace_nth(&mut root_encoded, b"fixture.example", 1, b"root001.example");
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = construct_unique_x509_certificate_path_by(
+        &target,
+        &candidates,
+        2,
+        3,
+        |certificate| certificate.encoded() == candidates[1].encoded(),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+    )
+    .unwrap();
+    let adjacent_link = path.adjacent_link(1).unwrap();
+    assert!(std::ptr::eq(
+        adjacent_link.child_candidate_certificate().unwrap(),
+        &candidates[0]
+    ));
+    assert!(std::ptr::eq(
+        adjacent_link.issuer_certificate(),
+        &candidates[1]
+    ));
+
+    let error = verify_constructed_x509_rsa_sha256_issuer_link(adjacent_link, policy())
+        .expect_err("the mutated intermediate must fail its exact signature check");
+
+    assert!(matches!(
+        error.kind(),
+        X509RsaSha256ConstructedPathAdjacentLinkErrorKind::IssuerLink(
+            X509RsaSha256IssuerLinkErrorKind::ChildSignature(
+                X509RsaSha256SignatureErrorKind::EncodedMessage(_)
+                    | X509RsaSha256SignatureErrorKind::PublicOperation(_)
+            )
+        )
+    ));
+    assert!(!error.to_string().contains("interm1"));
+    assert!(!error.to_string().contains("root001"));
 }
 
 #[test]
