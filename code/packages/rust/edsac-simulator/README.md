@@ -26,7 +26,7 @@ assert!(result.halted);
 ```
 
 The normative architecture and lifecycle contract is
-[`../../../specs/07n-edsac-simulator.md`](../../../specs/07n-edsac-simulator.md).
+[`../../../specs/07ab-edsac-simulator.md`](../../../specs/07ab-edsac-simulator.md).
 
 ## Development
 

@@ -1,4 +1,4 @@
-# Spec 07n — EDSAC (1949) Functional Simulator
+# Spec 07ab — EDSAC (1949) Functional Simulator
 
 ## Status
 
