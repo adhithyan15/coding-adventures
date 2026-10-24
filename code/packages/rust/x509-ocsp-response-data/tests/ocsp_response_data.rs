@@ -101,6 +101,7 @@ fn decode(
 fn decodes_default_v1_by_name_and_one_response() {
     let encoded = response_data(responder_by_name(), &[single_response(1)], &[]);
     let decoded = decode(&encoded).unwrap();
+    assert_eq!(decoded.encoded(), encoded);
     assert_eq!(decoded.version(), X509OcspResponseDataVersion::V1);
     match decoded.responder_id() {
         X509OcspResponderId::ByName(name) => {
@@ -452,6 +453,7 @@ fn debug_and_errors_do_not_disclose_responder_or_response_bytes() {
     assert!(!debug.contains("deadbeef"));
     assert!(!debug.contains("cafe"));
     assert!(!debug.contains("111111"));
+    assert!(!debug.contains("3081"));
 
     let invalid = response_data(
         responder_by_key(&[0xde, 0xad, 0xbe, 0xef]),

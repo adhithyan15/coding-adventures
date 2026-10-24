@@ -248,6 +248,7 @@ impl Error for X509OcspResponseDataError {}
 /// One structurally valid RFC 6960 `ResponseData` value.
 #[derive(Clone, PartialEq, Eq)]
 pub struct X509OcspResponseData<'a> {
+    encoded: &'a [u8],
     version: X509OcspResponseDataVersion,
     responder_id: X509OcspResponderId<'a>,
     produced_at: X509Time,
@@ -257,6 +258,12 @@ pub struct X509OcspResponseData<'a> {
 }
 
 impl<'a> X509OcspResponseData<'a> {
+    /// Return the exact canonical DER bytes later signature verification must
+    /// authenticate. This method alone grants no authentication authority.
+    pub const fn encoded(&self) -> &'a [u8] {
+        self.encoded
+    }
+
     /// Return the omitted-default RFC 6960 version.
     pub const fn version(&self) -> X509OcspResponseDataVersion {
         self.version
@@ -326,6 +333,7 @@ pub fn decode_x509_ocsp_response_data<'a>(
     decoder: &mut Asn1Decoder,
     element: Asn1Element<'a>,
 ) -> Result<X509OcspResponseData<'a>, X509OcspResponseDataError> {
+    let encoded = element.encoded();
     let value_offset = element.header().len();
     let value_length = element.value().len();
     let mut fields = decoder
@@ -413,6 +421,7 @@ pub fn decode_x509_ocsp_response_data<'a>(
     };
 
     Ok(X509OcspResponseData {
+        encoded,
         version,
         responder_id,
         produced_at,

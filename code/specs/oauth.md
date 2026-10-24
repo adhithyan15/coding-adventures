@@ -1226,6 +1226,8 @@ OCTET STRING, `producedAt` uses the strict OCSP GeneralizedTime profile, and
 the non-empty ordered response sequence composes bounded structural
 `SingleResponse` values. One optional explicit `responseExtensions [1]` field
 may follow and remains a generic, non-empty, unique-OID extension collection.
+Success retains the exact canonical DER `ResponseData` bytes that a later
+repository-owned verifier must authenticate, without reserialization.
 The structural layer does not interpret the responder key hash or extensions,
 select or validate CertID hash algorithms, authenticate a response signature,
 authorize a responder, bind any response to a certificate or constructed path,
