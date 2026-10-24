@@ -46,9 +46,11 @@ silently executing.
 - deterministic simulator halt state; and
 - installed-program origin and length.
 
-Unsupported configuration SPRs read as their documented fixed configuration
-or zero. Writable CPU SPRs, mapped GPRs, and MAC registers round-trip through
-`l.mfspr` and `l.mtspr`; invalid or read-only writes fail atomically.
+Unsupported 16-bit SPRs read as zero and ignore writes, while documented
+configuration SPRs expose their fixed values. Writable CPU SPRs, mapped GPRs,
+and MAC registers round-trip through `l.mfspr` and `l.mtspr`; implemented
+read-only writes and out-of-range addresses fail atomically. Both instructions
+require supervisor mode.
 
 ## Transport and lifecycle
 
@@ -88,10 +90,13 @@ The functional surface includes:
 
 Branches and jumps have no architectural delay slot: their target is visible
 immediately, link register `r9` receives the following instruction address,
-and `CPUCFGR[ND]` reports the selected configuration. `l.sys` and `l.trap`
-enter their architectural exception vectors after saving EPCR0/ESR0;
-`l.rfe` restores both. Arithmetic updates carry and overflow exactly where the
-manual specifies. Division by zero and signed overflow are typed atomic faults.
+and `CPUCFGR[ND]` reports the selected configuration. `l.jalr r9` is rejected
+because the link write would overlap its target operand. `l.sys` and `l.trap`
+enter their architectural exception vectors after saving EPCR0/ESR0 and
+disabling DME, IME, IEE, and TEE; `l.rfe` restores both. A system call saves the
+following PC, while a trap saves the trapping PC. Arithmetic updates carry and
+overflow exactly where the manual specifies. Division by zero and signed
+overflow are typed atomic faults.
 
 ## Errors and acceptance
 
@@ -100,7 +105,8 @@ out-of-range fetch/data access, fetch outside the installed image, unknown or
 unsupported instructions, invalid SPR access, divide by zero, signed division
 overflow, halted execution, excessive trace retention, and exhausted step
 budgets. As the architecture specifies, a failed `l.swa` is a successful
-instruction that clears SR[F] and does not write memory.
+instruction that clears SR[F] and does not write memory. Ordinary writes cancel
+an atomic reservation only when their byte ranges overlap its reserved word.
 Every error has stable nonempty display text and every failing transition
 preserves the complete state.
 
@@ -111,6 +117,6 @@ Completion requires:
 2. behavioral witnesses for both branch outcomes, signed/unsigned data,
    carry/overflow, jumps/links, exceptions, atomics, and memory widths;
 3. lifecycle, restore, rollback, malformed-word, and bounded-execution tests;
-4. line coverage above 80% (completion baseline: 83.80%, 481/574); and
+4. line coverage above 80% (completion baseline: 93.95%, 746/794); and
 5. Rustfmt, strict Clippy, rustdoc, release tests, BUILD integration, lessons
    validation, affected-package checks, and security review before publication.

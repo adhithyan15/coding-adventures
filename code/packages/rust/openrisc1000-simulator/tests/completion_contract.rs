@@ -1,6 +1,6 @@
 use openrisc1000_simulator::{
     primary_opcode_is_implemented, ExecutionResult, OpenRisc1000Error, OpenRisc1000Simulator,
-    OpenRisc1000State, MEMORY_SIZE, SR_CY, SR_F, SR_FO, SR_OV,
+    OpenRisc1000State, MEMORY_SIZE, SR_CY, SR_F, SR_FO, SR_OV, SR_SM,
 };
 
 fn words(words: &[u32]) -> Vec<u8> {
@@ -29,6 +29,14 @@ const fn store(op: u32, ra: u32, rb: u32, offset: u16) -> u32 {
         | (ra << 16)
         | (rb << 11)
         | ((offset as u32) & 0x7ff)
+}
+
+const fn mtspr(ra: u32, rb: u32, address: u16) -> u32 {
+    (0x30 << 26)
+        | ((((address as u32) >> 11) & 0x1f) << 21)
+        | (ra << 16)
+        | (rb << 11)
+        | ((address as u32) & 0x7ff)
 }
 
 const NOP: u32 = 0x1500_0000;
@@ -137,6 +145,27 @@ fn arithmetic_reports_carry_and_signed_overflow() {
 }
 
 #[test]
+fn multiply_immediate_and_division_refresh_their_status_flags() {
+    let mut multiply = loaded(&[imm(0x2c, 2, 1, 2), imm(0x2c, 3, 4, 2), HALT]);
+    multiply.write_register(1, i32::MAX as u32).unwrap();
+    multiply.write_register(4, 2).unwrap();
+    assert_ne!(multiply.step().unwrap().state_after.sr & SR_OV, 0);
+    assert_eq!(multiply.step().unwrap().state_after.sr & SR_OV, 0);
+
+    let mut divide = loaded(&[reg(3, 1, 2, 0x309), reg(4, 1, 2, 0x30a), HALT]);
+    let mut state = divide.get_state();
+    state.gpr[1] = 12;
+    state.gpr[2] = 3;
+    state.sr |= SR_OV | SR_CY;
+    divide.restore(state).unwrap();
+    let signed = divide.step().unwrap();
+    assert_eq!(signed.state_after.sr & SR_OV, 0);
+    assert_ne!(signed.state_after.sr & SR_CY, 0);
+    let unsigned = divide.step().unwrap();
+    assert_eq!(unsigned.state_after.sr & (SR_OV | SR_CY), 0);
+}
+
+#[test]
 fn shifts_rotates_extensions_and_bit_search_execute() {
     let mut simulator = loaded(&[
         imm(0x2a, 1, 0, 0x8001),
@@ -178,6 +207,22 @@ fn signed_and_unsigned_compares_control_branches() {
 }
 
 #[test]
+fn unsigned_immediate_compares_sign_extend_before_comparison() {
+    for immediate in [0x8000, 0xffff] {
+        let mut simulator = loaded(&[compare_imm(0x04, 1, immediate), HALT]);
+        simulator
+            .write_register(1, u32::from(immediate) - 1)
+            .unwrap();
+        simulator.step().unwrap();
+        assert_ne!(
+            simulator.get_state().sr & SR_F,
+            0,
+            "immediate {immediate:#06x}"
+        );
+    }
+}
+
+#[test]
 fn jumps_link_without_a_delay_slot() {
     let mut simulator = loaded(&[
         (0x01 << 26) | 2,
@@ -192,6 +237,19 @@ fn jumps_link_without_a_delay_slot() {
     assert_eq!(result.final_state.gpr[2], 2);
     assert_eq!(result.final_state.gpr[9], 0x110);
     assert_eq!(result.final_state.pc, 0x114);
+}
+
+#[test]
+fn jalr_rejects_link_register_as_its_target_atomically() {
+    let word = (0x12 << 26) | (9 << 11);
+    let mut simulator = loaded(&[word, HALT]);
+    simulator.write_register(9, 0x104).unwrap();
+    let before = simulator.get_state();
+    assert_eq!(
+        simulator.step(),
+        Err(OpenRisc1000Error::UnknownInstruction { word, pc: 0x100 })
+    );
+    assert_eq!(simulator.get_state(), before);
 }
 
 #[test]
@@ -282,21 +340,27 @@ fn sprs_gprs_and_mac_registers_round_trip() {
     let mtspr_maclo = (0x30 << 26) | (5 << 21) | (1 << 16) | (2 << 11) | 1;
     let mut simulator = loaded(&[mtspr_sr, mfspr_sr, mtspr_maclo, HALT]);
     simulator.write_register(1, 0).unwrap();
-    simulator.write_register(2, SR_FO | SR_F | SR_CY).unwrap();
+    simulator
+        .write_register(2, SR_FO | SR_SM | SR_F | SR_CY)
+        .unwrap();
     let state = simulator.run(4).unwrap().final_state;
     assert_eq!(state.gpr[3] & (SR_FO | SR_F | SR_CY), SR_FO | SR_F | SR_CY);
     assert_eq!(state.sr & SR_FO, SR_FO);
-    assert_eq!(state.maclo, SR_FO | SR_F | SR_CY);
+    assert_eq!(state.maclo, SR_FO | SR_SM | SR_F | SR_CY);
 }
 
 #[test]
 fn system_exception_and_rfe_save_and_restore_control_state() {
     let mut simulator = loaded(&[(0x08 << 26) | 7, HALT]);
+    let mut enabled = simulator.get_state();
+    enabled.sr |= (1 << 1) | (1 << 2) | (1 << 5) | (1 << 6);
+    simulator.restore(enabled).unwrap();
     simulator.step().unwrap();
     let state = simulator.get_state();
     assert_eq!(state.epcr0, 0x104);
     assert_eq!(state.pc, 0x0c00);
     assert_eq!(state.esr0 & SR_FO, SR_FO);
+    assert_eq!(state.sr & ((1 << 1) | (1 << 2) | (1 << 5) | (1 << 6)), 0);
 
     let mut restored = state;
     restored.memory[0x0c00..0x0c04].copy_from_slice(&(0x09_u32 << 26).to_be_bytes());
@@ -305,6 +369,22 @@ fn system_exception_and_rfe_save_and_restore_control_state() {
     simulator.restore(restored).unwrap();
     simulator.step().unwrap();
     assert_eq!(simulator.get_state().pc, 0x104);
+}
+
+#[test]
+fn trap_rfe_returns_to_the_trapping_instruction() {
+    let trap = (0x08 << 26) | (1 << 24) | 9;
+    let mut simulator = loaded(&[trap, HALT]);
+    simulator.step().unwrap();
+    let mut state = simulator.get_state();
+    assert_eq!(state.epcr0, 0x100);
+    assert_eq!(state.pc, 0x0e00);
+    state.memory[0x0e00..0x0e04].copy_from_slice(&(0x09_u32 << 26).to_be_bytes());
+    state.loaded_origin = 0;
+    state.loaded_len = 0x0e04;
+    simulator.restore(state).unwrap();
+    simulator.step().unwrap();
+    assert_eq!(simulator.get_state().pc, 0x100);
 }
 
 #[test]
@@ -330,6 +410,40 @@ fn atomic_load_store_requires_a_matching_reservation() {
     );
     simulator.step().unwrap();
     assert_eq!(simulator.get_state().sr & SR_F, 0);
+}
+
+#[test]
+fn only_overlapping_stores_cancel_an_atomic_reservation() {
+    let mut simulator = loaded(&[
+        imm(0x1b, 2, 1, 0),
+        store(0x35, 5, 4, 0),
+        store(0x33, 1, 3, 0),
+        HALT,
+    ]);
+    simulator.write_register(1, 0x200).unwrap();
+    simulator.write_register(3, 0x1122_3344).unwrap();
+    simulator.write_register(4, 0x5566_7788).unwrap();
+    simulator.write_register(5, 0x300).unwrap();
+    simulator
+        .write_memory(0x200, &[0xaa, 0xbb, 0xcc, 0xdd])
+        .unwrap();
+    simulator.step().unwrap();
+    simulator.step().unwrap();
+    assert_eq!(simulator.get_state().reservation, Some(0x200));
+    simulator.step().unwrap();
+    assert_ne!(simulator.get_state().sr & SR_F, 0);
+
+    let mut same = loaded(&[imm(0x1b, 2, 1, 0), HALT]);
+    same.write_register(1, 0x200).unwrap();
+    same.step().unwrap();
+    same.write_memory(0x200, &[0]).unwrap();
+    assert_eq!(same.get_state().reservation, None);
+
+    let mut partial = loaded(&[imm(0x1b, 2, 1, 0), HALT]);
+    partial.write_register(1, 0x200).unwrap();
+    partial.step().unwrap();
+    partial.write_memory(0x203, &[0]).unwrap();
+    assert_eq!(partial.get_state().reservation, None);
 }
 
 #[test]
@@ -540,10 +654,17 @@ fn special_register_fixed_and_mapped_surfaces_are_visible() {
         assert_eq!(simulator.step().unwrap().mnemonic, "l.mfspr");
     }
 
-    let mut simulator = loaded(&[imm(0x2d, 2, 1, 0x222), HALT]);
+    let mut simulator = loaded(&[imm(0x2d, 2, 1, 0x222), mtspr(1, 3, 0x222), HALT]);
+    simulator.write_register(3, 0xfeed_face).unwrap();
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mfspr");
+    assert_eq!(simulator.read_register(2).unwrap(), 0);
+    assert_eq!(simulator.step().unwrap().mnemonic, "l.mtspr");
+
+    let mut invalid_read = loaded(&[imm(0x2d, 2, 1, 0x222), HALT]);
+    invalid_read.write_register(1, 0x1_0000).unwrap();
     assert!(matches!(
-        simulator.step(),
-        Err(OpenRisc1000Error::InvalidSprRead { address: 0x222 })
+        invalid_read.step(),
+        Err(OpenRisc1000Error::InvalidSprRead { address: 0x1_0222 })
     ));
     let read_only_write = (0x30 << 26) | (1 << 16) | (2 << 11);
     let mut simulator = loaded(&[read_only_write, HALT]);
@@ -551,6 +672,23 @@ fn special_register_fixed_and_mapped_surfaces_are_visible() {
         simulator.step(),
         Err(OpenRisc1000Error::InvalidSprWrite { address: 0 })
     ));
+}
+
+#[test]
+fn special_register_instructions_require_supervisor_mode() {
+    for word in [imm(0x2d, 2, 1, 17), mtspr(1, 2, 17)] {
+        let mut simulator = loaded(&[word, HALT]);
+        let mut state = simulator.get_state();
+        state.sr &= !SR_SM;
+        state.gpr[2] = 0xfeed_face;
+        simulator.restore(state).unwrap();
+        let before = simulator.get_state();
+        assert_eq!(
+            simulator.step(),
+            Err(OpenRisc1000Error::PrivilegedInstruction { word, pc: 0x100 })
+        );
+        assert_eq!(simulator.get_state(), before);
+    }
 }
 
 #[test]
@@ -577,6 +715,12 @@ fn public_validation_and_reset_cover_all_boundaries() {
     state.pc = 3;
     assert!(matches!(
         simulator.restore(state),
+        Err(OpenRisc1000Error::InvalidState { .. })
+    ));
+    let mut invalid_reservation = simulator.get_state();
+    invalid_reservation.reservation = Some(0x1_0000);
+    assert!(matches!(
+        simulator.restore(invalid_reservation),
         Err(OpenRisc1000Error::InvalidState { .. })
     ));
     simulator.reset();

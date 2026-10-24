@@ -47,4 +47,4 @@ state. Failed steps and failed bounded runs leave the machine unchanged.
 The completion contract sweeps every primary opcode, all implemented ALU,
 shift, compare, MAC, system, and SPR subfamilies, malformed encodings, lifecycle
 faults, rollback, atomics, exception entry/return, and exact transport. Release
-tests, strict Clippy, rustdoc warnings, and 83.80% line coverage (481/574) pass.
+tests, strict Clippy, rustdoc warnings, and 93.95% line coverage (746/794) pass.

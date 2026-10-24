@@ -14,6 +14,10 @@ pub const MEMORY_SIZE: usize = 65_536;
 pub const MAX_RETAINED_STEPS: usize = 1_024;
 
 pub const SR_SM: u32 = 1 << 0;
+const SR_TEE: u32 = 1 << 1;
+const SR_IEE: u32 = 1 << 2;
+const SR_DME: u32 = 1 << 5;
+const SR_IME: u32 = 1 << 6;
 pub const SR_F: u32 = 1 << 9;
 pub const SR_CY: u32 = 1 << 10;
 pub const SR_OV: u32 = 1 << 11;
@@ -131,6 +135,7 @@ pub enum OpenRisc1000Error {
     DataOutOfRange { address: u32, width: usize },
     UnknownInstruction { word: u32, pc: u32 },
     UnsupportedInstruction { word: u32, pc: u32 },
+    PrivilegedInstruction { word: u32, pc: u32 },
     InvalidSprRead { address: u32 },
     InvalidSprWrite { address: u32 },
     InvalidRegister { register: usize },
@@ -171,6 +176,9 @@ impl fmt::Display for OpenRisc1000Error {
             }
             Self::UnsupportedInstruction { word, pc } => {
                 write!(f, "unsupported instruction {word:#010x} at {pc:#010x}")
+            }
+            Self::PrivilegedInstruction { word, pc } => {
+                write!(f, "privileged instruction {word:#010x} at {pc:#010x}")
             }
             Self::InvalidSprRead { address } => {
                 write!(f, "special-purpose register {address:#06x} is not readable")
@@ -264,7 +272,7 @@ impl OpenRisc1000Simulator {
     pub fn write_memory(&mut self, address: u32, bytes: &[u8]) -> Result<(), OpenRisc1000Error> {
         let range = checked_range(address, bytes.len())?;
         self.state.memory[range].copy_from_slice(bytes);
-        self.state.reservation = None;
+        invalidate_overlapping_reservation(&mut self.state, address, bytes.len());
         Ok(())
     }
 
@@ -368,9 +376,14 @@ fn validate_state(state: &OpenRisc1000State) -> Result<(), OpenRisc1000Error> {
             reason: "program counter must be word aligned",
         });
     }
-    if state.reservation.is_some_and(|address| address & 3 != 0) {
+    if state.reservation.is_some_and(|address| {
+        address & 3 != 0
+            || (address as usize)
+                .checked_add(4)
+                .is_none_or(|end| end > MEMORY_SIZE)
+    }) {
         return Err(OpenRisc1000Error::InvalidState {
-            reason: "atomic reservation must be word aligned",
+            reason: "atomic reservation must name an aligned in-range word",
         });
     }
     Ok(())
@@ -398,6 +411,30 @@ fn checked_range(address: u32, width: usize) -> Result<std::ops::Range<usize>, O
 fn check_alignment(address: u32, width: usize) -> Result<(), OpenRisc1000Error> {
     if width > 1 && !(address as usize).is_multiple_of(width) {
         return Err(OpenRisc1000Error::MisalignedData { address, width });
+    }
+    Ok(())
+}
+
+fn invalidate_overlapping_reservation(state: &mut OpenRisc1000State, address: u32, width: usize) {
+    let Some(reserved) = state.reservation else {
+        return;
+    };
+    let store_start = u64::from(address);
+    let store_end = store_start + width as u64;
+    let reservation_start = u64::from(reserved);
+    let reservation_end = reservation_start + 4;
+    if store_start < reservation_end && reservation_start < store_end {
+        state.reservation = None;
+    }
+}
+
+fn require_supervisor(
+    state: &OpenRisc1000State,
+    word: u32,
+    pc: u32,
+) -> Result<(), OpenRisc1000Error> {
+    if state.sr & SR_SM == 0 {
+        return Err(OpenRisc1000Error::PrivilegedInstruction { word, pc });
     }
     Ok(())
 }
@@ -502,6 +539,9 @@ fn execute_word(
             Ok("l.jr")
         }
         0x12 => {
+            if rb == 9 {
+                return Err(OpenRisc1000Error::UnknownInstruction { word, pc });
+            }
             state.gpr[9] = pc.wrapping_add(4);
             state.pc = state.gpr[rb];
             Ok("l.jalr")
@@ -575,10 +615,17 @@ fn execute_word(
             Ok("l.xori")
         }
         0x2c => {
-            state.gpr[rd] = state.gpr[ra].wrapping_mul(sign_extend16(immediate));
+            let product = i64::from(state.gpr[ra] as i32) * i64::from(immediate as i16);
+            state.gpr[rd] = product as u32;
+            set_flag(
+                &mut state.sr,
+                SR_OV,
+                product < i64::from(i32::MIN) || product > i64::from(i32::MAX),
+            );
             Ok("l.muli")
         }
         0x2d => {
+            require_supervisor(state, word, pc)?;
             let address = state.gpr[ra] | u32::from(immediate);
             state.gpr[rd] = read_spr(state, address)?;
             Ok("l.mfspr")
@@ -586,6 +633,7 @@ fn execute_word(
         0x2e => execute_shift_immediate(state, word, rd, ra, pc),
         0x2f => execute_compare_immediate(state, word, ra, immediate, pc),
         0x30 => {
+            require_supervisor(state, word, pc)?;
             let spr = (((word >> 21) & 0x1f) << 11) | (word & 0x7ff);
             let address = state.gpr[ra] | spr;
             write_spr(state, address, state.gpr[rb])?;
@@ -607,19 +655,16 @@ fn execute_word(
         0x35 => {
             let address = effective_store_address(state.gpr[ra], word);
             store_u32(state, address, state.gpr[rb])?;
-            state.reservation = None;
             Ok("l.sw")
         }
         0x36 => {
             let address = effective_store_address(state.gpr[ra], word);
             store_u8(state, address, state.gpr[rb] as u8)?;
-            state.reservation = None;
             Ok("l.sb")
         }
         0x37 => {
             let address = effective_store_address(state.gpr[ra], word);
             store_u16(state, address, state.gpr[rb] as u16)?;
-            state.reservation = None;
             Ok("l.sh")
         }
         0x38 => execute_register_alu(state, word, rd, ra, rb, pc),
@@ -643,7 +688,7 @@ fn execute_system(
             Ok("l.sys")
         }
         0x2100 => {
-            enter_exception(state, pc.wrapping_add(4), 0x0e00);
+            enter_exception(state, pc, 0x0e00);
             Ok("l.trap")
         }
         _ if word == 0x2200_0000 => Ok("l.msync"),
@@ -657,7 +702,7 @@ fn enter_exception(state: &mut OpenRisc1000State, return_pc: u32, vector: u32) {
     state.epcr0 = return_pc;
     state.esr0 = state.sr;
     state.eear0 = 0;
-    state.sr = (state.sr | SR_SM | SR_FO) & !SR_DSX;
+    state.sr = (state.sr | SR_SM | SR_FO) & !(SR_DSX | SR_DME | SR_IME | SR_IEE | SR_TEE);
     state.pc = vector;
     state.reservation = None;
 }
@@ -703,15 +748,14 @@ fn execute_compare_immediate(
 ) -> Result<&'static str, OpenRisc1000Error> {
     let condition = (word >> 21) & 0x1f;
     let lhs = state.gpr[ra];
-    let unsigned = u32::from(immediate);
     let signed = sign_extend16(immediate);
     let (result, mnemonic) = match condition {
         0x00 => (lhs == signed, "l.sfeqi"),
         0x01 => (lhs != signed, "l.sfnei"),
-        0x02 => (lhs > unsigned, "l.sfgtui"),
-        0x03 => (lhs >= unsigned, "l.sfgeui"),
-        0x04 => (lhs < unsigned, "l.sfltui"),
-        0x05 => (lhs <= unsigned, "l.sfleui"),
+        0x02 => (lhs > signed, "l.sfgtui"),
+        0x03 => (lhs >= signed, "l.sfgeui"),
+        0x04 => (lhs < signed, "l.sfltui"),
+        0x05 => (lhs <= signed, "l.sfleui"),
         0x0a => ((lhs as i32) > (signed as i32), "l.sfgtsi"),
         0x0b => ((lhs as i32) >= (signed as i32), "l.sfgesi"),
         0x0c => ((lhs as i32) < (signed as i32), "l.sfltsi"),
@@ -909,6 +953,7 @@ fn execute_register_alu(
                 return Err(OpenRisc1000Error::SignedDivisionOverflow);
             }
             state.gpr[rd] = ((lhs as i32) / (rhs as i32)) as u32;
+            set_flag(&mut state.sr, SR_OV, false);
             Ok("l.div")
         }
         0x30a => {
@@ -916,6 +961,7 @@ fn execute_register_alu(
                 return Err(OpenRisc1000Error::DivideByZero);
             }
             state.gpr[rd] = lhs / rhs;
+            set_flag(&mut state.sr, SR_CY, false);
             Ok("l.divu")
         }
         0x30b => {
@@ -951,6 +997,7 @@ fn read_spr(state: &OpenRisc1000State, address: u32) -> Result<u32, OpenRisc1000
         SPR_MACLO => Ok(state.maclo),
         SPR_MACHI => Ok(state.machi),
         SPR_GPR_BASE..=1055 => Ok(state.gpr[(address - SPR_GPR_BASE) as usize]),
+        _ if address <= u32::from(u16::MAX) => Ok(0),
         _ => Err(OpenRisc1000Error::InvalidSprRead { address }),
     }
 }
@@ -969,6 +1016,10 @@ fn write_spr(
         SPR_MACLO => state.maclo = value,
         SPR_MACHI => state.machi = value,
         SPR_GPR_BASE..=1055 => state.gpr[(address - SPR_GPR_BASE) as usize] = value,
+        SPR_VR | SPR_UPR | SPR_CPUCFGR | 3..=9 | SPR_AVR | SPR_PPC | SPR_COREID | SPR_NUMCORES => {
+            return Err(OpenRisc1000Error::InvalidSprWrite { address })
+        }
+        _ if address <= u32::from(u16::MAX) => {}
         _ => return Err(OpenRisc1000Error::InvalidSprWrite { address }),
     }
     Ok(())
@@ -1073,6 +1124,7 @@ fn store_u8(
 ) -> Result<(), OpenRisc1000Error> {
     let range = checked_range(address, 1)?;
     state.memory[range.start] = value;
+    invalidate_overlapping_reservation(state, address, 1);
     Ok(())
 }
 
@@ -1084,6 +1136,7 @@ fn store_u16(
     check_alignment(address, 2)?;
     let range = checked_range(address, 2)?;
     state.memory[range].copy_from_slice(&value.to_be_bytes());
+    invalidate_overlapping_reservation(state, address, 2);
     Ok(())
 }
 
@@ -1095,5 +1148,6 @@ fn store_u32(
     check_alignment(address, 4)?;
     let range = checked_range(address, 4)?;
     state.memory[range].copy_from_slice(&value.to_be_bytes());
+    invalidate_overlapping_reservation(state, address, 4);
     Ok(())
 }
