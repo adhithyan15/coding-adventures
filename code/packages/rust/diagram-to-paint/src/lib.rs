@@ -7302,11 +7302,11 @@ where
 
     // ── Relationships (drawn behind nodes) ───────────────────────────────────
     for rel in &diagram.relationships {
-        instructions.push(PaintInstruction::Path(line_path(
-            &rel.points,
-            "#6b7280",
-            1.5,
-        )));
+        let mut relationship_path = line_path(&rel.points, "#6b7280", 1.5);
+        if rel.kind == RelKind::Dependency {
+            relationship_path.stroke_dash = Some(vec![6.0, 4.0]);
+        }
+        instructions.push(PaintInstruction::Path(relationship_path));
         if rel.end_arrow && rel.points.len() >= 2 {
             let tip = &rel.points[rel.points.len() - 1];
             let prev = &rel.points[rel.points.len() - 2];
@@ -10249,6 +10249,10 @@ mod tests {
                 .count(),
             2
         );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke_dash.as_deref() == Some(&[6.0, 4.0])
+        )));
     }
 
     #[test]

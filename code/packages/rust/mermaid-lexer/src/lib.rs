@@ -1712,6 +1712,20 @@ mod tests {
     }
 
     #[test]
+    fn tokenizes_er_mixed_relationship_operators() {
+        let tokens = tokenize_mermaid_er(
+            "erDiagram\nCUSTOMER 1.-one or more DELIVERY_ADDRESS : mixed left\nCUSTOMER 1-.one or more POSTAL_ADDRESS : mixed right\n",
+        );
+        let operators: Vec<&str> = tokens
+            .iter()
+            .filter(|token| token.type_name.as_deref() == Some("NON_IDENTIFYING"))
+            .map(|token| token.value.as_str())
+            .collect();
+
+        assert_eq!(operators, [".-", "-."]);
+    }
+
+    #[test]
     fn tokenizes_c4_macros_and_keyed_arguments() {
         let tokens = tokenize_mermaid_c4(
             "C4Context\nPerson(user, \"Customer\", $sprite=\"person\")\nRel(user, bank, \"Uses\")\n",
