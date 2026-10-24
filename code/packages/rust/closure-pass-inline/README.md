@@ -123,7 +123,9 @@ structurally cannot do. It is admitted only under a tight, sound subset
    an expression statement or a `var` / `let` / `const` declaration, plus an
    optional `return` as the *final* statement; nothing else (no *early*
    return).
-4. **No `this` / `arguments`** — frame-bound, would rebind on a splice.
+4. **No `this` / `arguments` / `super` / `new.target`** — frame-bound,
+   would rebind on a splice. Arrow bodies count, since an arrow inherits
+   them (#18115).
 5. **Callee locals alpha-renamed to program-fresh names** before
    splicing — a spliced `let e` can never collide with the call-site scope.
    This is what makes admitting a `var` local sound (CLOC15 Open Q3): a `var`
