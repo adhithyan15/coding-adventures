@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 194,
+  "sourceHash": "fnv1a64:d5ced470f5894391",
+  "lessonIds": [
+    "PA-C194-identity-return",
+    "PA-C194-vidiarthi",
+    "PA-C194-vidiarthi-review",
+    "PA-C194-student-frame",
+    "PA-C194-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "punjabi/narration/ch194.txt",
+  "json": "punjabi/narration/ch194.json",
+  "textHash": "fnv1a64:b269d19bab0c73b6",
+  "jsonHash": "fnv1a64:c8a96a6c0de0427f",
+  "findings": []
+}
