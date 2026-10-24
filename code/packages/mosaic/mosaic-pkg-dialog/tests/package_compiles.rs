@@ -323,56 +323,15 @@ fn msl_compiles_and_declares_three_parts() {
 // 5. Per-backend artifact compilation
 // ---------------------------------------------------------------------------
 
-/// The list of backends the artifact builder currently *attempts*.  React,
-/// SwiftUI, and Qt have a `from_pipeline` entry point — but until the
-/// UI29-1-K-react, K-swiftui, K-qt PRs land, those entry points return
-/// `UnknownPrimitive("HostDialog")`, which the artifact builder wraps as
-/// `BuildError::PipelineError`.  The test below treats that as a
-/// **deferred** state rather than a failure.
-const ARTIFACT_BACKENDS: &[Backend] = &[
-    Backend::React,
-    Backend::SwiftUI,
-    Backend::Qt,
-    Backend::Html,
-    Backend::WebComponent,
-    Backend::Xaml,
-];
+/// Every backend: `HostDialog` lowers on all of them now (the UI29-1-K-*
+/// PRs landed), so a failure on any is a real failure. This used to be a
+/// hand-kept list of six backends that tolerated an "unknown primitive
+/// HostDialog" error as *deferred*; it silently excluded Flutter, Compose
+/// and Electron.
+const ARTIFACT_BACKENDS: [Backend; 9] = Backend::ALL;
 
-/// Distinguish an "unknown primitive: HostDialog" pipeline error (the
-/// expected "K-* PR hasn't landed yet" state) from any other failure
-/// mode.  Each backend's emitter renders its `UnknownPrimitive` error
-/// slightly differently — the React emitter writes
-/// `"moslayout primitive 'HostDialog' is not yet supported by the
-/// pipeline React emitter"`, the SwiftUI emitter writes a similar
-/// `"primitive 'HostDialog' not yet supported"` shape, and the Qt
-/// emitter follows the same template — but every variant includes the
-/// substring `HostDialog`.  Since `HostDialog` is the *only* primitive
-/// we use in this package that any backend might not recognise (every
-/// other tag — Box, Column, Text, HostButton — has been supported on
-/// every backend since the v0.1.0 commit), a pipeline error whose
-/// message mentions `HostDialog` is unambiguously the deferred state.
-///
-/// Anything else (panics, IO errors, a *different* unknown primitive,
-/// a syntax-level pipeline error, a manifest error) bubbles up as a
-/// real test failure.
-fn is_deferred_hostdialog_error(err: &BuildError) -> bool {
-    match err {
-        BuildError::PipelineError { error, .. } => error.contains("HostDialog"),
-        _ => false,
-    }
-}
-
-/// For each artifact backend, drive `build_package` and demand one of:
-///
-///   (a) Ok(BuildResult) with a non-empty `Dialog.<ext>` artifact — the
-///       backend's HostDialog lowering has landed.
-///   (b) Err(PipelineError) whose message mentions `UnknownPrimitive`
-///       and `HostDialog` — the backend's HostDialog lowering is still
-///       in flight.  This is the expected state on `main` today.
-///
-/// Anything else fails the test.  After the run, the test prints a
-/// per-backend status line so a contributor can see at a glance which
-/// backends are ready.
+/// For each backend, drive `build_package` and demand an `Ok(BuildResult)`
+/// with a non-empty per-component artifact that names `Dialog`.
 #[test]
 fn artifact_backends_either_build_or_defer_on_hostdialog() {
     // Stage output into a sibling `target/dialog-artifacts` directory
@@ -382,12 +341,8 @@ fn artifact_backends_either_build_or_defer_on_hostdialog() {
     let out_root = package_root().join("target").join("dialog-artifacts");
     let _ = fs::remove_dir_all(&out_root);
 
-    // Track per-backend outcomes so we can print a status table at the
-    // end.  A bare-bones `Vec<(Backend, &str)>` is enough — this is a
-    // developer-facing diagnostic, not a parsed CI artifact.
-    let mut outcomes: Vec<(Backend, &'static str)> = Vec::new();
 
-    for backend in ARTIFACT_BACKENDS {
+    for backend in &ARTIFACT_BACKENDS {
         let opts = BuildOptions {
             package_root: package_root(),
             output_root: out_root.clone(),
@@ -449,30 +404,11 @@ fn artifact_backends_either_build_or_defer_on_hostdialog() {
                     component_artifact.display(),
                     body
                 );
-                outcomes.push((*backend, "BUILT"));
-            }
-            Err(err) if is_deferred_hostdialog_error(&err) => {
-                // The K-* PR for this backend hasn't landed yet — this
-                // is the expected state on `main` today for v0.2.0.
-                outcomes.push((*backend, "DEFERRED (HostDialog lowering pending)"));
             }
             Err(err) => {
-                panic!(
-                    "{:?} build failed with an unexpected error (neither \
-                     a successful build nor a deferred-HostDialog \
-                     UnknownPrimitive pipeline error): {:?}",
-                    backend, err
-                );
+                panic!("{:?} failed to build the Dialog package: {:?}", backend, err);
             }
         }
-    }
-
-    // Print a status table so the developer running `cargo test --nocapture`
-    // sees which backends are ready.  When every line says BUILT, the
-    // K-* roadmap is done.
-    eprintln!("\nmosaic-pkg-dialog v0.2.0 — per-backend status:");
-    for (backend, status) in &outcomes {
-        eprintln!("  {:?}: {}", backend, status);
     }
 }
 
