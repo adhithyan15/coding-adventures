@@ -6463,7 +6463,7 @@ mod v_es2021 {
                 },
                 TokenDefinition {
                     name: r#"FLOAT_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
                     is_regex: true,
                     line_number: 85,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -6477,7 +6477,7 @@ mod v_es2021 {
                 },
                 TokenDefinition {
                     name: r#"SCI_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
                     is_regex: true,
                     line_number: 87,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -7312,7 +7312,7 @@ mod v_es2022 {
                 },
                 TokenDefinition {
                     name: r#"FLOAT_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
                     is_regex: true,
                     line_number: 85,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -7326,7 +7326,7 @@ mod v_es2022 {
                 },
                 TokenDefinition {
                     name: r#"SCI_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
                     is_regex: true,
                     line_number: 87,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -8168,7 +8168,7 @@ mod v_es2023 {
                 },
                 TokenDefinition {
                     name: r#"FLOAT_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
                     is_regex: true,
                     line_number: 79,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -8182,7 +8182,7 @@ mod v_es2023 {
                 },
                 TokenDefinition {
                     name: r#"SCI_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
                     is_regex: true,
                     line_number: 81,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -9024,7 +9024,7 @@ mod v_es2024 {
                 },
                 TokenDefinition {
                     name: r#"FLOAT_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
                     is_regex: true,
                     line_number: 61,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -9038,7 +9038,7 @@ mod v_es2024 {
                 },
                 TokenDefinition {
                     name: r#"SCI_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
                     is_regex: true,
                     line_number: 63,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -9880,7 +9880,7 @@ mod v_es2025 {
                 },
                 TokenDefinition {
                     name: r#"FLOAT_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?"#.to_string(),
                     is_regex: true,
                     line_number: 102,
                     alias: Some(r#"NUMBER"#.to_string()),
@@ -9894,7 +9894,7 @@ mod v_es2025 {
                 },
                 TokenDefinition {
                     name: r#"SCI_NUMBER"#.to_string(),
-                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
+                    pattern: r#"(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)"#.to_string(),
                     is_regex: true,
                     line_number: 104,
                     alias: Some(r#"NUMBER"#.to_string()),

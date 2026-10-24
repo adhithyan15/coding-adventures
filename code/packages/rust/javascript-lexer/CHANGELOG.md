@@ -6,6 +6,12 @@ All notable changes to the `coding-adventures-javascript-lexer` crate will be do
 
 ### Fixed
 
+- The legacy-octal-like part of es2021–es2025's `FLOAT_NUMBER` and
+  `SCI_NUMBER` is now `0[0-7]*[89][0-9]*` (was `0[0-9]*[89][0-9]*`). The two
+  match the same strings, but the old one was ambiguous: backtracking engines
+  (the Python and TypeScript lexers that read these `.tokens`) took quadratic
+  time on `0` followed by many `8`s (5 s for 20 KB). Rust's `regex` was
+  already linear. Found by the 6d security re-review (L3).
 - es2021–es2025 number patterns follow ECMA-262's NumericLiteralSeparator
   grammar: one `_` between two digits; none after a lone leading `0` or in a
   legacy octal / NonOctalDecimal literal; none beside `.`, an exponent or a

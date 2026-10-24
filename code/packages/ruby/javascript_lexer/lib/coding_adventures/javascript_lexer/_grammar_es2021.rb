@@ -74,7 +74,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "FLOAT_NUMBER",
-        pattern: "(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)\\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?",
+        pattern: "(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)\\.([0-9](_?[0-9])*)?([eE][+-]?[0-9](_?[0-9])*)?",
         is_regex: true,
         line_number: 85,
         alias_name: "NUMBER",
@@ -88,7 +88,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "SCI_NUMBER",
-        pattern: "(0|[1-9](_?[0-9])*|0[0-9]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)",
+        pattern: "(0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*)([eE][+-]?[0-9](_?[0-9])*)",
         is_regex: true,
         line_number: 87,
         alias_name: "NUMBER",
