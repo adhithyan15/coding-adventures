@@ -149,13 +149,13 @@ fn decodes_required_fields_and_preserves_exact_signed_bytes() {
 }
 
 #[test]
-fn decodes_ordered_bounded_certificates_through_the_shared_decoder() {
-    let certs = [certificate(1), certificate(2)];
+fn decodes_one_bounded_certificate_through_the_shared_decoder() {
+    let certs = [certificate(1)];
     let encoded = basic_response(Some(&certs));
     let decoded = decode(&encoded).unwrap();
 
-    assert_eq!(decoded.len(), 2);
-    assert_eq!(decoded.iter().count(), 2);
+    assert_eq!(decoded.len(), 1);
+    assert_eq!(decoded.iter().count(), 1);
     assert_eq!(
         decoded
             .get(0)
@@ -165,15 +165,7 @@ fn decodes_ordered_bounded_certificates_through_the_shared_decoder() {
             .magnitude(),
         &[1]
     );
-    assert_eq!(
-        decoded
-            .get(1)
-            .unwrap()
-            .tbs_certificate()
-            .serial_number()
-            .magnitude(),
-        &[2]
-    );
+    assert!(decoded.get(1).is_none());
 }
 
 #[test]
@@ -247,7 +239,17 @@ fn certificate_wrapper_must_be_exact_and_last() {
         X509OcspBasicResponseErrorKind::UnexpectedOptionalField
     );
 
-    for wrapper in [element(0xa0, &[]), element(0xa0, &element(0x31, &[]))] {
+    for wrapper in [
+        element(0xa0, &[]),
+        element(0xa0, &element(0x31, &[])),
+        element(
+            0xa0,
+            &[sequence(&[]), element(0x05, &[])]
+                .into_iter()
+                .flatten()
+                .collect::<Vec<_>>(),
+        ),
+    ] {
         let mut fields = required.to_vec();
         fields.push(wrapper);
         assert!(matches!(
@@ -346,13 +348,44 @@ fn shared_limits_fail_closed_and_errors_are_payload_safe() {
 }
 
 #[test]
+fn every_outer_element_budget_cut_point_fails_closed_before_success() {
+    let encoded = basic_response(Some(&[certificate(1)]));
+    let mut failures = 0usize;
+    let mut successes = 0usize;
+    for max_total_elements in 1..=96 {
+        let mut decoder = Asn1Decoder::new(Asn1Limits {
+            max_total_elements,
+            ..Asn1Limits::default()
+        });
+        match decoder.decode_exact(&encoded) {
+            Ok(root) => match decode_x509_ocsp_basic_response(&mut decoder, root) {
+                Ok(_) => successes += 1,
+                Err(error) => {
+                    assert!(error.offset() <= encoded.len());
+                    failures += 1;
+                }
+            },
+            Err(error) => {
+                assert_eq!(error.kind(), Asn1ErrorKind::ElementLimitExceeded);
+                failures += 1;
+            }
+        }
+    }
+    assert!(failures > 0);
+    assert!(successes > 0);
+}
+
+#[test]
 fn malformed_outer_framing_is_redacted() {
     let mut decoder = Asn1Decoder::new(Asn1Limits::default());
-    let error = decoder
+    let root = decoder
         .decode_exact(&[0x30, 0x03, 0x30, 0x02, 0x30])
-        .unwrap_err();
+        .unwrap();
+    let error = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap_err();
     assert_eq!(
         error.kind(),
-        Asn1ErrorKind::Framing(DerErrorKind::TruncatedValue)
+        X509OcspBasicResponseErrorKind::Structure(Asn1ErrorKind::Framing(
+            DerErrorKind::TruncatedValue
+        ))
     );
 }
