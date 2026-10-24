@@ -1,0 +1,11 @@
+{
+  "id": "PA-C193-ordinal-frames",
+  "pathSegment": "PA-PATH-193-A2-ORDINAL-E",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-193-A2-ORDINAL-E",
+      "order": 6
+    }
+  ]
+}

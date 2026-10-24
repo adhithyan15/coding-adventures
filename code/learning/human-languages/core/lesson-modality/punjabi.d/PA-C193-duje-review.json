@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C193-duje-review",
+    "language": "punjabi",
+    "chapter": 193,
+    "sequence": 10510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a8f5589f0d86ff2"
+  },
+  "findings": []
+}

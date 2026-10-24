@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C193-ordinal-return",
+    "language": "punjabi",
+    "chapter": 193,
+    "sequence": 10470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c06b5e1bccb80b82"
+  },
+  "findings": []
+}

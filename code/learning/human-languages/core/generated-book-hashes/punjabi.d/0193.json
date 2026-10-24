@@ -1,0 +1,16 @@
+{
+  "language": "punjabi",
+  "chapter": 193,
+  "sourceHash": "fnv1a64:b47606a9d2c595b8",
+  "lessonIds": [
+    "PA-C193-ordinal-return",
+    "PA-C193-pahile",
+    "PA-C193-pahile-review",
+    "PA-C193-duje",
+    "PA-C193-duje-review",
+    "PA-C193-ordinal-contrast",
+    "PA-C193-ordinal-frames",
+    "PA-C193-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch193-first-and-second-in-a-room.tex"
+}
